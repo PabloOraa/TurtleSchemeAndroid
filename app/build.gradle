@@ -45,7 +45,7 @@ dependencies {
     implementation "com.microsoft.device.dualscreen:tabs:1.0.0-alpha04"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.0-rc"
     implementation "androidx.window:window:1.0.0-alpha01"
-    testImplementation 'junit:junit:4.1'
+    testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }

@@ -1,5 +1,6 @@
 package com.example.turtlescheme;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Debug;
 import android.util.Log;
@@ -12,6 +13,7 @@ import com.microsoft.device.dualscreen.core.manager.ScreenModeListener;
 import com.microsoft.device.dualscreen.core.manager.SurfaceDuoScreenManager;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -19,7 +21,8 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity
 {
-    SurfaceDuoScreenManager surfaceDuoScreenManager;
+    private SurfaceDuoScreenManager surfaceDuoScreenManager;
+    private SQLiteDatabase connection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -37,6 +41,9 @@ public class MainActivity extends AppCompatActivity
         NavigationUI.setupWithNavController(navView, navController);*/
         if(ScreenHelper.isDeviceSurfaceDuo(this))
             configureDualScreen();
+
+        Database db = new Database(this,"turtlesketch.db", null, 3);//getResources().getStringArray(R.array.sections));
+        connection = db.getWritableDatabase();
     }
 
     private void configureDualScreen()

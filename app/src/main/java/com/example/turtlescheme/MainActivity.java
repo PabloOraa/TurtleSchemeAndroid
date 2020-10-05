@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Debug;
 import android.util.Log;
 import android.view.Window;
-import android.view.WindowManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.microsoft.device.dualscreen.bottomnavigation.SurfaceDuoBottomNavigationView;

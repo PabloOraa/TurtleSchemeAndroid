@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TurtleScheme</string>
-    <string name="title_add">ñadir a colección</string>
+    <string name="title_add">Añadir a colección</string>
     <string name="title_list">Listas</string>
     <string name="title_search">Buscar</string>
 </resources>

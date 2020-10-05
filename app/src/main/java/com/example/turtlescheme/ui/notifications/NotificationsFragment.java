@@ -1,35 +1,46 @@
 package com.example.turtlescheme.ui.notifications;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.turtlescheme.R;
 
-public class NotificationsFragment extends Fragment {
+import java.util.Objects;
 
-    private NotificationsViewModel notificationsViewModel;
+public class NotificationsFragment extends Fragment
+{
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        notificationsViewModel =
-                new ViewModelProvider(this).get(NotificationsViewModel.class);
+    @SuppressLint("SetJavaScriptEnabled")
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         View root = inflater.inflate(R.layout.fragment_notifications, container, false);
-        final TextView textView = root.findViewById(R.id.text_notifications);
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+        WebView mywebview = root.findViewById(R.id.webView);
+        WebSettings webSettings = mywebview.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        mywebview.loadUrl("https://turtlesketch.consulting");
+        mywebview.setWebViewClient(new WebViewClient());
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Objects.requireNonNull(((AppCompatActivity)requireActivity()).getSupportActionBar()).hide();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Objects.requireNonNull(((AppCompatActivity)requireActivity()).getSupportActionBar()).show();
     }
 }

@@ -18,7 +18,7 @@
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_search"
         android:name="com.example.turtlescheme.ui.notifications.NotificationsFragment"
         android:label="@string/title_search"
         tools:layout="@layout/fragment_notifications" />

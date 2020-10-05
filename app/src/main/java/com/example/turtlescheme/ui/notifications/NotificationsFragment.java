@@ -38,7 +38,7 @@ public class NotificationsFragment extends Fragment
         return root;
     }
 
-    @Override
+    /*@Override
     public void onResume() {
         super.onResume();
         Objects.requireNonNull(((AppCompatActivity)requireActivity()).getSupportActionBar()).hide();
@@ -48,5 +48,5 @@ public class NotificationsFragment extends Fragment
     public void onStop() {
         super.onStop();
         Objects.requireNonNull(((AppCompatActivity)requireActivity()).getSupportActionBar()).show();
-    }
+    }*/
 }

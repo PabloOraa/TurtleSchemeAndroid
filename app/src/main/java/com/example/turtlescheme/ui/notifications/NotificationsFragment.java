@@ -11,17 +11,14 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.turtlescheme.R;
 
 import java.util.Locale;
-import java.util.Objects;
 
 public class NotificationsFragment extends Fragment
 {
-
     @SuppressLint("SetJavaScriptEnabled")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -37,16 +34,4 @@ public class NotificationsFragment extends Fragment
         mywebview.setWebViewClient(new WebViewClient());
         return root;
     }
-
-    /*@Override
-    public void onResume() {
-        super.onResume();
-        Objects.requireNonNull(((AppCompatActivity)requireActivity()).getSupportActionBar()).hide();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Objects.requireNonNull(((AppCompatActivity)requireActivity()).getSupportActionBar()).show();
-    }*/
 }

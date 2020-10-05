@@ -4,4 +4,12 @@
     <string name="title_add">Añadir a colección</string>
     <string name="title_list">Listas</string>
     <string name="title_search">Buscar</string>
+    <string name="title">Título</string>
+    <string name="type">Tipo</string>
+    <string name="title_hint">Título</string>
+    <string name="books">Libros</string>
+    <string name="music">Música</string>
+    <string name="serie">Series</string>
+    <string name="movie">Películas</string>
+    <string name="search">Buscar</string>
 </resources>

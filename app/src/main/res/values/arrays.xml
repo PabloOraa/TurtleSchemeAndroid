@@ -1,0 +1,8 @@
+<resources>
+    <string-array name="types">
+        <item>@string/books</item>
+        <item>@string/music</item>
+        <item>@string/movie</item>
+        <item>@string/serie</item>
+    </string-array>
+</resources>

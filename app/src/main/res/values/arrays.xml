@@ -5,4 +5,9 @@
         <item>@string/movie</item>
         <item>@string/serie</item>
     </string-array>
+    <string-array name="themes">
+        <item>@string/light_theme</item>
+        <item>@string/dark_theme</item>
+        <item>@string/automatic_theme</item>
+    </string-array>
 </resources>

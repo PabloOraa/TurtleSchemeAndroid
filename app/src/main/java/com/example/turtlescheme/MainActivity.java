@@ -1,8 +1,9 @@
 package com.example.turtlescheme;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Debug;
 import android.util.Log;
 import android.view.Window;
 
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity
         Database db = new Database(this,"turtlesketch.db", null, 3);//getResources().getStringArray(R.array.sections));
         connection = db.getWritableDatabase();
     }
+
+
 
     @Override
     protected void onStart()

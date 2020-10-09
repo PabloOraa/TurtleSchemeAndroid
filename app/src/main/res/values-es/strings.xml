@@ -12,4 +12,9 @@
     <string name="serie">Series</string>
     <string name="movie">Películas</string>
     <string name="search">Buscar</string>
+    <string name="config">Configuración</string>
+    <string name="theme">Tema</string>
+    <string name="light_theme">Tema claro</string>
+    <string name="dark_theme">Tema oscuro</string>
+    <string name="automatic_theme">Predeterminado</string>
 </resources>

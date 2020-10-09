@@ -32,35 +32,13 @@ public class HomeFragment extends Fragment
         createListener();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == Activity.RESULT_OK)
-        {
-            String result = data.getStringExtra("theme");
-            if(result != null)
-                changeTheme(result);
-        }
-    }
-
-    private void changeTheme(String selectedText)
-    {
-        if(selectedText.equalsIgnoreCase(getString(R.string.light_theme)))
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        else if(selectedText.equalsIgnoreCase(getString(R.string.dark_theme)))
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        else
-        if(android.os.Build.VERSION.SDK_INT >= 29)
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        else
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
-    }
-
     private void createListener()
     {
         ImageView im = requireView().findViewById(R.id.IV_engranajes);
-        im.setOnClickListener(view -> startActivityForResult(new Intent(requireActivity(), Config.class),Activity.RESULT_OK));
+        im.setOnClickListener(view ->
+        {
+            startActivity(new Intent(requireActivity(), Config.class));
+            requireActivity().finish();
+        });
     }
 }

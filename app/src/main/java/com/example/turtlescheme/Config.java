@@ -1,6 +1,5 @@
 package com.example.turtlescheme;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,26 +19,29 @@ import com.microsoft.device.dualscreen.core.manager.SurfaceDuoScreenManager;
 public class Config extends AppCompatActivity
 {
     private SurfaceDuoScreenManager surfaceDuoScreenManager;
-    private String theme;
-
+    public static String theme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.configuration);
-        theme = getString(R.string.automatic_theme);
+        changeTheme(theme);
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
         configListener();
     }
 
     @Override
     public void onBackPressed()
     {
-        super.onBackPressed();
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("theme",theme);
-        setResult(Activity.RESULT_OK,returnIntent);
+        startActivity(new Intent(this,MainActivity.class));
         finish();
+        super.onBackPressed();
     }
 
     private void configListener()
@@ -52,7 +54,12 @@ public class Config extends AppCompatActivity
         else
         {
             Spinner spinner = findViewById(R.id.sp_themes);
-            spinner.setSelection(2);
+            if(theme.equalsIgnoreCase(getString(R.string.light_theme)))
+                spinner.setSelection(0);
+            else if(theme.equalsIgnoreCase(getString(R.string.dark_theme)))
+                spinner.setSelection(1);
+            else
+                spinner.setSelection(2);
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)

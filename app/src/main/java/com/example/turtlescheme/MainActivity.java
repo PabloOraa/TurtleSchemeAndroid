@@ -1,7 +1,5 @@
 package com.example.turtlescheme;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,7 +35,13 @@ public class MainActivity extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        if(Config.theme != null)
+            changeTheme(Config.theme);
+        else
+        {
+            Config.theme = getString(R.string.automatic_theme);
+            changeTheme(getString(R.string.automatic_theme));
+        }
 
         if(ScreenHelper.isDeviceSurfaceDuo(this))
             configureDualScreen();
@@ -45,8 +49,6 @@ public class MainActivity extends AppCompatActivity
         Database db = new Database(this,"turtlesketch.db", null, 3);//getResources().getStringArray(R.array.sections));
         connection = db.getWritableDatabase();
     }
-
-
 
     @Override
     protected void onStart()
@@ -87,5 +89,18 @@ public class MainActivity extends AppCompatActivity
     public SurfaceDuoScreenManager getSurfaceDuoScreenManager()
     {
         return surfaceDuoScreenManager;
+    }
+
+    public void changeTheme(String selectedText)
+    {
+        if(selectedText.equalsIgnoreCase(getString(R.string.light_theme)))
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        else if(selectedText.equalsIgnoreCase(getString(R.string.dark_theme)))
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        else
+        if(android.os.Build.VERSION.SDK_INT >= 29)
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        else
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
     }
 }

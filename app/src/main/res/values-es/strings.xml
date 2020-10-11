@@ -17,4 +17,6 @@
     <string name="light_theme">Tema claro</string>
     <string name="dark_theme">Tema oscuro</string>
     <string name="automatic_theme">Predeterminado</string>
+    <string name="sort">Ordenar</string>
+    <string name="filter">Filtrar</string>
 </resources>

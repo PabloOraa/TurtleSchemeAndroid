@@ -16,4 +16,6 @@
     <string name="light_theme">Light theme</string>
     <string name="dark_theme">Dark theme</string>
     <string name="automatic_theme">System default</string>
+    <string name="sort">Sort</string>
+    <string name="filter">Filter</string>
 </resources>

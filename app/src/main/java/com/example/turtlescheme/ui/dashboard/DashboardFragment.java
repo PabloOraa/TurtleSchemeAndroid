@@ -1,35 +1,51 @@
 package com.example.turtlescheme.ui.dashboard;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.view.ViewGroup.LayoutParams;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.turtlescheme.R;
 
-public class DashboardFragment extends Fragment {
+public class DashboardFragment extends Fragment
+{
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        /*View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        return root;*/
+        return inflater.inflate(R.layout.fragment_dashboard, container, false);
+    }
 
-    private DashboardViewModel dashboardViewModel;
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        int extraSpace;
+        DisplayMetrics display = new DisplayMetrics();
+        requireActivity().getWindowManager().getDefaultDisplay().getMetrics(display);
+        int width = display.widthPixels;
+        int widthConfig = requireActivity().findViewById(R.id.im_configL).getLayoutParams().width;
+        int widthSort = requireActivity().findViewById(R.id.iv_sortL).getLayoutParams().width;
+        int widthFilter = requireActivity().findViewById(R.id.im_filterL).getLayoutParams().width;
+        int widthAdd = requireActivity().findViewById(R.id.iv_addL).getLayoutParams().width;
+        int orientation = getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE)
+            extraSpace = (16*6 * (display.densityDpi / 160)) + (550 * (display.densityDpi / 160));
+        else
+            extraSpace = (16*7 * (display.densityDpi / 160));
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
-        final TextView textView = root.findViewById(R.id.text_dashboard);
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        return root;
+
+
+        LayoutParams layoutParams = requireActivity().findViewById(R.id.sv_searchL).getLayoutParams();
+        layoutParams.width = width-(widthConfig+widthAdd+widthFilter+widthSort+extraSpace);
+        requireActivity().findViewById(R.id.sv_searchL).setLayoutParams(layoutParams);
+
     }
 }

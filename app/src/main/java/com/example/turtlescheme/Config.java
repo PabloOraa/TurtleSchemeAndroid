@@ -49,6 +49,9 @@ public class Config extends AppCompatActivity
         if(findViewById(R.id.sp_themes) == null)
         {
             RadioGroup group = findViewById(R.id.rg_theme);
+            for(int i = 0; i < group.getChildCount();i++)
+                if(((RadioButton)group.getChildAt(i)).getText().toString().equalsIgnoreCase(theme))
+                    ((RadioButton) group.getChildAt(i)).setChecked(true);
             group.setOnCheckedChangeListener((radioGroup, i) -> changeTheme(((RadioButton)findViewById(radioGroup.getCheckedRadioButtonId())).getText().toString()));
         }
         else

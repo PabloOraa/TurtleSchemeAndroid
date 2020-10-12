@@ -1,7 +1,7 @@
 package com.example.turtlescheme.ui.home;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import com.example.turtlescheme.Config;
@@ -30,11 +29,21 @@ public class HomeFragment extends Fragment
     {
         super.onStart();
         createListener();
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        switch (currentNightMode)
+        {
+            case Configuration.UI_MODE_NIGHT_NO:
+                ((ImageView)requireActivity().findViewById(R.id.IV_engranajesH)).setImageResource(R.drawable.gears);
+                break;
+            case Configuration.UI_MODE_NIGHT_YES:
+                ((ImageView)requireActivity().findViewById(R.id.IV_engranajesH)).setImageResource(R.drawable.gears_white);
+                break;
+        }
     }
 
     private void createListener()
     {
-        ImageView im = requireView().findViewById(R.id.IV_engranajes);
+        ImageView im = requireView().findViewById(R.id.IV_engranajesH);
         im.setOnClickListener(view ->
         {
             startActivity(new Intent(requireActivity(), Config.class));

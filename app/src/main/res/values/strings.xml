@@ -18,4 +18,8 @@
     <string name="automatic_theme">System default</string>
     <string name="sort">Sort</string>
     <string name="filter">Filter</string>
+    <string name="add_list">Add list</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_list_message">Set the name of the list you want to create</string>
+    <string name="newListHint">Name of the new List</string>
 </resources>

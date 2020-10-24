@@ -19,4 +19,8 @@
     <string name="automatic_theme">Predeterminado</string>
     <string name="sort">Ordenar</string>
     <string name="filter">Filtrar</string>
+    <string name="add_list">Añadir lista</string>
+    <string name="cancel">Cancelar</string>
+    <string name="add_list_message">Indica el nombre de la lista que quieres crear</string>
+    <string name="newListHint">Nombre de la nueva lista</string>
 </resources>

@@ -2,6 +2,7 @@ package com.example.turtlescheme.ui.home;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.turtlescheme.Config;
+import com.example.turtlescheme.Database;
 import com.example.turtlescheme.R;
 
 public class HomeFragment extends Fragment
 {
+    private SQLiteDatabase connection;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -28,6 +31,7 @@ public class HomeFragment extends Fragment
     public void onStart()
     {
         super.onStart();
+        createDatabaseConnection();
         createListener();
         int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         switch (currentNightMode)
@@ -39,6 +43,12 @@ public class HomeFragment extends Fragment
                 ((ImageView)requireActivity().findViewById(R.id.IV_engranajesH)).setImageResource(R.drawable.gears_white);
                 break;
         }
+    }
+
+    private void createDatabaseConnection()
+    {
+        Database db = new Database(requireActivity(),"turtlesketch.db", null, 3);
+        connection = db.getWritableDatabase();
     }
 
     private void createListener()

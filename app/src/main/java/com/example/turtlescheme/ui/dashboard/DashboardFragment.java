@@ -1,7 +1,10 @@
 package com.example.turtlescheme.ui.dashboard;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -9,12 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.turtlescheme.Config;
+import com.example.turtlescheme.Database;
 import com.example.turtlescheme.R;
 
 import java.util.ArrayList;
@@ -23,11 +29,14 @@ public class DashboardFragment extends Fragment
 {
     ArrayList<String> listName = new ArrayList<>();
     ArrayAdapter<String> adapter;
+    private SQLiteDatabase connection;
+    View addView;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         /*View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
         return root;*/
+        addView = inflater.inflate(R.layout.add_list, container, false);
         return inflater.inflate(R.layout.fragment_dashboard, container, false);
     }
 
@@ -35,8 +44,14 @@ public class DashboardFragment extends Fragment
     public void onStart()
     {
         super.onStart();
+        listName.add(requireActivity().getText(R.string.music).toString());
+        listName.add(requireActivity().getText(R.string.books).toString());
+        listName.add(requireActivity().getText(R.string.movie).toString());
+        listName.add(requireActivity().getText(R.string.serie).toString());
+        createDatabaseConnection();
         int totalWidth = calcNecessaryWidth();
         adapter=new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, listName);
+        ((ListView)requireView().findViewById(R.id.lv_contentList)).setAdapter(adapter);
         checkTheme();
 
         LayoutParams layoutParams = requireActivity().findViewById(R.id.sv_searchL).getLayoutParams();
@@ -44,6 +59,12 @@ public class DashboardFragment extends Fragment
         requireActivity().findViewById(R.id.sv_searchL).setLayoutParams(layoutParams);
 
         createListener();
+    }
+
+    private void createDatabaseConnection()
+    {
+        Database db = new Database(requireActivity(),"turtlesketch.db", null, 3);
+        connection = db.getWritableDatabase();
     }
 
     private void checkTheme()
@@ -109,6 +130,13 @@ public class DashboardFragment extends Fragment
 
     private void addNewList()
     {
-
+        AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity());
+        alert.setView(addView);
+        alert.setTitle(requireActivity().getText(R.string.add_list));
+        alert.setMessage(requireActivity().getText(R.string.add_list_message));
+        alert.setPositiveButton(requireActivity().getText(R.string.add_list), (dialog, which) -> adapter.add(((EditText)addView.findViewById(R.id.et_add_list)).getText().toString()));
+        alert.setNegativeButton(requireActivity().getText(R.string.cancel), (dialog, which) -> dialog.dismiss());
+        AlertDialog dialog = alert.create();
+        dialog.show();
     }
 }

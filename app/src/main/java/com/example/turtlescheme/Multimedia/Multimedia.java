@@ -17,6 +17,7 @@ public abstract class Multimedia
     public static final String BOOK = "BOOK";
     public static final String SERIE  = "SERIE";
 
+    private String id;
     private String type;
     private String title;
     private List<String> actors_authors;
@@ -24,6 +25,16 @@ public abstract class Multimedia
     private String gender;
     private String language;
     private Image cover;
+
+    public String getId()
+    {
+        return id;
+    }
+
+    public void setId(String id)
+    {
+        this.id = id;
+    }
 
     public String getType()
     {

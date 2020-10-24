@@ -5,7 +5,7 @@ import android.content.ContentValues;
 public class Movie extends Multimedia
 {
     private String plot;
-    private String category;
+    private String director;
     private String publisher;
 
     public String getPlot()
@@ -18,14 +18,14 @@ public class Movie extends Multimedia
         this.plot = plot;
     }
 
-    public String getCategory()
+    public String getDirector()
     {
-        return category;
+        return director;
     }
 
-    public void setCategory(String category)
+    public void setDirector(String director)
     {
-        this.category = category;
+        this.director = director;
     }
 
     public String getPublisher()
@@ -43,7 +43,7 @@ public class Movie extends Multimedia
     {
         ContentValues content = super.getContentValues();
         content.put("plot", plot);
-        content.put("category", category);
+        content.put("director", director);
         content.put("publisher", publisher);
         return content;
     }

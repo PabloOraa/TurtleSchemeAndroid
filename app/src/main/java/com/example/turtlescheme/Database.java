@@ -1,8 +1,15 @@
 package com.example.turtlescheme;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.example.turtlescheme.Multimedia.Movie;
+import com.example.turtlescheme.Multimedia.Multimedia;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Database extends SQLiteOpenHelper
 {
@@ -79,5 +86,35 @@ public class Database extends SQLiteOpenHelper
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1)
     {
 
+    }
+
+    public boolean insertMultimedia(SQLiteDatabase sqLiteDatabase, Multimedia media)
+    {
+        long result = sqLiteDatabase.insert(media.getType(),null,media.getContentValues());
+        return result != -1;
+    }
+
+    public List<Multimedia> selectMultimedia(SQLiteDatabase sqLiteDatabase, String title, String table)
+    {
+        List<Multimedia> media = new ArrayList<>();
+        Cursor c;
+        switch (table)
+        {
+            case Multimedia.BOOK:
+                c = sqLiteDatabase.rawQuery("SELECT * FROM BOOK WHERE title = ?", new String[]{title});
+                media.add(new Movie());
+                break;
+            case Multimedia.MOVIE:
+                c = sqLiteDatabase.rawQuery("SELECT * FROM MOVIE WHERE title = ?", new String[]{title});
+                media.add(new Movie());
+                break;
+            default:
+                c = sqLiteDatabase.rawQuery("SELECT * FROM MOVIE mo, BOOK b, SERIE s, MUSIC mu WHERE mo.title = ?", new String[]{title});
+                media.add(new Movie());
+                break;
+        }
+
+        if(c != null) c.close();
+        return media;
     }
 }

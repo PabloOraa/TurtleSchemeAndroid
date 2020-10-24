@@ -2,17 +2,12 @@ package com.example.turtlescheme.ui.dashboard;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Insets;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.WindowInsets;
-import android.view.WindowManager;
-import android.view.WindowMetrics;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 

@@ -35,8 +35,7 @@ public class Database extends SQLiteOpenHelper
                 "category VARCHAR(50)," +
                 "cover VARCHAR(2083)," +
                 "lang VARCHAR(30)," +
-                "publishDate DATE," +
-                "gender VARCHAR(50)" +
+                "publishDate VARCHAR(50)" +
                 ");";
         sqLiteDatabase.execSQL(tableCreation);
         tableCreation = "CREATE TABLE MUSIC" +
@@ -49,7 +48,7 @@ public class Database extends SQLiteOpenHelper
                 "cover VARCHAR(2083)," +
                 "album VARCHAR(50)," +
                 "lang VARCHAR(30)," +
-                "publishDate DATE," +
+                "publishDate VARCHAR(50)," +
                 "gender VARCHAR(50)" +
                 ");";
         sqLiteDatabase.execSQL(tableCreation);
@@ -67,7 +66,7 @@ public class Database extends SQLiteOpenHelper
                 "durationPerEpisode VARCHAR(200) NOT NULL," +
                 "cover VARCHAR(2083)," +
                 "lang VARCHAR(30)," +
-                "publishDate DATE NOT NULL," +
+                "publishDate VARCHAR(50) NOT NULL," +
                 "gender VARCHAR(50) NOT NULL" +
                 ");";
         sqLiteDatabase.execSQL(tableCreation);
@@ -82,7 +81,7 @@ public class Database extends SQLiteOpenHelper
                 "duration VARCHAR(200) NOT NULL," +
                 "cover VARCHAR(2083)," +
                 "lang VARCHAR(30)," +
-                "publishDate DATE NOT NULL," +
+                "publishDate VARCHAR(50) NOT NULL," +
                 "gender VARCHAR(50) NOT NULL" +
                 ");";
         sqLiteDatabase.execSQL(tableCreation);
@@ -125,7 +124,7 @@ public class Database extends SQLiteOpenHelper
         switch (table)
         {
             case Multimedia.BOOK:
-                c = sqLiteDatabase.rawQuery("SELECT * FROM BOOK WHERE title = ?", new String[]{title});
+                c = sqLiteDatabase.rawQuery("SELECT * FROM BOOKS WHERE title = ?", new String[]{title});
                 media.add(new Book());
                 break;
             case Multimedia.MOVIE:

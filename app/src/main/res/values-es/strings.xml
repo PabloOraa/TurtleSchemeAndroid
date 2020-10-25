@@ -23,4 +23,12 @@
     <string name="cancel">Cancelar</string>
     <string name="add_list_message">Indica el nombre de la lista que quieres crear</string>
     <string name="newListHint">Nombre de la nueva lista</string>
+    <string name="cover_desc">Imagen del contenido multimedia</string>
+    <string name="media">Media</string>
+    <string name="es">Español</string>
+    <string name="en">Inglés</string>
+    <string name="fr">Francés</string>
+    <string name="de">Alemán</string>
+    <string name="be">Holandés</string>
+    <string name="add">Añadir</string>
 </resources>

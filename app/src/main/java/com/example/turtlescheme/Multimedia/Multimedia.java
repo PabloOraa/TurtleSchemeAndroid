@@ -3,28 +3,27 @@ package com.example.turtlescheme.Multimedia;
 import android.content.ContentValues;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 
 import java.io.ByteArrayOutputStream;
-import java.nio.ByteBuffer;
-import java.util.Date;
+import java.io.Serializable;
+import java.net.URL;
 import java.util.List;
 
-public abstract class Multimedia
+public abstract class Multimedia implements Serializable
 {
     public static final String MOVIE  = "MOVIE";
     public static final String MUSIC = "MUSIC";
-    public static final String BOOK = "BOOK";
+    public static final String BOOK = "BOOKS";
     public static final String SERIE  = "SERIE";
 
     private String id;
     private String type;
     private String title;
     private List<String> actors_authors;
-    private Date publishDate;
-    private String gender;
+    private String publishDate;
+    private List<String> gender;
     private String language;
-    private Image cover;
+    private String cover;
 
     public String getId()
     {
@@ -66,22 +65,22 @@ public abstract class Multimedia
         this.actors_authors = actors_authors;
     }
 
-    public Date getPublishDate()
+    public String getPublishDate()
     {
         return publishDate;
     }
 
-    public void setPublishDate(Date publishDate)
+    public void setPublishDate(String publishDate)
     {
         this.publishDate = publishDate;
     }
 
-    public String getGender()
+    public List<String> getGender()
     {
         return gender;
     }
 
-    public void setGender(String gender)
+    public void setGender(List<String> gender)
     {
         this.gender = gender;
     }
@@ -96,12 +95,25 @@ public abstract class Multimedia
         this.language = language;
     }
 
-    public Image getCover()
+    public Bitmap getCover()
+    {
+        try
+        {
+            URL url = new URL(cover);
+            return BitmapFactory.decodeStream(url.openConnection().getInputStream());
+        }
+        catch(java.io.IOException e)
+        {
+            return null;
+        }
+    }
+
+    public String getCoverString()
     {
         return cover;
     }
 
-    public void setCover(Image cover)
+    public void setCover(String cover)
     {
         this.cover = cover;
     }
@@ -116,8 +128,8 @@ public abstract class Multimedia
             content.put("artist", actors_authors.toString());
         else
             content.put("actors", actors_authors.toString());
-        content.put("gender", gender);
-        content.put("publishDate", String.valueOf(new java.sql.Date(publishDate.getTime())));
+        content.put("gender", gender.toString());
+        content.put("publishDate", publishDate);
         content.put("lang", language);
         ByteArrayOutputStream outputStream = getByteFromImage();
         content.put("cover", outputStream.toByteArray());
@@ -126,12 +138,8 @@ public abstract class Multimedia
 
     private ByteArrayOutputStream getByteFromImage()
     {
-        ByteBuffer buffer = cover.getPlanes()[0].getBuffer();
-        byte[] bytes = new byte[buffer.capacity()];
-        buffer.get(bytes);
-        Bitmap bitmapImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmapImage.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+        getCover().compress(Bitmap.CompressFormat.PNG, 0, outputStream);
         return  outputStream;
     }
 }

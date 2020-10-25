@@ -22,4 +22,12 @@
     <string name="cancel">Cancel</string>
     <string name="add_list_message">Set the name of the list you want to create</string>
     <string name="newListHint">Name of the new List</string>
+    <string name="cover_desc">Cover of the media</string>
+    <string name="media">Media</string>
+    <string name="es">Spanish</string>
+    <string name="en">English</string>
+    <string name="fr">French</string>
+    <string name="de">German</string>
+    <string name="be">Deutch</string>
+    <string name="add">Add</string>
 </resources>

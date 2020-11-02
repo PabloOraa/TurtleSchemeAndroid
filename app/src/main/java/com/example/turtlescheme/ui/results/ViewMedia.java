@@ -57,6 +57,7 @@ public class ViewMedia extends AppCompatActivity
     private void fillMedia()
     {
         Intent getIntent = getIntent();
+        media = (Multimedia) getIntent.getSerializableExtra("media");
         ((ImageView)findViewById(R.id.im_media_cover)).setImageBitmap(getBitmapFromURL(media.getCoverString()));
         ((TextView)findViewById(R.id.tv_media_author)).setText(media.getActors_authors().toString());
         ((TextView)findViewById(R.id.tv_media_title)).setText(media.getTitle());

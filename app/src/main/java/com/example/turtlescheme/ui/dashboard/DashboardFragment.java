@@ -1,7 +1,6 @@
 package com.example.turtlescheme.ui.dashboard;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
@@ -123,11 +122,7 @@ public class DashboardFragment extends Fragment
     private void createListener()
     {
         ImageView im = requireView().findViewById(R.id.iv_configL);
-        im.setOnClickListener(view ->
-        {
-            startActivity(new Intent(requireActivity(), Config.class));
-            requireActivity().finish();
-        });
+        im.setOnClickListener(view -> startActivity(new Intent(requireActivity(), Config.class)));
         ImageView imA = requireView().findViewById(R.id.iv_addL);
         imA.setOnClickListener(view -> addNewList());
         ListView list = requireView().findViewById(R.id.lv_contentList);

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,6 @@ import com.example.turtlescheme.Multimedia.Music;
 import com.example.turtlescheme.Multimedia.MusicGA.MusicGA;
 import com.example.turtlescheme.R;
 import com.example.turtlescheme.ui.results.ListMedia;
-import com.example.turtlescheme.ui.results.ViewMedia;
 import com.google.gson.GsonBuilder;
 
 import org.jetbrains.annotations.NotNull;
@@ -82,11 +80,7 @@ public class HomeFragment extends Fragment
     private void createListener()
     {
         ImageView im = requireView().findViewById(R.id.IV_engranajesH);
-        im.setOnClickListener(view ->
-        {
-            startActivity(new Intent(requireActivity(), Config.class));
-            requireActivity().finish();
-        });
+        im.setOnClickListener(view -> startActivity(new Intent(requireActivity(), Config.class)));
         Button bt = requireView().findViewById(R.id.bt_search);
         bt.setOnClickListener(view ->
         {

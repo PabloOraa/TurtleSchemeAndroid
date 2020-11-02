@@ -36,14 +36,6 @@ public class Config extends AppCompatActivity
         configListener();
     }
 
-    @Override
-    public void onBackPressed()
-    {
-        startActivity(new Intent(this,MainActivity.class));
-        finish();
-        super.onBackPressed();
-    }
-
     private void configListener()
     {
         if(findViewById(R.id.sp_themes) == null)

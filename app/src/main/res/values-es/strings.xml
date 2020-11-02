@@ -32,4 +32,8 @@
     <string name="be">Holandés</string>
     <string name="add">Añadir</string>
     <string name="list_results">Lista de resultados</string>
+    <string name="confirm_insert">Se ha guardado correctamente el contenido</string>
+    <string name="confirm">Insertado correctamente</string>
+    <string name="error">Error</string>
+    <string name="error_insert">Ha ocurrido un error al guardar el contenido</string>
 </resources>

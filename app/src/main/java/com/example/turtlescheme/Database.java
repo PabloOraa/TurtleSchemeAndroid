@@ -153,20 +153,36 @@ public class Database extends SQLiteOpenHelper
     {
         List<Multimedia> media = new ArrayList<>();
         List<String> listOfIds = getIds(sqLiteDatabase,titleOfTheList);
+        String options = "(";
         if(listOfIds == null)
             return media;
+        for(String id: listOfIds)
+            options = options.concat("'" + id + "',");
+        options = options.substring(0,options.length()-1).concat(")");
         Cursor c = sqLiteDatabase.rawQuery("SELECT * " +
-                                                "FROM MOVIE mo, BOOKS b, SERIE s, MUSIC mu " +
-                                                "WHERE mo.id IN " + listOfIds + " OR b.id IN " + listOfIds + "  OR s.id IN " + listOfIds + "  OR mu.id IN " + listOfIds ,null);
+                                                "FROM MOVIE " +
+                                                "WHERE id IN "+options , null);
         while(c.moveToNext())
-            if(c.getColumnIndex("channel") != -1) //Serie
-                media.add(new Serie());
-            else if(c.getColumnIndex("album") != -1) //Music
-                media.add(new Music());
-            else if(c.getColumnIndex("director") != -1) //Movie
-                media.add(new Movie());
-            else if(c.getColumnIndex("category") != -1) //Book
-                media.add(new Book());
+            media.add(new Movie());
+        c = sqLiteDatabase.rawQuery("SELECT * " +
+                                         "FROM BOOKS b " +
+                                         "WHERE id IN "+options , null);
+        while(c.moveToNext())
+            media.add(new Book(c.getString(c.getColumnIndex("id")),c.getString(c.getColumnIndex("title")),
+                    c.getString(c.getColumnIndex("author")),c.getString(c.getColumnIndex("publishDate")),c.getString(c.getColumnIndex("category")),
+                    c.getString(c.getColumnIndex("lang")),c.getString(c.getColumnIndex("cover")),"",
+                    c.getString(c.getColumnIndex("plot")),c.getString(c.getColumnIndex("publisher"))));
+        c = sqLiteDatabase.rawQuery("SELECT * " +
+                                        "FROM MUSIC " +
+                                        "WHERE id IN "+options , null);
+        while(c.moveToNext())
+            media.add(new Music());
+        c = sqLiteDatabase.rawQuery("SELECT * " +
+                                        "FROM SERIE " +
+                                        "WHERE id IN "+options , null);
+        while(c.moveToNext())
+            media.add(new Serie());
+
         if(c != null)
             c.close();
         return media;
@@ -203,5 +219,44 @@ public class Database extends SQLiteOpenHelper
         if(c != null)
                 c.close();
         return listOfIds;
+    }
+
+    public boolean existsMultimedia(SQLiteDatabase sqLiteDatabase, String title)
+    {
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * " +
+                "FROM MOVIE " +
+                "WHERE title = ?" , new String[] {title});
+        while(c.moveToNext())
+        {
+            c.close();
+            return true;
+        }
+        c = sqLiteDatabase.rawQuery("SELECT * " +
+                "FROM BOOKS b " +
+                "WHERE title = ?" , new String[] {title});
+        while(c.moveToNext())
+        {
+            c.close();
+            return true;
+        }
+        c = sqLiteDatabase.rawQuery("SELECT * " +
+                "FROM MUSIC " +
+                "WHERE title = ?" , new String[] {title});
+        while(c.moveToNext())
+        {
+            c.close();
+            return true;
+        }
+        c = sqLiteDatabase.rawQuery("SELECT * " +
+                "FROM SERIE " +
+                "WHERE title = ?" , new String[] {title});
+        while(c.moveToNext())
+        {
+            c.close();
+            return true;
+        }
+        if(c != null)
+            c.close();
+        return false;
     }
 }

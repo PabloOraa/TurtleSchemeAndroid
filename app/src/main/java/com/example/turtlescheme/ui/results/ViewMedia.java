@@ -1,11 +1,13 @@
 package com.example.turtlescheme.ui.results;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +24,7 @@ import com.microsoft.device.dualscreen.core.manager.SurfaceDuoScreenManager;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 public class ViewMedia extends AppCompatActivity
 {
@@ -41,7 +44,18 @@ public class ViewMedia extends AppCompatActivity
     {
         super.onStart();
         fillMedia();
-        createListener();
+        Database db = new Database(this,"turtlesketch.db", null, 3);
+        if(!db.existsMultimedia(db.getReadableDatabase(),media.getTitle()))
+            createListener();
+        else
+            findViewById(R.id.bt_add_media).setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        setResult(1);
+        super.onBackPressed();
     }
 
     private void createListener()
@@ -50,7 +64,30 @@ public class ViewMedia extends AppCompatActivity
         {
             Database db = new Database(this,"turtlesketch.db", null, 3);//getResources().getStringArray(R.array.sections));
             SQLiteDatabase connection = db.getWritableDatabase();
-            db.insertMultimedia(connection, media);
+            if(db.insertMultimedia(connection, media))
+            {
+                //Insert OK
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setTitle(getText(R.string.confirm));
+                alert.setMessage(getText(R.string.confirm_insert));
+                alert.setPositiveButton("Ok", (dialog, which) ->
+                {
+                    dialog.dismiss();
+                    setResult(2);
+                    finish();
+                });
+                AlertDialog dialog = alert.create();
+                dialog.show();
+            }
+            else
+            {
+                //Insert NO
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setTitle(getText(R.string.error));
+                alert.setMessage(getText(R.string.error_insert));
+                AlertDialog dialog = alert.create();
+                dialog.show();
+            }
         });
     }
 
@@ -58,15 +95,15 @@ public class ViewMedia extends AppCompatActivity
     {
         Intent getIntent = getIntent();
         media = (Multimedia) getIntent.getSerializableExtra("media");
-        ((ImageView)findViewById(R.id.im_media_cover)).setImageBitmap(getBitmapFromURL(media.getCoverString()));
-        ((TextView)findViewById(R.id.tv_media_author)).setText(media.getActors_authors().toString());
+        ((ImageView)findViewById(R.id.im_media_cover)).setImageBitmap(getBitmapFromURL(media.getCover()));
+        ((TextView)findViewById(R.id.tv_media_author)).setText(media.getActors_authors().toString().split("\\[")[1].split("]")[0]);
         ((TextView)findViewById(R.id.tv_media_title)).setText(media.getTitle());
         if(media.getLanguage()!=null)
             ((TextView)findViewById(R.id.tv_media_language)).setText(media.getLanguage());
         if(media.getUrl() != null)
             ((TextView)findViewById(R.id.tv_media_directorAlbum)).setText(media.getUrl());
         if(media.getGender() != null)
-            ((TextView)findViewById(R.id.tv_media_gender)).setText(media.getGender().toString().split("\\[")[1].split("]")[0]);
+            ((TextView) findViewById(R.id.tv_media_gender)).setText(media.getGender().toString().split("\\[")[1].split("]")[0]);
         ((TextView)findViewById(R.id.tv_media_publishDate)).setText(media.getPublishDate());
         if(media.getClass().equals(Book.class))
         {

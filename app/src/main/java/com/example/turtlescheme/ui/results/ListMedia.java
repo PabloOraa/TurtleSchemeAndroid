@@ -56,7 +56,6 @@ public class ListMedia extends AppCompatActivity
 
     private void changeTheme(String selectedText)
     {
-        Config.theme = selectedText;
         if(selectedText.equalsIgnoreCase(getString(R.string.light_theme)))
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         else if(selectedText.equalsIgnoreCase(getString(R.string.dark_theme)))
@@ -95,13 +94,13 @@ public class ListMedia extends AppCompatActivity
         else if(book.getLanguage().equalsIgnoreCase("be"))
             book.setLanguage(getText(R.string.be).toString());
         intent.putExtra("media", book);
-        startActivity(intent);
+        startActivityForResult(intent, 2);
     }
     private void openIntentMusic(Music music)
     {
         Intent intent = new Intent(this,ViewMedia.class);
         intent.putExtra("id",music.getId());
-        intent.putExtra("coverString", music.getCoverString());
+        intent.putExtra("coverString", music.getCover());
         intent.putExtra("author", music.getActors_authors().toString().substring(1,music.getActors_authors().toString().length()-1));
         if(music.getTitle().contains("("))
             music.setTitle(music.getTitle().substring(0,music.getTitle().indexOf("(")-1));
@@ -115,6 +114,18 @@ public class ListMedia extends AppCompatActivity
         intent.putExtra("type", music.getType());
         intent.putExtra("media", music);
         intent.putExtra("dirAlb", music.getUrl());
-        startActivity(intent);
+        startActivityForResult(intent, 2);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == 2)
+        {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 }

@@ -23,9 +23,12 @@ import androidx.fragment.app.Fragment;
 import com.example.turtlescheme.Config;
 import com.example.turtlescheme.Database;
 import com.example.turtlescheme.Multimedia.Multimedia;
+import com.example.turtlescheme.Multimedia.MultimediaSerializable;
 import com.example.turtlescheme.R;
+import com.example.turtlescheme.ui.results.ListMedia;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DashboardFragment extends Fragment
 {
@@ -126,7 +129,23 @@ public class DashboardFragment extends Fragment
         ImageView imA = requireView().findViewById(R.id.iv_addL);
         imA.setOnClickListener(view -> addNewList());
         ListView list = requireView().findViewById(R.id.lv_contentList);
-        list.setOnItemClickListener((parent, view, position, id) -> Log.d("Resultados", db.selectList(connection, Multimedia.BOOK).toString()));
+        list.setOnItemClickListener((parent, view, position, id) ->
+        {
+            Intent intent = new Intent(requireActivity(), ListMedia.class);
+            List<Multimedia> media;
+            if(listName.get(position).equalsIgnoreCase((String) requireActivity().getText(R.string.books)))
+                media = new ArrayList<>(db.selectList(connection,Multimedia.BOOK));
+            else if(listName.get(position).equalsIgnoreCase((String) requireActivity().getText(R.string.music)))
+                media = new ArrayList<>(db.selectList(connection,Multimedia.MUSIC));
+            else if(listName.get(position).equalsIgnoreCase((String) requireActivity().getText(R.string.movie)))
+                media = new ArrayList<>(db.selectList(connection,Multimedia.MOVIE));
+            else if(listName.get(position).equalsIgnoreCase((String) requireActivity().getText(R.string.serie)))
+                media = new ArrayList<>(db.selectList(connection,Multimedia.SERIE));
+            else
+                media = new ArrayList<>(db.selectList(connection,listName.get(position)));
+            intent.putExtra("media", new MultimediaSerializable(media));
+            startActivity(intent);
+        });
     }
 
     private void addNewList()

@@ -29,6 +29,24 @@ public abstract class Multimedia implements Serializable
     private String cover;
     private String url;
 
+    public Multimedia()
+    {
+
+    }
+
+    public Multimedia(String id, String type, String title, String actors_authors, String publishDate, String gender, String language, String cover, String url)
+    {
+        this.id = id;
+        this.type = type;
+        this.title = title;
+        this.actors_authors = Arrays.asList(actors_authors.split(","));
+        this.publishDate = publishDate;
+        this.gender = Arrays.asList(gender.split(","));
+        this.language = language;
+        this.cover = cover;
+        this.url = url;
+    }
+
     public String getId()
     {
         return id;
@@ -99,7 +117,7 @@ public abstract class Multimedia implements Serializable
         this.language = language;
     }
 
-    public Bitmap getCover()
+    public Bitmap getCoverBitmap()
     {
         try
         {
@@ -112,7 +130,7 @@ public abstract class Multimedia implements Serializable
         }
     }
 
-    public String getCoverString()
+    public String getCover()
     {
         return cover;
     }
@@ -135,25 +153,25 @@ public abstract class Multimedia implements Serializable
     public ContentValues getContentValues()
     {
         ContentValues content = new ContentValues();
+        content.put("id", id);
         content.put("title", title);
         if(getType().equals(Multimedia.BOOK))
-            content.put("author", actors_authors.toString());
+            content.put("author", actors_authors.toString().split("\\[")[1].split("]")[0]);
         else if(getType().equals(Multimedia.MUSIC))
-            content.put("artist", actors_authors.toString());
+            content.put("artist", actors_authors.toString().split("\\[")[1].split("]")[0]);
         else
-            content.put("actors", actors_authors.toString());
-        content.put("gender", gender.toString());
+            content.put("actors", actors_authors.toString().split("\\[")[1].split("]")[0]);
+        content.put("gender", gender.toString().split("\\[")[1].split("]")[0]);
         content.put("publishDate", publishDate);
         content.put("lang", language);
-        ByteArrayOutputStream outputStream = getByteFromImage();
-        content.put("cover", outputStream.toByteArray());
+        content.put("cover", cover);
         return content;
     }
 
     private ByteArrayOutputStream getByteFromImage()
     {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        getCover().compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+        getCoverBitmap().compress(Bitmap.CompressFormat.PNG, 0, outputStream);
         return  outputStream;
     }
 

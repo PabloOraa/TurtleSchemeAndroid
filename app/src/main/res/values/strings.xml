@@ -31,4 +31,8 @@
     <string name="be">Deutch</string>
     <string name="add">Add</string>
     <string name="list_results">List results</string>
+    <string name="confirm_insert">The content is saved without problems.</string>
+    <string name="confirm">Insert correctly</string>
+    <string name="error">Error</string>
+    <string name="error_insert">An unexpected error has happen on saving the content</string>
 </resources>

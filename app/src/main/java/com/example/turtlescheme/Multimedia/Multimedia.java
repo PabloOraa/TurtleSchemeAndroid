@@ -179,6 +179,9 @@ public abstract class Multimedia implements Serializable
     @Override
     public String toString()
     {
-        return title + "\n" + actors_authors.toString().split("\\[")[1].split("]")[0];
+        if(actors_authors.size() > 0)
+            return title + "\n" + actors_authors.toString().split("\\[")[1].split("]")[0];
+        else
+            return title;
     }
 }

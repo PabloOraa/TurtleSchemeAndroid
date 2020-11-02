@@ -1,5 +1,6 @@
 package com.example.turtlescheme.ui.home;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
@@ -102,9 +103,11 @@ public class HomeFragment extends Fragment
         call.enqueue(new Callback<MusicGA>() {
             @Override
             public void onResponse(@NotNull Call<MusicGA> call, @NotNull Response<MusicGA> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful())
+                {
                     MusicGA music = response.body();
-                    if (music != null) {
+                    if (music != null && music.getData().size() > 0)
+                    {
                         List<Music> musicList = Converter.convertToMusicList(music);
                         Intent intent = new Intent(requireActivity(), ListMedia.class);
                         List<Multimedia> media = new ArrayList<>(musicList);
@@ -112,7 +115,18 @@ public class HomeFragment extends Fragment
                         startActivity(intent);
                         requireActivity().finish();
                     }
-                } else
+                    else if(music != null && music.getData().size() == 0)
+                    {
+                        AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity());
+                        alert.setTitle(getText(R.string.error));
+                        alert.setMessage(requireActivity().getText(R.string.no_result_found));
+                        alert.setPositiveButton(requireActivity().getText(R.string.yes), (dialog, which) -> dialog.dismiss());
+                        alert.setNegativeButton(requireActivity().getText(R.string.no), (dialog,which) -> dialog.dismiss());
+                        AlertDialog dialog = alert.create();
+                        dialog.show();
+                    }
+                }
+                else
                     System.out.println(response.errorBody());
             }
 
@@ -138,7 +152,7 @@ public class HomeFragment extends Fragment
                 if(response.isSuccessful())
                 {
                     BooksGA books = response.body();
-                    if(books != null)
+                    if(books != null && books.getTotalItems() > 0)
                     {
                         List<Book> bookList = Converter.convertToBookList(books);
                         Intent intent = new Intent(requireActivity(), ListMedia.class);
@@ -146,6 +160,16 @@ public class HomeFragment extends Fragment
                         intent.putExtra("media", new MultimediaSerializable(media));
                         startActivity(intent);
                         requireActivity().finish();
+                    }
+                    else if(books != null && books.getTotalItems() == 0)
+                    {
+                        AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity());
+                        alert.setTitle(getText(R.string.error));
+                        alert.setMessage(requireActivity().getText(R.string.no_result_found));
+                        alert.setPositiveButton(requireActivity().getText(R.string.yes), (dialog, which) -> dialog.dismiss());
+                        alert.setNegativeButton(requireActivity().getText(R.string.no), (dialog,which) -> dialog.dismiss());
+                        AlertDialog dialog = alert.create();
+                        dialog.show();
                     }
                 }
                 else

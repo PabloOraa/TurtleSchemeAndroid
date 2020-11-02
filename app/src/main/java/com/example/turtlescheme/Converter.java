@@ -29,7 +29,12 @@ public class Converter
             newBook.setPublishDate(item.getVolumeInfo().getPublishedDate());
             newBook.setGender(item.getVolumeInfo().getCategories());
             newBook.setLanguage(item.getVolumeInfo().getLanguage());
-            newBook.setCover(item.getVolumeInfo().getImageLinks().getThumbnail());
+            if(item.getVolumeInfo().getImageLinks() != null && item.getVolumeInfo().getImageLinks().getThumbnail() != null)
+                newBook.setCover(item.getVolumeInfo().getImageLinks().getThumbnail());
+            else if(item.getVolumeInfo().getImageLinks() != null && item.getVolumeInfo().getImageLinks().getSmallThumbnail() != null)
+                newBook.setCover(item.getVolumeInfo().getImageLinks().getSmallThumbnail());
+            else
+                newBook.setCover("");
             newBook.setPlot(item.getVolumeInfo().getDescription());
             newBook.setPublisher(item.getVolumeInfo().getPublisher());
             newBook.setType(Multimedia.BOOK);

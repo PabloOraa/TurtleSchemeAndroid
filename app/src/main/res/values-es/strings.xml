@@ -36,4 +36,7 @@
     <string name="confirm">Insertado correctamente</string>
     <string name="error">Error</string>
     <string name="error_insert">Ha ocurrido un error al guardar el contenido</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    <string name="no_result_found">No se ha encontrado ningún resultado. ¿Quiéres añadirlo?</string>
 </resources>

@@ -35,4 +35,7 @@
     <string name="confirm">Insert correctly</string>
     <string name="error">Error</string>
     <string name="error_insert">An unexpected error has happen on saving the content</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="no_result_found">No results found for that Title. Do you want to add it?</string>
 </resources>

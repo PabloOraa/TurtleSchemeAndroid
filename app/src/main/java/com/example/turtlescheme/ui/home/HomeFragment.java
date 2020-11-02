@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +23,13 @@ import com.example.turtlescheme.Interfaces.DeezerAPI;
 import com.example.turtlescheme.Interfaces.GoogleAPI;
 import com.example.turtlescheme.Multimedia.Book;
 import com.example.turtlescheme.Multimedia.BooksGA.BooksGA;
-import com.example.turtlescheme.Multimedia.BooksGA.Item;
 import com.example.turtlescheme.Multimedia.Multimedia;
+import com.example.turtlescheme.Multimedia.MultimediaSerializable;
 import com.example.turtlescheme.Multimedia.Music;
 import com.example.turtlescheme.Multimedia.MusicGA.MusicGA;
 import com.example.turtlescheme.R;
-import com.example.turtlescheme.ViewMedia;
+import com.example.turtlescheme.ui.results.ListMedia;
+import com.example.turtlescheme.ui.results.ViewMedia;
 import com.google.gson.GsonBuilder;
 
 import org.jetbrains.annotations.NotNull;
@@ -110,7 +112,11 @@ public class HomeFragment extends Fragment
                     MusicGA music = response.body();
                     if (music != null) {
                         List<Music> musicList = Converter.convertToMusicList(music);
-                        openIntentMusic(musicList.get(0));
+                        Intent intent = new Intent(requireActivity(), ListMedia.class);
+                        List<Multimedia> media = new ArrayList<>(musicList);
+                        intent.putExtra("media", new MultimediaSerializable(media));
+                        startActivity(intent);
+                        requireActivity().finish();
                     }
                 } else
                     System.out.println(response.errorBody());
@@ -141,7 +147,11 @@ public class HomeFragment extends Fragment
                     if(books != null)
                     {
                         List<Book> bookList = Converter.convertToBookList(books);
-                        openIntentBook(bookList.get(0));
+                        Intent intent = new Intent(requireActivity(), ListMedia.class);
+                        List<Multimedia> media = new ArrayList<>(bookList);
+                        intent.putExtra("media", new MultimediaSerializable(media));
+                        startActivity(intent);
+                        requireActivity().finish();
                     }
                 }
                 else
@@ -157,54 +167,5 @@ public class HomeFragment extends Fragment
         });
     }
 
-    private void openIntentBook(Book book)
-    {
-        Intent intent = new Intent(requireActivity(),ViewMedia.class);
-        intent.putExtra("id",book.getId());
-        intent.putExtra("coverString", book.getCoverString());
-        intent.putExtra("author", book.getActors_authors().toString().substring(1,book.getActors_authors().toString().length()-1));
-        if(book.getTitle().contains("("))
-            book.setTitle(book.getTitle().substring(0,book.getTitle().indexOf("(")-1));
-        intent.putExtra("title", book.getTitle());
-        intent.putExtra("publisher", book.getPublisher());
-        intent.putExtra("publishDate",book.getPublishDate());
-        if(book.getLanguage().equalsIgnoreCase("es"))
-            book.setLanguage(requireActivity().getText(R.string.es).toString());
-        else if(book.getLanguage().equalsIgnoreCase("en"))
-            book.setLanguage(requireActivity().getText(R.string.en).toString());
-        else if(book.getLanguage().equalsIgnoreCase("fr"))
-            book.setLanguage(requireActivity().getText(R.string.fr).toString());
-        else if(book.getLanguage().equalsIgnoreCase("de"))
-            book.setLanguage(requireActivity().getText(R.string.de).toString());
-        else if(book.getLanguage().equalsIgnoreCase("be"))
-            book.setLanguage(requireActivity().getText(R.string.be).toString());
-        intent.putExtra("language", book.getLanguage());
-        intent.putExtra("gender", book.getGender().toString().substring(1,book.getGender().toString().length()-1));
-        intent.putExtra("plot", book.getPlot());
-        intent.putExtra("type", book.getType());
-        intent.putExtra("media", book);
-        startActivity(intent);
-        requireActivity().finish();
-    }
-    private void openIntentMusic(Music music)
-    {
-        Intent intent = new Intent(requireActivity(),ViewMedia.class);
-        intent.putExtra("id",music.getId());
-        intent.putExtra("coverString", music.getCoverString());
-        intent.putExtra("author", music.getActors_authors().toString().substring(1,music.getActors_authors().toString().length()-1));
-        if(music.getTitle().contains("("))
-            music.setTitle(music.getTitle().substring(0,music.getTitle().indexOf("(")-1));
-        intent.putExtra("title", music.getTitle());
-        if(music.getPublisher() != null)
-            intent.putExtra("publisher", music.getPublisher());
-        intent.putExtra("publishDate",music.getPublishDate());
-        intent.putExtra("language", music.getLanguage());
-        if(music.getGender() != null)
-            intent.putExtra("gender", music.getGender().toString().substring(1,music.getGender().toString().length()-1));
-        intent.putExtra("type", music.getType());
-        intent.putExtra("media", music);
-        intent.putExtra("dirAlb", music.getUrl());
-        startActivity(intent);
-        requireActivity().finish();
-    }
+
 }

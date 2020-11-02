@@ -4,9 +4,12 @@ import android.content.ContentValues;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class Multimedia implements Serializable
@@ -152,5 +155,12 @@ public abstract class Multimedia implements Serializable
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         getCover().compress(Bitmap.CompressFormat.PNG, 0, outputStream);
         return  outputStream;
+    }
+
+    @NotNull
+    @Override
+    public String toString()
+    {
+        return title + "\n" + actors_authors.toString().split("\\[")[1].split("]")[0];
     }
 }

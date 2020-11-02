@@ -2,7 +2,9 @@ package com.example.turtlescheme.Multimedia;
 
 import android.content.ContentValues;
 
-public class Music extends  Multimedia
+import java.io.Serializable;
+
+public class Music extends  Multimedia implements Serializable
 {
     private String duration;
     private String publisher;

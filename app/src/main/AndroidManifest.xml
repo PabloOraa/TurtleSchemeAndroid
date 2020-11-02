@@ -26,8 +26,12 @@
             android:label="@string/config">
         </activity>
         <activity
-            android:name=".ViewMedia"
+            android:name=".ui.results.ViewMedia"
             android:label="@string/media">
+        </activity>
+        <activity
+            android:name=".ui.results.ListMedia"
+            android:label="@string/list_results">
         </activity>
     </application>
 

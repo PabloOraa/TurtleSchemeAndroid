@@ -31,4 +31,5 @@
     <string name="de">Alemán</string>
     <string name="be">Holandés</string>
     <string name="add">Añadir</string>
+    <string name="list_results">Lista de resultados</string>
 </resources>

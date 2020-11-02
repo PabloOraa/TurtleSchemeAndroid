@@ -30,4 +30,5 @@
     <string name="de">German</string>
     <string name="be">Deutch</string>
     <string name="add">Add</string>
+    <string name="list_results">List results</string>
 </resources>

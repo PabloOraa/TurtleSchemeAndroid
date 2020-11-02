@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class Book extends Multimedia implements Serializable
 {
@@ -47,6 +46,7 @@ public class Book extends Multimedia implements Serializable
     @Override
     public String toString()
     {
-        return "ID: " + getId() + "\nTitle: " + getTitle() + "\nAuthor(s): " + getActors_authors();
+        return super.toString();
+        //return "ID: " + getId() + "\nTitle: " + getTitle() + "\nAuthor(s): " + getActors_authors();
     }
 }

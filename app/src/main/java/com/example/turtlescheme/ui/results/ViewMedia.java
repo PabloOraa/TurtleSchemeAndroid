@@ -1,26 +1,26 @@
-package com.example.turtlescheme;
+package com.example.turtlescheme.ui.results;
 
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.example.turtlescheme.Config;
+import com.example.turtlescheme.Database;
 import com.example.turtlescheme.Multimedia.Book;
 import com.example.turtlescheme.Multimedia.Multimedia;
+import com.example.turtlescheme.Multimedia.Music;
+import com.example.turtlescheme.R;
 import com.microsoft.device.dualscreen.core.manager.SurfaceDuoScreenManager;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ViewMedia extends AppCompatActivity
@@ -44,15 +44,6 @@ public class ViewMedia extends AppCompatActivity
         createListener();
     }
 
-    @Override
-    public void onBackPressed()
-    {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
-        super.onBackPressed();
-    }
-
     private void createListener()
     {
         findViewById(R.id.bt_add_media).setOnClickListener(v ->
@@ -66,24 +57,30 @@ public class ViewMedia extends AppCompatActivity
     private void fillMedia()
     {
         Intent getIntent = getIntent();
-        if(getIntent.getSerializableExtra("media").getClass().equals(Book.class))
-            media = (Book)getIntent.getSerializableExtra("media");
-        ((ImageView)findViewById(R.id.im_media_cover)).setImageBitmap(getBitmapFromURL(getIntent.getStringExtra("coverString")));
-        ((TextView)findViewById(R.id.tv_media_author)).setText(getIntent.getStringExtra("author"));
-        ((TextView)findViewById(R.id.tv_media_title)).setText(getIntent.getStringExtra("title"));
-        if(getIntent.hasExtra("publisher"))
-            ((TextView)findViewById(R.id.tv_media_publisher)).setText(getIntent.getStringExtra("publisher"));
-        ((TextView)findViewById(R.id.tv_media_publishDate)).setText(getIntent.getStringExtra("publishDate"));
-        if(getIntent.hasExtra("language"))
-        ((TextView)findViewById(R.id.tv_media_language)).setText(getIntent.getStringExtra("language"));
-        if(getIntent.hasExtra("gender"))
-        ((TextView)findViewById(R.id.tv_media_gender)).setText(getIntent.getStringExtra("gender"));
-        if(getIntent.hasExtra("plot"))
-        ((TextView)findViewById(R.id.tv_media_plot)).setText(getIntent.getStringExtra("plot"));
-        if(getIntent.hasExtra("dirAlb"))
-            ((TextView)findViewById(R.id.tv_media_directorAlbum)).setText(getIntent.getStringExtra("dirAlb"));
-        if(getIntent.hasExtra("duration"))
-            ((TextView)findViewById(R.id.tv_media_duration)).setText(getIntent.getStringExtra("duration"));
+        ((ImageView)findViewById(R.id.im_media_cover)).setImageBitmap(getBitmapFromURL(media.getCoverString()));
+        ((TextView)findViewById(R.id.tv_media_author)).setText(media.getActors_authors().toString());
+        ((TextView)findViewById(R.id.tv_media_title)).setText(media.getTitle());
+        if(media.getLanguage()!=null)
+            ((TextView)findViewById(R.id.tv_media_language)).setText(media.getLanguage());
+        if(media.getUrl() != null)
+            ((TextView)findViewById(R.id.tv_media_directorAlbum)).setText(media.getUrl());
+        if(media.getGender() != null)
+            ((TextView)findViewById(R.id.tv_media_gender)).setText(media.getGender().toString().split("\\[")[1].split("]")[0]);
+        ((TextView)findViewById(R.id.tv_media_publishDate)).setText(media.getPublishDate());
+        if(media.getClass().equals(Book.class))
+        {
+            Book book = (Book) media;
+            if(book.getPublisher() != null)
+                ((TextView)findViewById(R.id.tv_media_publisher)).setText(book.getPublisher());
+            if(book.getPlot() != null)
+                ((TextView)findViewById(R.id.tv_media_plot)).setText(book.getPlot());
+        }
+        else if(media.getClass().equals(Music.class))
+        {
+            Music music = (Music) media;
+            if(music.getDuration() != null)
+                ((TextView)findViewById(R.id.tv_media_duration)).setText(music.getDuration());
+        }
     }
 
     private void changeTheme(String selectedText)

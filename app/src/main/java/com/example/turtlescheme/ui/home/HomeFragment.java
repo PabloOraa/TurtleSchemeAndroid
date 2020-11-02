@@ -16,12 +16,16 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.turtlescheme.Config;
+import com.example.turtlescheme.Converter;
 import com.example.turtlescheme.Database;
+import com.example.turtlescheme.Interfaces.DeezerAPI;
 import com.example.turtlescheme.Interfaces.GoogleAPI;
 import com.example.turtlescheme.Multimedia.Book;
 import com.example.turtlescheme.Multimedia.BooksGA.BooksGA;
 import com.example.turtlescheme.Multimedia.BooksGA.Item;
 import com.example.turtlescheme.Multimedia.Multimedia;
+import com.example.turtlescheme.Multimedia.Music;
+import com.example.turtlescheme.Multimedia.MusicGA.MusicGA;
 import com.example.turtlescheme.R;
 import com.example.turtlescheme.ViewMedia;
 import com.google.gson.GsonBuilder;
@@ -87,34 +91,68 @@ public class HomeFragment extends Fragment
             String type = ((Spinner)requireView().findViewById(R.id.sp_types)).getSelectedItem().toString();
             String textToSearch = ((EditText)requireView().findViewById(R.id.editTextTextPersonName)).getText().toString();
             if(type.equalsIgnoreCase(requireActivity().getString(R.string.books)))
+                searchBooks(textToSearch);
+            else if(type.equalsIgnoreCase(requireActivity().getString(R.string.music)))
+                searchMusic(textToSearch);
+        });
+    }
+
+    private void searchMusic(String textToSearch) {
+        Retrofit query = new Retrofit.Builder().baseUrl("https://api.deezer.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
+                .setLenient()
+                .create())).client(new OkHttpClient.Builder().build()).build();
+        DeezerAPI apiService = query.create(DeezerAPI.class);
+        Call<MusicGA> call = apiService.getMusic(textToSearch);
+        call.enqueue(new Callback<MusicGA>() {
+            @Override
+            public void onResponse(@NotNull Call<MusicGA> call, @NotNull Response<MusicGA> response) {
+                if (response.isSuccessful()) {
+                    MusicGA music = response.body();
+                    if (music != null) {
+                        List<Music> musicList = Converter.convertToMusicList(music);
+                        openIntentMusic(musicList.get(0));
+                    }
+                } else
+                    System.out.println(response.errorBody());
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<MusicGA> call, @NotNull Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void searchBooks(String textToSearch)
+    {
+        Retrofit query = new Retrofit.Builder().baseUrl("https://www.googleapis.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
+                .setLenient()
+                .create())).client(new OkHttpClient.Builder().build()).build();
+        GoogleAPI apiService = query.create(GoogleAPI.class);
+        Call<BooksGA> call = apiService.getBooks(textToSearch);
+        call.enqueue(new Callback<BooksGA>()
+        {
+            @Override
+            public void onResponse(@NotNull Call<BooksGA> call, @NotNull Response<BooksGA> response)
             {
-                Retrofit query = new Retrofit.Builder().baseUrl("https://www.googleapis.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
-                        .setLenient()
-                        .create())).client(new OkHttpClient.Builder().build()).build();
-                GoogleAPI apiService = query.create(GoogleAPI.class);
-                Call<BooksGA> call = apiService.getBooks(textToSearch);
-                call.enqueue(new Callback<BooksGA>()
+                if(response.isSuccessful())
                 {
-                    @Override
-                    public void onResponse(@NotNull Call<BooksGA> call, @NotNull Response<BooksGA> response)
+                    BooksGA books = response.body();
+                    if(books != null)
                     {
-                        if(response.isSuccessful())
-                        {
-                            BooksGA books = response.body();
-                            List<Book> bookList = convertToBookList(books);
-                            openIntentBook(bookList.get(0));
-                        }
-                        else
-                            System.out.println(response.errorBody());
-
+                        List<Book> bookList = Converter.convertToBookList(books);
+                        openIntentBook(bookList.get(0));
                     }
+                }
+                else
+                    System.out.println(response.errorBody());
 
-                    @Override
-                    public void onFailure(@NotNull Call<BooksGA> call, @NotNull Throwable t)
-                    {
-                        t.printStackTrace();
-                    }
-                });
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<BooksGA> call, @NotNull Throwable t)
+            {
+                t.printStackTrace();
             }
         });
     }
@@ -148,25 +186,25 @@ public class HomeFragment extends Fragment
         startActivity(intent);
         requireActivity().finish();
     }
-
-    private List<Book> convertToBookList(BooksGA books)
+    private void openIntentMusic(Music music)
     {
-        List<Book> bookList = new ArrayList<>();
-        for(Item item : books.getItems())
-        {
-            Book newBook = new Book();
-            newBook.setId(item.getId());
-            newBook.setTitle(item.getVolumeInfo().getTitle());
-            newBook.setActors_authors(item.getVolumeInfo().getAuthors());
-            newBook.setPublishDate(item.getVolumeInfo().getPublishedDate());
-            newBook.setGender(item.getVolumeInfo().getCategories());
-            newBook.setLanguage(item.getVolumeInfo().getLanguage());
-            newBook.setCover(item.getVolumeInfo().getImageLinks().getThumbnail());
-            newBook.setPlot(item.getVolumeInfo().getDescription());
-            newBook.setPublisher(item.getVolumeInfo().getPublisher());
-            newBook.setType(Multimedia.BOOK);
-            bookList.add(newBook);
-        }
-        return bookList;
+        Intent intent = new Intent(requireActivity(),ViewMedia.class);
+        intent.putExtra("id",music.getId());
+        intent.putExtra("coverString", music.getCoverString());
+        intent.putExtra("author", music.getActors_authors().toString().substring(1,music.getActors_authors().toString().length()-1));
+        if(music.getTitle().contains("("))
+            music.setTitle(music.getTitle().substring(0,music.getTitle().indexOf("(")-1));
+        intent.putExtra("title", music.getTitle());
+        if(music.getPublisher() != null)
+            intent.putExtra("publisher", music.getPublisher());
+        intent.putExtra("publishDate",music.getPublishDate());
+        intent.putExtra("language", music.getLanguage());
+        if(music.getGender() != null)
+            intent.putExtra("gender", music.getGender().toString().substring(1,music.getGender().toString().length()-1));
+        intent.putExtra("type", music.getType());
+        intent.putExtra("media", music);
+        intent.putExtra("dirAlb", music.getUrl());
+        startActivity(intent);
+        requireActivity().finish();
     }
 }

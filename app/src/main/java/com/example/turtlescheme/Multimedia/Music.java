@@ -5,7 +5,6 @@ import android.content.ContentValues;
 public class Music extends  Multimedia
 {
     private String duration;
-    private String album;
     private String publisher;
 
     public String getDuration()
@@ -16,16 +15,6 @@ public class Music extends  Multimedia
     public void setDuration(String duration)
     {
         this.duration = duration;
-    }
-
-    public String getAlbum()
-    {
-        return album;
-    }
-
-    public void setAlbum(String album)
-    {
-        this.album = album;
     }
 
     public String getPublisher()
@@ -43,7 +32,6 @@ public class Music extends  Multimedia
     {
         ContentValues content = super.getContentValues();
         content.put("duration", duration);
-        content.put("album", album);
         content.put("publisher", publisher);
         return content;
     }

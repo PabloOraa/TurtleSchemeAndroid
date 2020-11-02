@@ -24,6 +24,7 @@ public abstract class Multimedia implements Serializable
     private List<String> gender;
     private String language;
     private String cover;
+    private String url;
 
     public String getId()
     {
@@ -116,6 +117,16 @@ public abstract class Multimedia implements Serializable
     public void setCover(String cover)
     {
         this.cover = cover;
+    }
+
+    public String getUrl()
+    {
+        return  url;
+    }
+
+    public void setUrl(String url)
+    {
+        this.url = url;
     }
 
     public ContentValues getContentValues()

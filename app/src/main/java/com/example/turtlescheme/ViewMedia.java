@@ -44,6 +44,15 @@ public class ViewMedia extends AppCompatActivity
         createListener();
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+        super.onBackPressed();
+    }
+
     private void createListener()
     {
         findViewById(R.id.bt_add_media).setOnClickListener(v ->
@@ -62,9 +71,12 @@ public class ViewMedia extends AppCompatActivity
         ((ImageView)findViewById(R.id.im_media_cover)).setImageBitmap(getBitmapFromURL(getIntent.getStringExtra("coverString")));
         ((TextView)findViewById(R.id.tv_media_author)).setText(getIntent.getStringExtra("author"));
         ((TextView)findViewById(R.id.tv_media_title)).setText(getIntent.getStringExtra("title"));
-        ((TextView)findViewById(R.id.tv_media_publisher)).setText(getIntent.getStringExtra("publisher"));
+        if(getIntent.hasExtra("publisher"))
+            ((TextView)findViewById(R.id.tv_media_publisher)).setText(getIntent.getStringExtra("publisher"));
         ((TextView)findViewById(R.id.tv_media_publishDate)).setText(getIntent.getStringExtra("publishDate"));
+        if(getIntent.hasExtra("language"))
         ((TextView)findViewById(R.id.tv_media_language)).setText(getIntent.getStringExtra("language"));
+        if(getIntent.hasExtra("gender"))
         ((TextView)findViewById(R.id.tv_media_gender)).setText(getIntent.getStringExtra("gender"));
         if(getIntent.hasExtra("plot"))
         ((TextView)findViewById(R.id.tv_media_plot)).setText(getIntent.getStringExtra("plot"));
@@ -95,7 +107,7 @@ public class ViewMedia extends AppCompatActivity
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
 
-            if(src.contains("http"))
+            if(src.contains("http") && !src.contains("https"))
                 src = src.replace("http", "https");
             URL url = new URL(src);
             return  BitmapFactory.decodeStream(url.openConnection().getInputStream());

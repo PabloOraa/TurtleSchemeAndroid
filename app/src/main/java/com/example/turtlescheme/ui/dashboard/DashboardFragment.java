@@ -7,10 +7,12 @@ import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,6 +23,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.turtlescheme.Config;
 import com.example.turtlescheme.Database;
+import com.example.turtlescheme.Multimedia.Multimedia;
 import com.example.turtlescheme.R;
 
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ public class DashboardFragment extends Fragment
 {
     ArrayList<String> listName = new ArrayList<>();
     ArrayAdapter<String> adapter;
+    Database db;
     private SQLiteDatabase connection;
     View addView;
 
@@ -63,7 +67,7 @@ public class DashboardFragment extends Fragment
 
     private void createDatabaseConnection()
     {
-        Database db = new Database(requireActivity(),"turtlesketch.db", null, 3);
+        db = new Database(requireActivity(),"turtlesketch.db", null, 3);
         connection = db.getWritableDatabase();
     }
 
@@ -126,6 +130,8 @@ public class DashboardFragment extends Fragment
         });
         ImageView imA = requireView().findViewById(R.id.iv_addL);
         imA.setOnClickListener(view -> addNewList());
+        ListView list = requireView().findViewById(R.id.lv_contentList);
+        list.setOnItemClickListener((parent, view, position, id) -> Log.d("Resultados", db.selectList(connection, Multimedia.BOOK).toString()));
     }
 
     private void addNewList()

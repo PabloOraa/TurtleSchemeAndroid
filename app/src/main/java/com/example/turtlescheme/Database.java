@@ -31,7 +31,7 @@ public class Database extends SQLiteOpenHelper
                 "title VARCHAR(50) NOT NULL," +
                 "author VARCHAR(50) NOT NULL," +
                 "publisher VARCHAR(50)," +
-                "plot VARCHAR(200) NOT NULL," +
+                "plot VARCHAR(200)," +
                 "category VARCHAR(50)," +
                 "cover VARCHAR(2083)," +
                 "lang VARCHAR(30)," +
@@ -140,7 +140,7 @@ public class Database extends SQLiteOpenHelper
                 media.add(new Music());
                 break;
             default:
-                c = sqLiteDatabase.rawQuery("SELECT * FROM MOVIE mo, BOOK b, SERIE s, MUSIC mu WHERE mo.title = ? OR b.title = ? OR s.title = ? OR mu.title = ?", new String[]{title,title,title,title});
+                c = sqLiteDatabase.rawQuery("SELECT * FROM MOVIE mo, BOOKS b, SERIE s, MUSIC mu WHERE mo.title = ? OR b.title = ? OR s.title = ? OR mu.title = ?", new String[]{title,title,title,title});
                 media.add(new Movie());
                 break;
         }
@@ -153,8 +153,10 @@ public class Database extends SQLiteOpenHelper
     {
         List<Multimedia> media = new ArrayList<>();
         List<String> listOfIds = getIds(sqLiteDatabase,titleOfTheList);
+        if(listOfIds == null)
+            return media;
         Cursor c = sqLiteDatabase.rawQuery("SELECT * " +
-                                                "FROM MOVIE mo, BOOK b, SERIE s, MUSIC mu " +
+                                                "FROM MOVIE mo, BOOKS b, SERIE s, MUSIC mu " +
                                                 "WHERE mo.id IN " + listOfIds + " OR b.id IN " + listOfIds + "  OR s.id IN " + listOfIds + "  OR mu.id IN " + listOfIds ,null);
         while(c.moveToNext())
             if(c.getColumnIndex("channel") != -1) //Serie
@@ -184,11 +186,20 @@ public class Database extends SQLiteOpenHelper
     private List<String> getIds(SQLiteDatabase sqLiteDatabase, String titleOfTheList)
     {
         List<String> listOfIds = new ArrayList<>();
-        Cursor c = sqLiteDatabase.rawQuery("SELECT media " +
-                                                "FROM List " +
-                                                "WHERE title = ?",new String[] {titleOfTheList});
-        while(c.moveToNext())
-            listOfIds.add(c.getString(c.getColumnIndex("media")));
+        Cursor c;
+        if(titleOfTheList.equals(Multimedia.BOOK)) {
+            c = sqLiteDatabase.rawQuery("SELECT * " +
+                    "FROM BOOKS ", null);
+            while(c.moveToNext())
+                listOfIds.add(c.getString(c.getColumnIndex("id")));
+        }
+        else {
+            c = sqLiteDatabase.rawQuery("SELECT media " +
+                    "FROM LIST " +
+                    "WHERE title = ?", new String[]{titleOfTheList});
+            while(c.moveToNext())
+                listOfIds.add(c.getString(c.getColumnIndex("media")));
+        }
         if(c != null)
                 c.close();
         return listOfIds;

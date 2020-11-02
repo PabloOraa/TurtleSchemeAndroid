@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/im_media_cover"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="96dp"
+            android:contentDescription="@string/cover_desc"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars[0]" />
+
+        <TextView
+            android:id="@+id/tv_media_title"
+            android:layout_width="127dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:text=''
+            android:textAlignment="center"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_media_author"
+            app:layout_constraintEnd_toStartOf="@+id/tv_media_author"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_media_author" />
+
+        <TextView
+            android:id="@+id/tv_media_author"
+            android:layout_width="127dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="64dp"
+            android:text=""
+            android:textAlignment="center"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/im_media_cover" />
+
+        <TextView
+            android:id="@+id/tv_media_publisher"
+            android:layout_width="127dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text=""
+            android:textAlignment="center"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="@+id/tv_media_title"
+            app:layout_constraintStart_toStartOf="@+id/tv_media_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_media_title" />
+
+        <TextView
+            android:id="@+id/tv_media_publishDate"
+            android:layout_width="127dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAlignment="center"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_media_publisher"
+            app:layout_constraintEnd_toEndOf="@+id/tv_media_author"
+            app:layout_constraintStart_toStartOf="@+id/tv_media_author"
+            app:layout_constraintTop_toTopOf="@+id/tv_media_publisher" />
+
+        <TextView
+            android:id="@+id/tv_media_language"
+            android:layout_width="127dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text=""
+            android:textAlignment="center"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="@+id/tv_media_publisher"
+            app:layout_constraintStart_toStartOf="@+id/tv_media_publisher"
+            app:layout_constraintTop_toBottomOf="@+id/tv_media_publisher" />
+
+        <TextView
+            android:id="@+id/tv_media_gender"
+            android:layout_width="127dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAlignment="center"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="@+id/tv_media_publishDate"
+            app:layout_constraintStart_toStartOf="@+id/tv_media_publishDate"
+            app:layout_constraintTop_toTopOf="@+id/tv_media_language" />
+
+        <TextView
+            android:id="@+id/tv_media_plot"
+            android:layout_width="333dp"
+            android:layout_height="wrap_content"
+            android:justificationMode="inter_word"
+            android:layout_marginTop="32dp"
+            android:text=""
+            android:textAlignment="center"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="@+id/tv_media_gender"
+            app:layout_constraintStart_toStartOf="@+id/tv_media_language"
+            app:layout_constraintTop_toBottomOf="@+id/tv_media_language" />
+
+        <TextView
+            android:id="@+id/tv_media_directorAlbum"
+            android:layout_width="127dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text=""
+            android:textAlignment="center"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="@+id/tv_media_language"
+            app:layout_constraintStart_toStartOf="@+id/tv_media_plot"
+            app:layout_constraintTop_toBottomOf="@+id/tv_media_plot" />
+
+        <TextView
+            android:id="@+id/tv_media_duration"
+            android:layout_width="127dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAlignment="center"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="@+id/tv_media_gender"
+            app:layout_constraintStart_toStartOf="@+id/tv_media_gender"
+            app:layout_constraintTop_toTopOf="@+id/tv_media_directorAlbum" />
+
+        <Button
+            android:id="@+id/bt_add_media"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="28dp"
+            android:text="@string/add"
+            app:layout_constraintBottom_toTopOf="@+id/im_media_cover"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.041" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

@@ -23,7 +23,7 @@ import java.util.List;
 public class ListMedia extends AppCompatActivity
 {
     List<Multimedia> listMedia = new ArrayList<>();
-    ArrayAdapter<Multimedia> adapter;
+    ArrayAdapterWithPhoto adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
@@ -32,7 +32,8 @@ public class ListMedia extends AppCompatActivity
         setContentView(R.layout.view_list_media);
         MultimediaSerializable ser = (MultimediaSerializable) getIntent().getSerializableExtra("media");
         listMedia = ser.getMultimediaList();
-        adapter=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listMedia);
+        adapter= new ArrayAdapterWithPhoto(this, R.layout.list_results_layout, listMedia);
+        adapter.setMedia((ArrayList<Multimedia>) listMedia);
         ((ListView)findViewById(R.id.lv_contentListQuery)).setAdapter(adapter);
         changeTheme(Config.theme);
     }

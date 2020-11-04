@@ -143,7 +143,12 @@ public class DashboardFragment extends Fragment
                 media = new ArrayList<>(db.selectList(connection,Multimedia.SERIE));
             else
                 media = new ArrayList<>(db.selectList(connection,listName.get(position)));
-            intent.putExtra("media", new MultimediaSerializable(media));
+            if(!media.isEmpty())
+                intent.putExtra("media", new MultimediaSerializable(media));
+            else
+                intent.putExtra("empty", true);
+            intent.putExtra("list", true);
+            intent.putExtra("listTitle", listName.get(position));
             startActivity(intent);
         });
     }

@@ -2,15 +2,30 @@ package com.example.turtlescheme.Multimedia;
 
 import android.content.ContentValues;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Serie extends Multimedia
 {
     private String plot;
-    private String channel;
     private String director;
     private String country;
     private String durationPerEpisode;
-    private int seasonNumber;
-    private int chapterNumber;
+    private String seasonNumber;
+
+    public Serie()
+    {
+
+    }
+
+    public Serie(String id, String title, String actors_authors, String publishDate, String gender, String language, String cover, String url, String plot, String director, String country, String durationPerEpisode, String seasonNumber)
+    {
+        super(id,Multimedia.SERIE,title,actors_authors,publishDate,gender,language,cover,url);
+        this.plot = plot;
+        this.director = director;
+        this.country = country;
+        this.durationPerEpisode = durationPerEpisode;
+        this.seasonNumber = seasonNumber;
+    }
 
     public String getPlot()
     {
@@ -22,24 +37,14 @@ public class Serie extends Multimedia
         this.plot = plot;
     }
 
-    public int getSeasonNumber()
+    public String getSeasonNumber()
     {
         return seasonNumber;
     }
 
-    public void setSeasonNumber(int seasonNumber)
+    public void setSeasonNumber(String seasonNumber)
     {
         this.seasonNumber = seasonNumber;
-    }
-
-    public int getChapterNumber()
-    {
-        return chapterNumber;
-    }
-
-    public void setChapterNumber(int chapterNumber)
-    {
-        this.chapterNumber = chapterNumber;
     }
 
     public String getCountry()
@@ -50,16 +55,6 @@ public class Serie extends Multimedia
     public void setCountry(String country)
     {
         this.country = country;
-    }
-
-    public String getChannel()
-    {
-        return channel;
-    }
-
-    public void setChannel(String channel)
-    {
-        this.channel = channel;
     }
 
     public String getDurationPerEpisode()
@@ -87,12 +82,17 @@ public class Serie extends Multimedia
     {
         ContentValues content = super.getContentValues();
         content.put("plot", plot);
-        content.put("channel", channel);
         content.put("director", director);
         content.put("seasonNumber", seasonNumber);
-        content.put("chapterNumber", chapterNumber);
         content.put("country", country);
         content.put("durationPerEpisode", durationPerEpisode);
         return content;
+    }
+
+    @NotNull
+    @Override
+    public String toString()
+    {
+        return super.toString();
     }
 }

@@ -39,4 +39,5 @@
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="no_result_found">No se ha encontrado ningún resultado. ¿Quiéres añadirlo?</string>
+    <string name="no_media_list">No se ha encontrado ningún contenido en esta lista. Para añadirlo, puedes pulsar en el icono + de la parte superior.</string>
 </resources>

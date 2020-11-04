@@ -38,4 +38,5 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="no_result_found">No results found for that Title. Do you want to add it?</string>
+    <string name="no_media_list">No media has been added to this list at this moment. You can add one title pressing the + icon</string>
 </resources>

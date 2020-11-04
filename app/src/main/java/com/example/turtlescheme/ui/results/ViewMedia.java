@@ -17,14 +17,15 @@ import androidx.appcompat.app.AppCompatDelegate;
 import com.example.turtlescheme.Config;
 import com.example.turtlescheme.Database;
 import com.example.turtlescheme.Multimedia.Book;
+import com.example.turtlescheme.Multimedia.Movie;
 import com.example.turtlescheme.Multimedia.Multimedia;
 import com.example.turtlescheme.Multimedia.Music;
+import com.example.turtlescheme.Multimedia.Serie;
 import com.example.turtlescheme.R;
 import com.microsoft.device.dualscreen.core.manager.SurfaceDuoScreenManager;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 
 public class ViewMedia extends AppCompatActivity
 {
@@ -118,6 +119,21 @@ public class ViewMedia extends AppCompatActivity
             Music music = (Music) media;
             if(music.getDuration() != null)
                 ((TextView)findViewById(R.id.tv_media_duration)).setText(music.getDuration());
+        }
+        else if(media.getClass().equals(Serie.class))
+        {
+            Serie serie = (Serie) media;
+            if(serie.getPlot() != null)
+                ((TextView)findViewById(R.id.tv_media_plot)).setText(serie.getPlot());
+        }
+        else if(media.getClass().equals(Movie.class))
+        {
+            Movie movie = (Movie) media;
+            if(movie.getPlot() != null)
+                ((TextView)findViewById(R.id.tv_media_plot)).setText(movie.getPlot());
+            if(movie.getDirector() != null)
+                ((TextView)findViewById(R.id.tv_media_publisher)).setText(movie.getDirector());
+
         }
     }
 

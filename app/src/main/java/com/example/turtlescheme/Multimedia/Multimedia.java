@@ -18,6 +18,8 @@ public abstract class Multimedia implements Serializable
     public static final String MUSIC = "MUSIC";
     public static final String BOOK = "BOOKS";
     public static final String SERIE  = "SERIE";
+    public static final String SERIEOMBD = "series";
+    public static final String MOVIEOMBD = "movie";
 
     private String id;
     private String type;
@@ -161,7 +163,8 @@ public abstract class Multimedia implements Serializable
             content.put("artist", actors_authors.toString().split("\\[")[1].split("]")[0]);
         else
             content.put("actors", actors_authors.toString().split("\\[")[1].split("]")[0]);
-        content.put("gender", gender.toString().split("\\[")[1].split("]")[0]);
+        if(gender != null)
+            content.put("gender", gender.toString().split("\\[")[1].split("]")[0]);
         content.put("publishDate", publishDate);
         content.put("lang", language);
         content.put("cover", cover);

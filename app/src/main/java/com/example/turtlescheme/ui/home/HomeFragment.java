@@ -17,9 +17,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.turtlescheme.Config;
-import com.example.turtlescheme.Converter;
+import com.example.turtlescheme.Interfaces.OmbdAPI;
+import com.example.turtlescheme.Multimedia.Movie;
+import com.example.turtlescheme.Multimedia.OmbdGA.OmbdGA;
+import com.example.turtlescheme.Multimedia.Serie;
+import com.example.turtlescheme.ui.results.Converter;
 import com.example.turtlescheme.Database;
-import com.example.turtlescheme.Interfaces.DeezerAPI;
+import com.example.turtlescheme.Interfaces.MusicAPI;
 import com.example.turtlescheme.Interfaces.GoogleAPI;
 import com.example.turtlescheme.Multimedia.Book;
 import com.example.turtlescheme.Multimedia.BooksGA.BooksGA;
@@ -91,14 +95,19 @@ public class HomeFragment extends Fragment
                 searchBooks(textToSearch);
             else if(type.equalsIgnoreCase(requireActivity().getString(R.string.music)))
                 searchMusic(textToSearch);
+            else if(type.equalsIgnoreCase(requireActivity().getString(R.string.serie)))
+                searchSerie(textToSearch);
+            else if(type.equalsIgnoreCase(requireActivity().getString(R.string.movie)))
+                searchMovie(textToSearch);
         });
     }
 
-    private void searchMusic(String textToSearch) {
+    private void searchMusic(String textToSearch)
+    {
         Retrofit query = new Retrofit.Builder().baseUrl("https://api.deezer.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
                 .setLenient()
                 .create())).client(new OkHttpClient.Builder().build()).build();
-        DeezerAPI apiService = query.create(DeezerAPI.class);
+        MusicAPI apiService = query.create(MusicAPI.class);
         Call<MusicGA> call = apiService.getMusic(textToSearch);
         call.enqueue(new Callback<MusicGA>() {
             @Override
@@ -185,5 +194,97 @@ public class HomeFragment extends Fragment
         });
     }
 
+    private void searchSerie(String textToSearch)
+    {
+        Retrofit query = new Retrofit.Builder().baseUrl("https://www.omdbapi.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
+                .setLenient()
+                .create())).client(new OkHttpClient.Builder().build()).build();
+        OmbdAPI apiService = query.create(OmbdAPI.class);
+        Call<OmbdGA> call = apiService.getMovieSerie(textToSearch, Multimedia.SERIEOMBD);
+        call.enqueue(new Callback<OmbdGA>()
+        {
+            @Override
+            public void onResponse(@NotNull Call<OmbdGA> call, @NotNull Response<OmbdGA> response)
+            {
+                if (response.isSuccessful())
+                {
+                    OmbdGA mediaSM = response.body();
+                    if (mediaSM != null && Integer.parseInt(mediaSM.getTotalResults()) > 0)
+                    {
+                        List<Serie> serieList = Converter.convertToSeriesList(mediaSM);
+                        Intent intent = new Intent(requireActivity(), ListMedia.class);
+                        List<Multimedia> media = new ArrayList<>(serieList);
+                        intent.putExtra("media", new MultimediaSerializable(media));
+                        startActivity(intent);
+                        requireActivity().finish();
+                    }
+                    else if(mediaSM != null && Integer.parseInt(mediaSM.getTotalResults()) == 0)
+                    {
+                        AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity());
+                        alert.setTitle(getText(R.string.error));
+                        alert.setMessage(requireActivity().getText(R.string.no_result_found));
+                        alert.setPositiveButton(requireActivity().getText(R.string.yes), (dialog, which) -> dialog.dismiss());
+                        alert.setNegativeButton(requireActivity().getText(R.string.no), (dialog,which) -> dialog.dismiss());
+                        AlertDialog dialog = alert.create();
+                        dialog.show();
+                    }
+                }
+                else
+                    System.out.println(response.errorBody());
+            }
 
+            @Override
+            public void onFailure(@NotNull Call<OmbdGA> call, @NotNull Throwable t)
+            {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void searchMovie(String textToSearch)
+    {
+        Retrofit query = new Retrofit.Builder().baseUrl("https://www.omdbapi.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
+                .setLenient()
+                .create())).client(new OkHttpClient.Builder().build()).build();
+        OmbdAPI apiService = query.create(OmbdAPI.class);
+        Call<OmbdGA> call = apiService.getMovieSerie(textToSearch, Multimedia.MOVIEOMBD);
+        call.enqueue(new Callback<OmbdGA>()
+        {
+            @Override
+            public void onResponse(@NotNull Call<OmbdGA> call, @NotNull Response<OmbdGA> response)
+            {
+                if (response.isSuccessful())
+                {
+                    OmbdGA mediaSM = response.body();
+                    if (mediaSM != null && Integer.parseInt(mediaSM.getTotalResults()) > 0)
+                    {
+                        List<Movie> movieList = Converter.convertToMovieList(mediaSM);
+                        Intent intent = new Intent(requireActivity(), ListMedia.class);
+                        List<Multimedia> media = new ArrayList<>(movieList);
+                        intent.putExtra("media", new MultimediaSerializable(media));
+                        startActivity(intent);
+                        requireActivity().finish();
+                    }
+                    else if(mediaSM != null && Integer.parseInt(mediaSM.getTotalResults()) == 0)
+                    {
+                        AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity());
+                        alert.setTitle(getText(R.string.error));
+                        alert.setMessage(requireActivity().getText(R.string.no_result_found));
+                        alert.setPositiveButton(requireActivity().getText(R.string.yes), (dialog, which) -> dialog.dismiss());
+                        alert.setNegativeButton(requireActivity().getText(R.string.no), (dialog,which) -> dialog.dismiss());
+                        AlertDialog dialog = alert.create();
+                        dialog.show();
+                    }
+                }
+                else
+                    System.out.println(response.errorBody());
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<OmbdGA> call, @NotNull Throwable t)
+            {
+                t.printStackTrace();
+            }
+        });
+    }
 }

@@ -2,11 +2,26 @@ package com.example.turtlescheme.Multimedia;
 
 import android.content.ContentValues;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Movie extends Multimedia
 {
     private String plot;
     private String director;
-    private String publisher;
+    private String duration;
+
+    public Movie()
+    {
+
+    }
+
+    public Movie(String id, String title, String actors_authors, String publishDate, String gender, String language, String cover, String url, String plot, String director, String duration)
+    {
+        super(id,Multimedia.MOVIE,title,actors_authors,publishDate,gender,language,cover,url);
+        this.plot = plot;
+        this.director = director;
+        this.duration = duration;
+    }
 
     public String getPlot()
     {
@@ -28,14 +43,14 @@ public class Movie extends Multimedia
         this.director = director;
     }
 
-    public String getPublisher()
+    public String getDuration()
     {
-        return publisher;
+        return duration;
     }
 
-    public void setPublisher(String publisher)
+    public void setDuration(String duration)
     {
-        this.publisher = publisher;
+        this.duration = duration;
     }
 
     @Override
@@ -44,7 +59,14 @@ public class Movie extends Multimedia
         ContentValues content = super.getContentValues();
         content.put("plot", plot);
         content.put("director", director);
-        content.put("publisher", publisher);
+        content.put("duration", duration);
         return content;
+    }
+
+    @NotNull
+    @Override
+    public String toString()
+    {
+        return super.toString();
     }
 }

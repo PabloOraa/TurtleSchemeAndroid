@@ -3,6 +3,7 @@ package com.example.turtlescheme.ui.results;
 import android.os.StrictMode;
 import android.util.ArraySet;
 
+import com.example.turtlescheme.Interfaces.MusicAPI;
 import com.example.turtlescheme.Interfaces.OmbdAPI;
 import com.example.turtlescheme.Multimedia.Book;
 import com.example.turtlescheme.Multimedia.BooksGA.BooksGA;
@@ -10,8 +11,10 @@ import com.example.turtlescheme.Multimedia.BooksGA.Item;
 import com.example.turtlescheme.Multimedia.Movie;
 import com.example.turtlescheme.Multimedia.Multimedia;
 import com.example.turtlescheme.Multimedia.Music;
-import com.example.turtlescheme.Multimedia.MusicGA.Datum;
+import com.example.turtlescheme.Multimedia.MusicGA.Album;
+import com.example.turtlescheme.Multimedia.MusicGA.Artist;
 import com.example.turtlescheme.Multimedia.MusicGA.MusicGA;
+import com.example.turtlescheme.Multimedia.MusicGA.MusicGADetail;
 import com.example.turtlescheme.Multimedia.OmbdGA.OmbdGA;
 import com.example.turtlescheme.Multimedia.OmbdGA.OmbdGADetails;
 import com.example.turtlescheme.Multimedia.OmbdGA.Search;
@@ -33,7 +36,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Converter
 {
-    private static volatile boolean continueToReturn;
 
     public static List<Book> convertToBookList(BooksGA books)
     {
@@ -64,19 +66,9 @@ public class Converter
     public static List<Music> convertToMusicList(MusicGA music)
     {
         Set<Music> musicList = new ArraySet<>();
-        for(Datum data : music.getData()) //NO gender, no publisher
-        {
-            Music newMusic = new Music();
-            newMusic.setId(data.getAlbum().getId().toString());
-            newMusic.setTitle(data.getAlbum().getTitle());
-            //Integer duration = (data.getAlbum().getTracklist().length()*data.getDuration());
-            newMusic.setDuration(Integer.valueOf((data.getDuration()/60)).toString()); //Temporary while we don't access the tracklist to SUM all track's duration.
-            newMusic.setActors_authors(new ArrayList<>(Collections.singleton(data.getArtist().getName())));
-            newMusic.setCover(data.getAlbum().getCoverXl());
-            newMusic.setType(Multimedia.MUSIC);
-            newMusic.setUrl(data.getAlbum().getTracklist());
-            musicList.add(newMusic);
-        }
+        for(Artist data : music.getArtists()) //NO gender, no publisher
+            musicList = getMusicDetail(data.getIdArtist());
+
         return new ArrayList<>(musicList);
     }
 
@@ -100,6 +92,56 @@ public class Converter
                 movieList.add(getMDetails(search.getTitle()));
         }
         return new ArrayList<>(movieList);
+    }
+
+
+    private static Set<Music> getMusicDetail(String idArtist)
+    {
+        Set<Music> musicList = new ArraySet<>();
+        Retrofit query = new Retrofit.Builder().baseUrl("https://www.theaudiodb.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
+            .setLenient()
+            .create())).client(new OkHttpClient.Builder().build()).build();
+        MusicAPI apiService = query.create(MusicAPI.class);
+        Call<MusicGADetail> call = apiService.getAlbums(idArtist);
+        try
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            Response<MusicGADetail> response = call.execute();
+            if(response.isSuccessful())
+            {
+                MusicGADetail music = response.body();
+                if(music != null)
+                {
+                    for(Album album : music.getAlbum())
+                    {
+                        Music newMusic = new Music();
+                        newMusic.setId(album.getIdAlbum());
+                        newMusic.setTitle(album.getStrAlbum());
+                        newMusic.setLanguage("English");
+                        //Integer duration = (data.getAlbum().getTracklist().length()*data.getDuration());
+                        newMusic.setDuration("");
+                        newMusic.setPublishDate(album.getIntYearReleased());
+                        newMusic.setPublisher(album.getStrLabel());
+                        newMusic.setGender(Arrays.asList(album.getStrGenre().split(",")));
+                        newMusic.setActors_authors(new ArrayList<>(Collections.singleton(album.getStrArtist())));
+                        newMusic.setDescription(album.getStrDescriptionEN());
+                        newMusic.setCover(album.getStrAlbumThumb());
+                        newMusic.setType(Multimedia.MUSIC);
+                        newMusic.setUrl("");//data.getAlbum().getTracklist());
+                        if(newMusic.getCover()!=null)
+                            musicList.add(newMusic);
+                    }
+                }
+            }
+            else
+                System.out.println(response.errorBody());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return musicList;
     }
 
     private static Serie getSDetails(String title)
@@ -149,7 +191,6 @@ public class Converter
 
     private static Movie getMDetails(String title)
     {
-        continueToReturn = false;
         Movie newMovie = new Movie();
         Retrofit query = new Retrofit.Builder().baseUrl("https://www.omdbapi.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
                 .setLenient()
@@ -180,7 +221,6 @@ public class Converter
                     newMovie.setTitle(title);
                     newMovie.setDuration(serie.getRuntime());
                     newMovie.setCover(serie.getPoster());
-                    continueToReturn = true;
                 }
             }
             else

@@ -104,18 +104,21 @@ public class HomeFragment extends Fragment
 
     private void searchMusic(String textToSearch)
     {
-        Retrofit query = new Retrofit.Builder().baseUrl("https://api.deezer.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
+        /*Retrofit query = new Retrofit.Builder().baseUrl("https://api.deezer.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
+                .setLenient()
+                .create())).client(new OkHttpClient.Builder().build()).build();*/
+        Retrofit query = new Retrofit.Builder().baseUrl("https://www.theaudiodb.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
                 .setLenient()
                 .create())).client(new OkHttpClient.Builder().build()).build();
         MusicAPI apiService = query.create(MusicAPI.class);
-        Call<MusicGA> call = apiService.getMusic(textToSearch);
+        Call<MusicGA> call = apiService.getArtist(textToSearch);
         call.enqueue(new Callback<MusicGA>() {
             @Override
             public void onResponse(@NotNull Call<MusicGA> call, @NotNull Response<MusicGA> response) {
                 if (response.isSuccessful())
                 {
                     MusicGA music = response.body();
-                    if (music != null && music.getData().size() > 0)
+                    if (music != null && music.getArtists().size() > 0)
                     {
                         List<Music> musicList = Converter.convertToMusicList(music);
                         Intent intent = new Intent(requireActivity(), ListMedia.class);
@@ -124,7 +127,7 @@ public class HomeFragment extends Fragment
                         startActivity(intent);
                         requireActivity().finish();
                     }
-                    else if(music != null && music.getData().size() == 0)
+                    else if(music != null && music.getArtists().size() > 0)
                     {
                         AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity());
                         alert.setTitle(getText(R.string.error));

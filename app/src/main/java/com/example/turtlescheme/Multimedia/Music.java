@@ -10,17 +10,19 @@ public class Music extends  Multimedia implements Serializable
 {
     private String duration;
     private String publisher;
+    private String description;
 
     public Music()
     {
 
     }
 
-    public Music(String id, String title, String actors_authors, String publishDate, String gender, String language, String cover, String url, String duration, String publisher)
+    public Music(String id, String title, String actors_authors, String publishDate, String gender, String language, String cover, String url, String duration, String publisher, String description)
     {
         super(id,Multimedia.MUSIC,title,actors_authors,publishDate,gender,language,cover,url);
         this.duration = duration;
         this.publisher = publisher;
+        this.description = description;
     }
 
     public String getDuration()
@@ -31,6 +33,16 @@ public class Music extends  Multimedia implements Serializable
     public void setDuration(String duration)
     {
         this.duration = duration;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
     }
 
     public String getPublisher()
@@ -49,6 +61,7 @@ public class Music extends  Multimedia implements Serializable
         ContentValues content = super.getContentValues();
         content.put("duration", duration);
         content.put("publisher", publisher);
+        content.put("description", description);
         return content;
     }
 

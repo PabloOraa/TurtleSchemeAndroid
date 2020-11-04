@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,7 +44,13 @@ public abstract class Multimedia implements Serializable
         this.title = title;
         this.actors_authors = Arrays.asList(actors_authors.split(","));
         this.publishDate = publishDate;
-        this.gender = Arrays.asList(gender.split(","));
+        if(gender.contains(","))
+            this.gender = Arrays.asList(gender.split(","));
+        else
+        {
+            this.gender = new ArrayList<>();
+            this.gender.add(gender);
+        }
         this.language = language;
         this.cover = cover;
         this.url = url;

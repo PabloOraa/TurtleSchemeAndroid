@@ -49,6 +49,7 @@ public class Database extends SQLiteOpenHelper
                 "album VARCHAR(50)," +
                 "lang VARCHAR(30)," +
                 "publishDate VARCHAR(50)," +
+                "description VARCHAR(2048)," +
                 "gender VARCHAR(50)" +
                 ");";
         sqLiteDatabase.execSQL(tableCreation);
@@ -179,7 +180,7 @@ public class Database extends SQLiteOpenHelper
             media.add(new Music(c.getString(c.getColumnIndex("id")),c.getString(c.getColumnIndex("title")),
                     c.getString(c.getColumnIndex("artist")),c.getString(c.getColumnIndex("publishDate")),c.getString(c.getColumnIndex("gender")),
                     c.getString(c.getColumnIndex("lang")),c.getString(c.getColumnIndex("cover")),"",
-                    c.getString(c.getColumnIndex("duration")),c.getString(c.getColumnIndex("publisher"))));
+                    c.getString(c.getColumnIndex("duration")),c.getString(c.getColumnIndex("publisher")),c.getString(c.getColumnIndex("description"))));
         c = sqLiteDatabase.rawQuery("SELECT * " +
                                         "FROM SERIE " +
                                         "WHERE id IN "+options , null);

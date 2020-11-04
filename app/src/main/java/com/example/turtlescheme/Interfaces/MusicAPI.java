@@ -1,6 +1,7 @@
 package com.example.turtlescheme.Interfaces;
 
 import com.example.turtlescheme.Multimedia.MusicGA.MusicGA;
+import com.example.turtlescheme.Multimedia.MusicGA.MusicGADetail;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -17,5 +18,5 @@ public interface MusicAPI
 
     //https://www.theaudiodb.com/
     @GET("api/v1/json/1/album.php")
-    Call<MusicGA> getAlbums(@Query("i") String idArtist);
+    Call<MusicGADetail> getAlbums(@Query("i") String idArtist);
 }

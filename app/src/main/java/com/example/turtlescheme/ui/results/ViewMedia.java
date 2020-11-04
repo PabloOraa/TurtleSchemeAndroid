@@ -119,6 +119,8 @@ public class ViewMedia extends AppCompatActivity
             Music music = (Music) media;
             if(music.getDuration() != null)
                 ((TextView)findViewById(R.id.tv_media_duration)).setText(music.getDuration());
+            if(music.getPublisher() != null)
+                ((TextView)findViewById(R.id.tv_media_publisher)).setText(music.getPublisher());
         }
         else if(media.getClass().equals(Serie.class))
         {

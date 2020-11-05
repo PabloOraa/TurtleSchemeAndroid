@@ -40,4 +40,12 @@
     <string name="no">No</string>
     <string name="no_result_found">No se ha encontrado ningún resultado. ¿Quiéres añadirlo?</string>
     <string name="no_media_list">No se ha encontrado ningún contenido en esta lista. Para añadirlo, puedes pulsar en el icono + de la parte superior.</string>
+    <string name="more_less">Mayor a menor</string>
+    <string name="less_more">Menos a mayor</string>
+    <string name="alphabetically">Alfabéticamente</string>
+    <string name="by_content_type">Contenido que sea</string>
+    <string name="by_number_equal_more">Contenidos en la lista o más</string>
+    <string name="by_number_equal_less">Contentidos en la lista o menos</string>
+    <string name="by_number_equals">Contenidos en la lista</string>
+    <string name="apply">Aplicar</string>
 </resources>

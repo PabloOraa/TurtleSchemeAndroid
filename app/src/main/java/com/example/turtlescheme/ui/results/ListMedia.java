@@ -1,18 +1,26 @@
 package com.example.turtlescheme.ui.results;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.turtlescheme.Config;
 import com.example.turtlescheme.MainActivity;
@@ -30,6 +38,7 @@ import java.util.List;
 public class ListMedia extends AppCompatActivity
 {
     List<Multimedia> listMedia = new ArrayList<>();
+    List<Multimedia> listMediaBackup = new ArrayList<>();
     ArrayAdapterWithPhoto adapter;
     private boolean isList = false;
 
@@ -45,6 +54,7 @@ public class ListMedia extends AppCompatActivity
             MultimediaSerializable ser = (MultimediaSerializable) getIntent().getSerializableExtra("media");
             listMedia = ser.getMultimediaList();
             adapter= new ArrayAdapterWithPhoto(this, R.layout.list_results_layout, listMedia);
+            listMediaBackup.addAll(listMedia);
             adapter.setMedia((ArrayList<Multimedia>) listMedia);
             ((ListView)findViewById(R.id.lv_contentListQuery)).setAdapter(adapter);
         }
@@ -55,7 +65,10 @@ public class ListMedia extends AppCompatActivity
                     getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.books)) ||
                     getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.movie)) ||
                     getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.serie)))
+            {
                 findViewById(R.id.iv_addL_inside_list).setVisibility(View.INVISIBLE);
+                findViewById(R.id.im_filterL_inside_list).setVisibility(View.INVISIBLE);
+            }
         }
         changeTheme(Config.theme);
         createListener();
@@ -117,8 +130,128 @@ public class ListMedia extends AppCompatActivity
                 else if(listMedia.get(position).getType().equalsIgnoreCase(Multimedia.MOVIE))
                     openIntentMovie((Movie)listMedia.get(position));
             });
+        if(isList)
+        {
+            if(findViewById(R.id.iv_sortL) != null)
+                findViewById(R.id.iv_sortL).setOnClickListener(v -> filterSortListener("sort"));
+            else if(findViewById(R.id.iv_sortL_inside_list) != null)
+                findViewById(R.id.iv_sortL_inside_list).setOnClickListener(v -> filterSortListener("sort"));
 
+            if(findViewById(R.id.im_filterL) != null)
+                findViewById(R.id.im_filterL).setOnClickListener(v -> filterSortListener("filter"));
+            else if(findViewById(R.id.im_filterL_inside_list) != null)
+                findViewById(R.id.im_filterL_inside_list).setOnClickListener(v -> filterSortListener("filter"));
+        }
+    }
 
+    private void filterSortListener(String type)
+    {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.filter_sort_layout, null);
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setView(view);
+        if(type.equalsIgnoreCase("filter"))
+        {
+            if(findViewById(R.id.im_filterL_inside_list) != null)
+            {
+                ((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).removeView(((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).getViewById(R.id.et_number_equals_less));
+                ((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).removeView(((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).getViewById(R.id.et_number_equals));
+                ((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).removeView(((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).getViewById(R.id.et_number_equals_more));
+                for(int i = 0; i < ((RadioGroup)view.findViewById(R.id.rg_filter)).getChildCount();i++)
+                    if(!((RadioButton)((RadioGroup)view.findViewById(R.id.rg_filter)).getChildAt(i)).getText().toString().equalsIgnoreCase(getString(R.string.by_content_type)))
+                        ((ConstraintLayout) view.findViewById(R.id.ln_filter_sort)).removeView(((RadioGroup) view.findViewById(R.id.rg_filter)).getChildAt(i));
+            }
+            //((LinearLayout)view.findViewById(R.id.ln_filter_sort)).removeView(findViewById(R.id.rg_sort));
+            ((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).removeView(((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).getViewById(R.id.rg_sort));
+            alert.setTitle(getText(R.string.add_list));
+            alert.setMessage(getText(R.string.add_list_message));
+            createListenerForFuncFilter(view);
+        }
+        else if(type.equalsIgnoreCase("sort"))
+        {
+            //((LinearLayout)view.findViewById(R.id.ln_filter_sort)).removeView(findViewById(R.id.rg_filter));
+            ((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).removeView(((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).getViewById(R.id.rg_filter));
+            ((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).removeView(((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).getViewById(R.id.et_number_equals_less));
+            ((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).removeView(((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).getViewById(R.id.et_number_equals));
+            ((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).removeView(((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).getViewById(R.id.et_number_equals_more));
+            ((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).removeView(((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).getViewById(R.id.sp_type_filter));
+            alert.setTitle(getText(R.string.add_list));
+            alert.setMessage(getText(R.string.add_list_message));
+        }
+
+        alert.setPositiveButton(getText(R.string.apply), (dialog, which) ->
+        {
+            if(type.equalsIgnoreCase("filter"))
+                if(((RadioButton)view.findViewById(((RadioGroup) view.findViewById(R.id.rg_filter)).getCheckedRadioButtonId())).getText().toString().equalsIgnoreCase(getString(R.string.by_content_type)))
+                    setNewList("type", ((Spinner)view.findViewById(R.id.sp_type_filter)).getSelectedItem().toString());
+                else if(((RadioButton)view.findViewById(((RadioGroup) view.findViewById(R.id.rg_filter)).getCheckedRadioButtonId())).getText().toString().equalsIgnoreCase(getString(R.string.by_number_equal_more)))
+                    setNewList("more_eq", ((EditText)view.findViewById(R.id.et_number_equals_more)).getText().toString());
+        });
+        alert.setNegativeButton(getText(R.string.cancel), (dialog, which) -> dialog.dismiss());
+        AlertDialog dialog = alert.create();
+        dialog.show();
+    }
+
+    private void createListenerForFuncFilter(View view)
+    {
+        if(view.findViewById(R.id.rg_filter) != null)
+        {
+            ((RadioGroup)view.findViewById(R.id.rg_filter)).setOnCheckedChangeListener((group, checkedId) ->
+            {
+                if(((RadioButton)view.findViewById(checkedId)).getText().toString().equalsIgnoreCase(getString(R.string.by_content_type)))
+                {
+                    view.findViewById(R.id.sp_type_filter).setEnabled(true);
+                    /*view.findViewById(R.id.et_number_equals_more).setEnabled(false);
+                    view.findViewById(R.id.et_number_equals).setEnabled(false);
+                    view.findViewById(R.id.et_number_equals_less).setEnabled(false);*/
+                }
+                else if(((RadioButton)view.findViewById(checkedId)).getText().toString().equalsIgnoreCase(getString(R.string.by_number_equal_more)))
+                {
+                    view.findViewById(R.id.sp_type_filter).setEnabled(false);
+                    /*view.findViewById(R.id.et_number_equals_more).setEnabled(true);
+                    view.findViewById(R.id.et_number_equals).setEnabled(false);
+                    view.findViewById(R.id.et_number_equals_less).setEnabled(false);*/
+                }
+                else if(((RadioButton)view.findViewById(checkedId)).getText().toString().equalsIgnoreCase(getString(R.string.by_number_equal_less)))
+                {
+                    view.findViewById(R.id.sp_type_filter).setEnabled(false);
+                    /*view.findViewById(R.id.et_number_equals_more).setEnabled(false);
+                    view.findViewById(R.id.et_number_equals).setEnabled(false);
+                    view.findViewById(R.id.et_number_equals_less).setEnabled(true);*/
+                }
+                else if(((RadioButton)view.findViewById(checkedId)).getText().toString().equalsIgnoreCase(getString(R.string.by_number_equals)))
+                {
+                    view.findViewById(R.id.sp_type_filter).setEnabled(false);
+                    /*view.findViewById(R.id.et_number_equals_more).setEnabled(true);
+                    view.findViewById(R.id.et_number_equals).setEnabled(true);
+                    view.findViewById(R.id.et_number_equals_less).setEnabled(false);*/
+                }
+            });
+            view.findViewById(R.id.sp_type_filter).setEnabled(false);
+            /*view.findViewById(R.id.et_number_equals_more).setEnabled(false);
+            view.findViewById(R.id.et_number_equals).setEnabled(false);
+            view.findViewById(R.id.et_number_equals_less).setEnabled(false);*/
+        }
+    }
+
+    private void setNewList(String criteria, String selectedItem)
+    {
+        if(criteria.equalsIgnoreCase("type"))
+        {
+            if(selectedItem.equalsIgnoreCase(getString(R.string.movie)))
+                selectedItem = Multimedia.MOVIE;
+            else if(selectedItem.equalsIgnoreCase(getString(R.string.music)))
+                selectedItem = Multimedia.MUSIC;
+            else if(selectedItem.equalsIgnoreCase(getString(R.string.books)))
+                selectedItem = Multimedia.BOOK;
+            else if(selectedItem.equalsIgnoreCase(getString(R.string.serie)))
+                selectedItem = Multimedia.SERIE;
+
+            adapter.clear();
+            for(Multimedia media : listMediaBackup)
+                if(media.getType().equalsIgnoreCase(selectedItem))
+                    adapter.add(media);
+        }
     }
 
     private void openIntentBook(Book book)

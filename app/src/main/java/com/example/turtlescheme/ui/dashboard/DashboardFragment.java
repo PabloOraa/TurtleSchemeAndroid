@@ -1,7 +1,9 @@
 package com.example.turtlescheme.ui.dashboard;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.turtlescheme.Config;
@@ -28,7 +31,12 @@ import com.example.turtlescheme.R;
 import com.example.turtlescheme.ui.results.ListMedia;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 public class DashboardFragment extends Fragment
 {
@@ -56,6 +64,7 @@ public class DashboardFragment extends Fragment
         listName.add(requireActivity().getText(R.string.serie).toString());
         createDatabaseConnection();
         int totalWidth = calcNecessaryWidth();
+        checkPrefs();
         adapter=new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, listName);
         ((ListView)requireView().findViewById(R.id.lv_contentList)).setAdapter(adapter);
         checkTheme();
@@ -65,6 +74,19 @@ public class DashboardFragment extends Fragment
         requireActivity().findViewById(R.id.sv_searchL).setLayoutParams(layoutParams);
 
         createListener();
+    }
+
+    private void checkPrefs()
+    {
+        SharedPreferences sharedpreferences = requireContext().getSharedPreferences("lists", Context.MODE_PRIVATE);
+        if(sharedpreferences.contains("listsNames"))
+        {
+            listName.clear();
+            String names = sharedpreferences.getString("listsNames", "Music");
+            names = names.replaceAll("\\[", "").replaceAll("]", "");
+            for (String name : names.split(","))
+                listName.add(name.trim());
+        }
     }
 
     private void createDatabaseConnection()
@@ -159,7 +181,13 @@ public class DashboardFragment extends Fragment
         alert.setView(addView);
         alert.setTitle(requireActivity().getText(R.string.add_list));
         alert.setMessage(requireActivity().getText(R.string.add_list_message));
-        alert.setPositiveButton(requireActivity().getText(R.string.add_list), (dialog, which) -> adapter.add(((EditText)addView.findViewById(R.id.et_add_list)).getText().toString()));
+        alert.setPositiveButton(requireActivity().getText(R.string.add_list), (dialog, which) -> {
+                    adapter.add(((EditText) addView.findViewById(R.id.et_add_list)).getText().toString());
+                    SharedPreferences sharedpreferences = requireContext().getSharedPreferences("lists", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putString("listsNames", listName.toString());
+                    editor.apply();
+                });
         alert.setNegativeButton(requireActivity().getText(R.string.cancel), (dialog, which) -> dialog.dismiss());
         AlertDialog dialog = alert.create();
         dialog.show();

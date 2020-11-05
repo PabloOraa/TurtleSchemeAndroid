@@ -39,4 +39,13 @@
     <string name="no">No</string>
     <string name="no_result_found">No results found for that Title. Do you want to add it?</string>
     <string name="no_media_list">No media has been added to this list at this moment. You can add one title pressing the + icon</string>
+    <string name="more_less">More content first</string>
+    <string name="less_more">Less content first</string>
+    <string name="alphabetically">Alphabetically</string>
+    <string name="by_content_type">Content of type</string>
+    <string name="by_number_equal_more">Contents or more in the list</string>
+    <string name="by_number_equal_less">Contents or less in the list</string>
+    <string name="by_number_equals">Content in the list</string>
+    <string name="number_hint" translatable="false">1</string>
+    <string name="apply">Apply</string>
 </resources>

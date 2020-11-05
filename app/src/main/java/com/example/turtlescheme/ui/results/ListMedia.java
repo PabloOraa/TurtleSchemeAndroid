@@ -3,13 +3,11 @@ package com.example.turtlescheme.ui.results;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -159,7 +157,10 @@ public class ListMedia extends AppCompatActivity
                 ((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).removeView(((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).getViewById(R.id.et_number_equals_more));
                 for(int i = 0; i < ((RadioGroup)view.findViewById(R.id.rg_filter)).getChildCount();i++)
                     if(!((RadioButton)((RadioGroup)view.findViewById(R.id.rg_filter)).getChildAt(i)).getText().toString().equalsIgnoreCase(getString(R.string.by_content_type)))
-                        ((ConstraintLayout) view.findViewById(R.id.ln_filter_sort)).removeView(((RadioGroup) view.findViewById(R.id.rg_filter)).getChildAt(i));
+                    {
+                        ((RadioGroup) view.findViewById(R.id.rg_filter)).removeView(((RadioGroup) view.findViewById(R.id.rg_filter)).getChildAt(i));
+                        i--;
+                    }
             }
             //((LinearLayout)view.findViewById(R.id.ln_filter_sort)).removeView(findViewById(R.id.rg_sort));
             ((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).removeView(((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).getViewById(R.id.rg_sort));
@@ -201,36 +202,21 @@ public class ListMedia extends AppCompatActivity
                 if(((RadioButton)view.findViewById(checkedId)).getText().toString().equalsIgnoreCase(getString(R.string.by_content_type)))
                 {
                     view.findViewById(R.id.sp_type_filter).setEnabled(true);
-                    /*view.findViewById(R.id.et_number_equals_more).setEnabled(false);
-                    view.findViewById(R.id.et_number_equals).setEnabled(false);
-                    view.findViewById(R.id.et_number_equals_less).setEnabled(false);*/
                 }
                 else if(((RadioButton)view.findViewById(checkedId)).getText().toString().equalsIgnoreCase(getString(R.string.by_number_equal_more)))
                 {
                     view.findViewById(R.id.sp_type_filter).setEnabled(false);
-                    /*view.findViewById(R.id.et_number_equals_more).setEnabled(true);
-                    view.findViewById(R.id.et_number_equals).setEnabled(false);
-                    view.findViewById(R.id.et_number_equals_less).setEnabled(false);*/
                 }
                 else if(((RadioButton)view.findViewById(checkedId)).getText().toString().equalsIgnoreCase(getString(R.string.by_number_equal_less)))
                 {
                     view.findViewById(R.id.sp_type_filter).setEnabled(false);
-                    /*view.findViewById(R.id.et_number_equals_more).setEnabled(false);
-                    view.findViewById(R.id.et_number_equals).setEnabled(false);
-                    view.findViewById(R.id.et_number_equals_less).setEnabled(true);*/
                 }
                 else if(((RadioButton)view.findViewById(checkedId)).getText().toString().equalsIgnoreCase(getString(R.string.by_number_equals)))
                 {
                     view.findViewById(R.id.sp_type_filter).setEnabled(false);
-                    /*view.findViewById(R.id.et_number_equals_more).setEnabled(true);
-                    view.findViewById(R.id.et_number_equals).setEnabled(true);
-                    view.findViewById(R.id.et_number_equals_less).setEnabled(false);*/
                 }
             });
             view.findViewById(R.id.sp_type_filter).setEnabled(false);
-            /*view.findViewById(R.id.et_number_equals_more).setEnabled(false);
-            view.findViewById(R.id.et_number_equals).setEnabled(false);
-            view.findViewById(R.id.et_number_equals_less).setEnabled(false);*/
         }
     }
 
@@ -328,7 +314,6 @@ public class ListMedia extends AppCompatActivity
         int widthSort = findViewById(R.id.iv_sortL_inside_list).getLayoutParams().width;
         int widthFilter = findViewById(R.id.im_filterL_inside_list).getLayoutParams().width;
         int widthAdd = 0;
-        String text = getIntent().getStringExtra("listTitle");
         if(!getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.music)) &&
                 !getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.books)) &&
                 !getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.movie)) &&

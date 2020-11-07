@@ -1,7 +1,11 @@
 package com.example.turtlescheme;
 
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Window;
 
@@ -25,6 +29,11 @@ public class MainActivity extends AppCompatActivity
 {
     private SurfaceDuoScreenManager surfaceDuoScreenManager;
     private SQLiteDatabase connection;
+    /**
+     * The app version code (not the version name!) that was used on the last
+     * start of the app.
+     */
+    private static final String LAST_APP_VERSION = "0.9.2";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -40,6 +49,21 @@ public class MainActivity extends AppCompatActivity
         {
             Config.theme = getString(R.string.automatic_theme);
             changeTheme(getString(R.string.automatic_theme));
+        }
+
+        switch (checkAppStart())
+        {
+            case NORMAL:
+                // We don't want to get on the user's nerves
+                break;
+            case FIRST_TIME_VERSION:
+                System.out.println("First time on this version :D. I can show what's new here.");
+                break;
+            case FIRST_TIME:
+                System.out.println("First time on the app, thank you! Here there should be a tutorial or check for backup");
+                break;
+            default:
+                break;
         }
 
         if(ScreenHelper.isDeviceSurfaceDuo(this))
@@ -101,5 +125,74 @@ public class MainActivity extends AppCompatActivity
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         else
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
+    }
+
+    /**
+     * Distinguishes different kinds of app starts: <li>
+     * <ul>
+     * First start ever ({@link #FIRST_TIME})
+     * </ul>
+     * <ul>
+     * First start in this version ({@link #FIRST_TIME_VERSION})
+     * </ul>
+     * <ul>
+     * Normal app start ({@link #NORMAL})
+     * </ul>
+     *
+     * @author schnatterer
+     *
+     */
+    public enum AppStart
+    {
+        FIRST_TIME, FIRST_TIME_VERSION, NORMAL
+    }
+
+    /**
+     * Finds out started for the first time (ever or in the current version).<br/>
+     * <br/>
+     * Note: This method is <b>not idempotent</b> only the first call will
+     * determine the proper result. Any subsequent calls will only return
+     * {@link AppStart#NORMAL} until the app is started again. So you might want
+     * to consider caching the result!
+     *
+     * @return the type of app start
+     */
+    public AppStart checkAppStart() {
+        PackageInfo pInfo;
+        SharedPreferences sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        AppStart appStart = AppStart.NORMAL;
+        try
+        {
+            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            int lastVersionCode = sharedPreferences
+                    .getInt(LAST_APP_VERSION, -1);
+            int currentVersionCode = pInfo.versionCode;
+            appStart = checkAppStart(currentVersionCode, lastVersionCode);
+            // Update version in preferences
+            sharedPreferences.edit().putInt(LAST_APP_VERSION, currentVersionCode).apply();
+        } catch (PackageManager.NameNotFoundException e)
+        {
+            Log.w("Log", "Unable to determine current app version from pacakge manager. Defenisvely assuming normal app start.");
+        }
+        return appStart;
+    }
+
+    public AppStart checkAppStart(int currentVersionCode, int lastVersionCode)
+    {
+        if (lastVersionCode == -1)
+            return AppStart.FIRST_TIME;
+        else if (lastVersionCode < currentVersionCode)
+            return AppStart.FIRST_TIME_VERSION;
+        else if (lastVersionCode > currentVersionCode)
+        {
+            Log.w("Log", "Current version code (" + currentVersionCode
+                    + ") is less then the one recognized on last startup ("
+                    + lastVersionCode
+                    + "). Defenisvely assuming normal app start.");
+            return AppStart.NORMAL;
+        }
+        else
+            return AppStart.NORMAL;
     }
 }

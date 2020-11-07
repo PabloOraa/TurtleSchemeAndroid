@@ -3,6 +3,7 @@ package com.example.turtlescheme;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -284,5 +285,28 @@ public class Database extends SQLiteOpenHelper
         }
         c.close();
         return false;
+    }
+
+    public int getNumberOfContentOfAList(SQLiteDatabase sqLiteDatabase, String listName)
+    {
+        long count;
+        switch (listName) {
+            case Multimedia.BOOK:
+                count = DatabaseUtils.queryNumEntries(sqLiteDatabase, "BOOKS");
+                break;
+            case Multimedia.MUSIC:
+                count = DatabaseUtils.queryNumEntries(sqLiteDatabase, "MUSIC");
+                break;
+            case Multimedia.MOVIE:
+                count = DatabaseUtils.queryNumEntries(sqLiteDatabase, "MOVIE");
+                break;
+            case Multimedia.SERIE:
+                count = DatabaseUtils.queryNumEntries(sqLiteDatabase, "SERIE");
+                break;
+            default:
+                count = DatabaseUtils.queryNumEntries(sqLiteDatabase, "LIST", "title = ?", new String[] {listName});
+                break;
+        }
+        return (int) count;
     }
 }

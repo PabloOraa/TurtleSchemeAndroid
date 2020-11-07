@@ -15,6 +15,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <RadioButton
+            android:id="@+id/radioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/original" />
+
+        <RadioButton
             android:id="@+id/radioButton2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -87,6 +94,7 @@
         android:id="@+id/sp_type_filter"
         android:layout_width="150dp"
         android:layout_height="48dp"
+        android:layout_marginTop="48dp"
         android:layout_weight="1"
         android:entries="@array/types"
         app:layout_constraintStart_toEndOf="@+id/rg_filter"
@@ -99,6 +107,12 @@
         android:layout_marginStart="4dp"
         app:layout_constraintStart_toStartOf="@+id/rg_filter"
         app:layout_constraintTop_toBottomOf="@+id/rg_filter">
+
+        <RadioButton
+            android:id="@+id/rb_original"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/original" />
 
         <RadioButton
             android:id="@+id/rb_alphabetically"

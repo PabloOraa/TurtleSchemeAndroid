@@ -42,23 +42,26 @@ public class Converter
         List<Book> bookList = new ArrayList<>();
         for(Item item : books.getItems())
         {
-            Book newBook = new Book();
-            newBook.setId(item.getId());
-            newBook.setTitle(item.getVolumeInfo().getTitle());
-            newBook.setActors_authors(item.getVolumeInfo().getAuthors());
-            newBook.setPublishDate(item.getVolumeInfo().getPublishedDate());
-            newBook.setGender(item.getVolumeInfo().getCategories());
-            newBook.setLanguage(item.getVolumeInfo().getLanguage());
-            if(item.getVolumeInfo().getImageLinks() != null && item.getVolumeInfo().getImageLinks().getThumbnail() != null)
-                newBook.setCover(item.getVolumeInfo().getImageLinks().getThumbnail());
-            else if(item.getVolumeInfo().getImageLinks() != null && item.getVolumeInfo().getImageLinks().getSmallThumbnail() != null)
-                newBook.setCover(item.getVolumeInfo().getImageLinks().getSmallThumbnail());
-            else
-                newBook.setCover("");
-            newBook.setPlot(item.getVolumeInfo().getDescription());
-            newBook.setPublisher(item.getVolumeInfo().getPublisher());
-            newBook.setType(Multimedia.BOOK);
-            bookList.add(newBook);
+            if(!item.getVolumeInfo().getAuthors().isEmpty() && !item.getVolumeInfo().getTitle().isEmpty())
+            {
+                Book newBook = new Book();
+                newBook.setId(item.getId());
+                newBook.setTitle(item.getVolumeInfo().getTitle());
+                newBook.setActors_authors(item.getVolumeInfo().getAuthors());
+                newBook.setPublishDate(item.getVolumeInfo().getPublishedDate());
+                newBook.setGender(item.getVolumeInfo().getCategories());
+                newBook.setLanguage(item.getVolumeInfo().getLanguage());
+                if (item.getVolumeInfo().getImageLinks() != null && item.getVolumeInfo().getImageLinks().getThumbnail() != null)
+                    newBook.setCover(item.getVolumeInfo().getImageLinks().getThumbnail());
+                else if (item.getVolumeInfo().getImageLinks() != null && item.getVolumeInfo().getImageLinks().getSmallThumbnail() != null)
+                    newBook.setCover(item.getVolumeInfo().getImageLinks().getSmallThumbnail());
+                else
+                    newBook.setCover("");
+                newBook.setPlot(item.getVolumeInfo().getDescription());
+                newBook.setPublisher(item.getVolumeInfo().getPublisher());
+                newBook.setType(Multimedia.BOOK);
+                bookList.add(newBook);
+            }
         }
         return bookList;
     }
@@ -115,22 +118,25 @@ public class Converter
                 {
                     for(Album album : music.getAlbum())
                     {
-                        Music newMusic = new Music();
-                        newMusic.setId(album.getIdAlbum());
-                        newMusic.setTitle(album.getStrAlbum());
-                        newMusic.setLanguage("English");
-                        //Integer duration = (data.getAlbum().getTracklist().length()*data.getDuration());
-                        newMusic.setDuration("");
-                        newMusic.setPublishDate(album.getIntYearReleased());
-                        newMusic.setPublisher(album.getStrLabel());
-                        newMusic.setGender(Arrays.asList(album.getStrGenre().split(",")));
-                        newMusic.setActors_authors(new ArrayList<>(Collections.singleton(album.getStrArtist())));
-                        newMusic.setDescription(album.getStrDescriptionEN());
-                        newMusic.setCover(album.getStrAlbumThumb());
-                        newMusic.setType(Multimedia.MUSIC);
-                        newMusic.setUrl("");//data.getAlbum().getTracklist());
-                        if(newMusic.getCover()!=null)
-                            musicList.add(newMusic);
+                        if(!album.getStrArtist().isEmpty() && !album.getStrAlbum().isEmpty())
+                        {
+                            Music newMusic = new Music();
+                            newMusic.setId(album.getIdAlbum());
+                            newMusic.setTitle(album.getStrAlbum());
+                            newMusic.setLanguage("English");
+                            //Integer duration = (data.getAlbum().getTracklist().length()*data.getDuration());
+                            newMusic.setDuration("");
+                            newMusic.setPublishDate(album.getIntYearReleased());
+                            newMusic.setPublisher(album.getStrLabel());
+                            newMusic.setGender(Arrays.asList(album.getStrGenre().split(",")));
+                            newMusic.setActors_authors(new ArrayList<>(Collections.singleton(album.getStrArtist())));
+                            newMusic.setDescription(album.getStrDescriptionEN());
+                            newMusic.setCover(album.getStrAlbumThumb());
+                            newMusic.setType(Multimedia.MUSIC);
+                            newMusic.setUrl("");//data.getAlbum().getTracklist());
+                            if (newMusic.getCover() != null)
+                                musicList.add(newMusic);
+                        }
                     }
                 }
             }
@@ -159,7 +165,7 @@ public class Converter
             Response<OmbdGADetails> response = call.execute();
             if (response.isSuccessful()) {
                 OmbdGADetails serie = response.body();
-                if (serie != null)
+                if (serie != null && !serie.getTitle().isEmpty())
                 {
                     newSerie.setSeasonNumber(serie.getTotalSeasons());
                     newSerie.setDurationPerEpisode(serie.getRuntime());
@@ -204,23 +210,23 @@ public class Converter
             Response<OmbdGADetails> response = call.execute();
             if (response.isSuccessful())
             {
-                OmbdGADetails serie = response.body();
-                if(serie != null)
+                OmbdGADetails movie = response.body();
+                if(movie != null && !movie.getTitle().isEmpty() && !movie.getRuntime().isEmpty() && !movie.getGenre().isEmpty())
                 {
-                    newMovie.setDirector(serie.getDirector());
-                    newMovie.setPlot(serie.getPlot());
-                    newMovie.setActors_authors(Arrays.asList(serie.getActors().split(",")));
-                    newMovie.setGender(Arrays.asList(serie.getGenre().split(",")));
-                    if(serie.getLanguage().contains(Locale.getDefault().getDisplayLanguage()))
+                    newMovie.setDirector(movie.getDirector());
+                    newMovie.setPlot(movie.getPlot());
+                    newMovie.setActors_authors(Arrays.asList(movie.getActors().split(",")));
+                    newMovie.setGender(Arrays.asList(movie.getGenre().split(",")));
+                    if(movie.getLanguage().contains(Locale.getDefault().getDisplayLanguage()))
                         newMovie.setLanguage(Locale.getDefault().getDisplayLanguage());
                     else
-                        newMovie.setLanguage(serie.getLanguage());
-                    newMovie.setId(serie.getImdbID());
-                    newMovie.setPublishDate(serie.getReleased());
+                        newMovie.setLanguage(movie.getLanguage());
+                    newMovie.setId(movie.getImdbID());
+                    newMovie.setPublishDate(movie.getReleased());
                     newMovie.setType(Multimedia.MOVIE);
                     newMovie.setTitle(title);
-                    newMovie.setDuration(serie.getRuntime());
-                    newMovie.setCover(serie.getPoster());
+                    newMovie.setDuration(movie.getRuntime());
+                    newMovie.setCover(movie.getPoster());
                 }
             }
             else

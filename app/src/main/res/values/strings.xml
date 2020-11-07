@@ -48,4 +48,5 @@
     <string name="by_number_equals">Content in the list</string>
     <string name="number_hint" translatable="false">1</string>
     <string name="apply">Apply</string>
+    <string name="original">Original</string>
 </resources>

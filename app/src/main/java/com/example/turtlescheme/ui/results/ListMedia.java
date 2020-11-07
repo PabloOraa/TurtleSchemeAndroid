@@ -3,12 +3,16 @@ package com.example.turtlescheme.ui.results;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Insets;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.view.WindowInsets;
+import android.view.WindowMetrics;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -39,6 +43,8 @@ public class ListMedia extends AppCompatActivity
     List<Multimedia> listMediaBackup = new ArrayList<>();
     ArrayAdapterWithPhoto adapter;
     private boolean isList = false;
+    private String optionFilter;
+    private String optionSort;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
@@ -59,6 +65,9 @@ public class ListMedia extends AppCompatActivity
         else if(getIntent().hasExtra("empty"))
         {
             setContentView(R.layout.view_list_media_empty);
+        }
+
+        if(isList)
             if(getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.music)) ||
                     getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.books)) ||
                     getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.movie)) ||
@@ -67,7 +76,6 @@ public class ListMedia extends AppCompatActivity
                 findViewById(R.id.iv_addL_inside_list).setVisibility(View.INVISIBLE);
                 findViewById(R.id.im_filterL_inside_list).setVisibility(View.INVISIBLE);
             }
-        }
         changeTheme(Config.theme);
         createListener();
     }
@@ -88,16 +96,14 @@ public class ListMedia extends AppCompatActivity
         {
             if(findViewById(R.id.cl_list_inside_list) != null)
                 ((LinearLayout)findViewById(R.id.cl_list_inside_list).getParent()).removeView(findViewById(R.id.cl_list_inside_list));
-            //findViewById(R.id.cl_list_inside_list).setVisibility(View.INVISIBLE);
         }
     }
 
     @Override
     public void onBackPressed()
     {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        if(!isList)
+            setResult(2);
         super.onBackPressed();
     }
 
@@ -156,11 +162,24 @@ public class ListMedia extends AppCompatActivity
                 ((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).removeView(((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).getViewById(R.id.et_number_equals));
                 ((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).removeView(((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).getViewById(R.id.et_number_equals_more));
                 for(int i = 0; i < ((RadioGroup)view.findViewById(R.id.rg_filter)).getChildCount();i++)
-                    if(!((RadioButton)((RadioGroup)view.findViewById(R.id.rg_filter)).getChildAt(i)).getText().toString().equalsIgnoreCase(getString(R.string.by_content_type)))
+                    if(!((RadioButton)((RadioGroup)view.findViewById(R.id.rg_filter)).getChildAt(i)).getText().toString().equalsIgnoreCase(getString(R.string.by_content_type)) && !((RadioButton)((RadioGroup)view.findViewById(R.id.rg_filter)).getChildAt(i)).getText().toString().equalsIgnoreCase(getString(R.string.original)))
                     {
                         ((RadioGroup) view.findViewById(R.id.rg_filter)).removeView(((RadioGroup) view.findViewById(R.id.rg_filter)).getChildAt(i));
                         i--;
                     }
+                    else if(((RadioButton)((RadioGroup)view.findViewById(R.id.rg_filter)).getChildAt(i)).getText().toString().equalsIgnoreCase(getString(R.string.original)))
+                        if(optionFilter == null || optionFilter.isEmpty() || optionFilter.equalsIgnoreCase(getString(R.string.original)))
+                        {
+                            ((RadioButton)((RadioGroup)view.findViewById(R.id.rg_filter)).getChildAt(i)).setChecked(true);
+                            optionFilter = getString(R.string.original);
+                        }
+                        else
+                        {
+                            for(int j = 0; j < ((RadioGroup)view.findViewById(R.id.rg_filter)).getChildCount();j++)
+                                if(((RadioButton)((RadioGroup)view.findViewById(R.id.rg_filter)).getChildAt(i)).getText().toString().equalsIgnoreCase(optionFilter))
+                                    ((RadioButton)((RadioGroup)view.findViewById(R.id.rg_filter)).getChildAt(i)).setChecked(true);
+                        }
+
             }
             //((LinearLayout)view.findViewById(R.id.ln_filter_sort)).removeView(findViewById(R.id.rg_sort));
             ((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).removeView(((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).getViewById(R.id.rg_sort));
@@ -176,6 +195,24 @@ public class ListMedia extends AppCompatActivity
             ((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).removeView(((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).getViewById(R.id.et_number_equals));
             ((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).removeView(((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).getViewById(R.id.et_number_equals_more));
             ((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).removeView(((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).getViewById(R.id.sp_type_filter));
+            for(int i = 0; i < ((RadioGroup)view.findViewById(R.id.rg_sort)).getChildCount();i++)
+                if(!((RadioButton)((RadioGroup)view.findViewById(R.id.rg_sort)).getChildAt(i)).getText().toString().equalsIgnoreCase(getString(R.string.alphabetically)) && ! ((RadioButton)((RadioGroup)view.findViewById(R.id.rg_sort)).getChildAt(i)).getText().toString().equalsIgnoreCase(getString(R.string.original)))
+                {
+                    ((RadioGroup) view.findViewById(R.id.rg_sort)).removeView(((RadioGroup) view.findViewById(R.id.rg_sort)).getChildAt(i));
+                    i--;
+                }
+                else if(((RadioButton)((RadioGroup)view.findViewById(R.id.rg_sort)).getChildAt(i)).getText().toString().equalsIgnoreCase(getString(R.string.original)))
+                    if(optionSort == null || optionSort.isEmpty() || optionSort.equalsIgnoreCase(getString(R.string.original)))
+                    {
+                        ((RadioButton)((RadioGroup)view.findViewById(R.id.rg_sort)).getChildAt(i)).setChecked(true);
+                        optionSort = getString(R.string.original);
+                    }
+                    else
+                    {
+                        for(int j = 0; j < ((RadioGroup)view.findViewById(R.id.rg_sort)).getChildCount();j++)
+                            if(((RadioButton)((RadioGroup)view.findViewById(R.id.rg_sort)).getChildAt(i)).getText().toString().equalsIgnoreCase(optionSort))
+                                ((RadioButton)((RadioGroup)view.findViewById(R.id.rg_sort)).getChildAt(i)).setChecked(true);
+                    }
             alert.setTitle(getText(R.string.add_list));
             alert.setMessage(getText(R.string.add_list_message));
         }
@@ -183,10 +220,19 @@ public class ListMedia extends AppCompatActivity
         alert.setPositiveButton(getText(R.string.apply), (dialog, which) ->
         {
             if(type.equalsIgnoreCase("filter"))
+            {
                 if(((RadioButton)view.findViewById(((RadioGroup) view.findViewById(R.id.rg_filter)).getCheckedRadioButtonId())).getText().toString().equalsIgnoreCase(getString(R.string.by_content_type)))
-                    setNewList("type", ((Spinner)view.findViewById(R.id.sp_type_filter)).getSelectedItem().toString());
-                else if(((RadioButton)view.findViewById(((RadioGroup) view.findViewById(R.id.rg_filter)).getCheckedRadioButtonId())).getText().toString().equalsIgnoreCase(getString(R.string.by_number_equal_more)))
-                    setNewList("more_eq", ((EditText)view.findViewById(R.id.et_number_equals_more)).getText().toString());
+                    setNewList(getString(R.string.by_content_type), ((Spinner)view.findViewById(R.id.sp_type_filter)).getSelectedItem().toString());
+                else if(((RadioButton)view.findViewById(((RadioGroup) view.findViewById(R.id.rg_filter)).getCheckedRadioButtonId())).getText().toString().equalsIgnoreCase(getString(R.string.by_content_type)))
+                    setNewList(getString(R.string.original), null);
+            }
+            else if(type.equalsIgnoreCase("sort"))
+            {
+                if(((RadioButton)view.findViewById(((RadioGroup) view.findViewById(R.id.rg_sort)).getCheckedRadioButtonId())).getText().toString().equalsIgnoreCase(getString(R.string.alphabetically)))
+                    setNewList(getString(R.string.alphabetically));
+                else if(((RadioButton)view.findViewById(((RadioGroup) view.findViewById(R.id.rg_sort)).getCheckedRadioButtonId())).getText().toString().equalsIgnoreCase(getString(R.string.original)))
+                    setNewList(getString(R.string.original));
+            }
         });
         alert.setNegativeButton(getText(R.string.cancel), (dialog, which) -> dialog.dismiss());
         AlertDialog dialog = alert.create();
@@ -200,44 +246,74 @@ public class ListMedia extends AppCompatActivity
             ((RadioGroup)view.findViewById(R.id.rg_filter)).setOnCheckedChangeListener((group, checkedId) ->
             {
                 if(((RadioButton)view.findViewById(checkedId)).getText().toString().equalsIgnoreCase(getString(R.string.by_content_type)))
-                {
                     view.findViewById(R.id.sp_type_filter).setEnabled(true);
-                }
-                else if(((RadioButton)view.findViewById(checkedId)).getText().toString().equalsIgnoreCase(getString(R.string.by_number_equal_more)))
-                {
+                else if(((RadioButton)view.findViewById(checkedId)).getText().toString().equalsIgnoreCase(getString(R.string.by_content_type)))
                     view.findViewById(R.id.sp_type_filter).setEnabled(false);
-                }
-                else if(((RadioButton)view.findViewById(checkedId)).getText().toString().equalsIgnoreCase(getString(R.string.by_number_equal_less)))
-                {
-                    view.findViewById(R.id.sp_type_filter).setEnabled(false);
-                }
-                else if(((RadioButton)view.findViewById(checkedId)).getText().toString().equalsIgnoreCase(getString(R.string.by_number_equals)))
-                {
-                    view.findViewById(R.id.sp_type_filter).setEnabled(false);
-                }
             });
-            view.findViewById(R.id.sp_type_filter).setEnabled(false);
+            if(!optionFilter.equalsIgnoreCase(getString(R.string.by_content_type)))
+                view.findViewById(R.id.sp_type_filter).setEnabled(false);
         }
+    }
+
+    private void setNewList(String criteria)
+    {
+        if(listMedia != null && listMedia.size() > 0)
+        {
+            if(criteria.equalsIgnoreCase(getString(R.string.alphabetically)))
+            {
+                Multimedia media;
+                for(int i = 0; i < listMedia.size();i++)
+                {
+                    media = listMedia.get(i);
+                    for(int j = i; j < listMedia.size();j++)
+                        if(media.getTitle().compareToIgnoreCase(listMedia.get(j).getTitle()) > 0)
+                        {
+                            Multimedia newMedia = listMedia.get(i);
+                            listMedia.set(i,media);
+                            listMedia.set(j,newMedia);
+                        }
+                }
+                List<Multimedia> newListMultimedia = new ArrayList<>(listMedia);
+                adapter.clear();
+                adapter.addAll(newListMultimedia);
+            }
+            else if(criteria.equalsIgnoreCase(getString(R.string.original)))
+            {
+                adapter.clear();
+                adapter.addAll(listMediaBackup);
+            }
+        }
+        optionSort = criteria;
     }
 
     private void setNewList(String criteria, String selectedItem)
     {
-        if(criteria.equalsIgnoreCase("type"))
+        if(listMedia != null && listMedia.size() > 0)
         {
-            if(selectedItem.equalsIgnoreCase(getString(R.string.movie)))
-                selectedItem = Multimedia.MOVIE;
-            else if(selectedItem.equalsIgnoreCase(getString(R.string.music)))
-                selectedItem = Multimedia.MUSIC;
-            else if(selectedItem.equalsIgnoreCase(getString(R.string.books)))
-                selectedItem = Multimedia.BOOK;
-            else if(selectedItem.equalsIgnoreCase(getString(R.string.serie)))
-                selectedItem = Multimedia.SERIE;
+            if (criteria.equalsIgnoreCase(getString(R.string.by_content_type)))
+            {
+                if (selectedItem.equalsIgnoreCase(getString(R.string.movie)))
+                    selectedItem = Multimedia.MOVIE;
+                else if (selectedItem.equalsIgnoreCase(getString(R.string.music)))
+                    selectedItem = Multimedia.MUSIC;
+                else if (selectedItem.equalsIgnoreCase(getString(R.string.books)))
+                    selectedItem = Multimedia.BOOK;
+                else if (selectedItem.equalsIgnoreCase(getString(R.string.serie)))
+                    selectedItem = Multimedia.SERIE;
 
-            adapter.clear();
-            for(Multimedia media : listMediaBackup)
-                if(media.getType().equalsIgnoreCase(selectedItem))
+                adapter.clear();
+                for (Multimedia media : listMediaBackup)
+                    if (media.getType().equalsIgnoreCase(selectedItem))
+                        adapter.add(media);
+            }
+            else if(criteria.equalsIgnoreCase(getString(R.string.original)))
+            {
+                adapter.clear();
+                for (Multimedia media : listMediaBackup)
                     adapter.add(media);
+            }
         }
+        optionFilter = criteria;
     }
 
     private void openIntentBook(Book book)
@@ -298,32 +374,44 @@ public class ListMedia extends AppCompatActivity
     private int calcNecessaryWidth()
     {
         int extraSpace;
-        DisplayMetrics display = new DisplayMetrics();
+        DisplayMetrics display = getResources().getDisplayMetrics();
         int width;
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
         {
-            WindowMetrics windowMetrics = requireActivity().getWindowManager().getCurrentWindowMetrics();
+            WindowMetrics windowMetrics = getWindowManager().getCurrentWindowMetrics();
             Insets insets = windowMetrics.getWindowInsets().getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
             width = windowMetrics.getBounds().width() - insets.left - insets.right;
         }
         else
-        {*/
-        getWindowManager().getDefaultDisplay().getMetrics(display);
-        width = display.widthPixels;
-        //}
+        {
+            getApplicationContext().getDisplay().getRealMetrics(display);
+            width = display.widthPixels;
+        }
         int widthSort = findViewById(R.id.iv_sortL_inside_list).getLayoutParams().width;
-        int widthFilter = findViewById(R.id.im_filterL_inside_list).getLayoutParams().width;
+        int widthFilter = 0;
         int widthAdd = 0;
         if(!getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.music)) &&
                 !getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.books)) &&
                 !getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.movie)) &&
                 !getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.serie)))
+        {
             widthAdd = findViewById(R.id.iv_addL_inside_list).getLayoutParams().width;
+            widthFilter = findViewById(R.id.im_filterL_inside_list).getLayoutParams().width;
+        }
         int orientation = getResources().getConfiguration().orientation;
-        /*if (orientation == Configuration.ORIENTATION_LANDSCAPE)
-            extraSpace = (16*6 * (display.densityDpi / 160)) + (550 * (display.densityDpi / 160));
-        else*/
-            extraSpace = (16*6 * (display.densityDpi / 160));
+        extraSpace = (16*6 * (display.densityDpi / 160));
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE)
+        {
+            if (isInMultiWindowMode()) //Split Screen
+            {
+                extraSpace += (16 * 2 * (display.densityDpi / 160));
+                width /= 2;
+            }
+            else
+                extraSpace += (16 * 2 * (display.densityDpi / 160)) + (550 * (display.densityDpi / 160));
+
+        }
+
 
         if(!getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.music)) &&
                 !getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.books)) &&

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.turtlescheme.Config;
@@ -76,6 +77,16 @@ public class HomeFragment extends Fragment
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        if(resultCode == 2)
+        {
+            ((EditText)requireView().findViewById(R.id.editTextTextPersonName)).setText("");
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void createDatabaseConnection()
     {
         Database db = new Database(requireActivity(),"turtlesketch.db", null, 3);
@@ -118,16 +129,16 @@ public class HomeFragment extends Fragment
                 if (response.isSuccessful())
                 {
                     MusicGA music = response.body();
-                    if (music != null && music.getArtists().size() > 0)
+                    if (music != null && music.getArtists() != null && music.getArtists().size() > 0)
                     {
                         List<Music> musicList = Converter.convertToMusicList(music);
                         Intent intent = new Intent(requireActivity(), ListMedia.class);
                         List<Multimedia> media = new ArrayList<>(musicList);
                         intent.putExtra("media", new MultimediaSerializable(media));
-                        startActivity(intent);
-                        requireActivity().finish();
+                        startActivityForResult(intent, 2);
+                        //requireActivity().finish();
                     }
-                    else if(music != null && music.getArtists().size() > 0)
+                    else if(music != null && (music.getArtists() == null || music.getArtists().size() == 0))
                     {
                         AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity());
                         alert.setTitle(getText(R.string.error));
@@ -170,8 +181,8 @@ public class HomeFragment extends Fragment
                         Intent intent = new Intent(requireActivity(), ListMedia.class);
                         List<Multimedia> media = new ArrayList<>(bookList);
                         intent.putExtra("media", new MultimediaSerializable(media));
-                        startActivity(intent);
-                        requireActivity().finish();
+                        startActivityForResult(intent, 2);
+                        //requireActivity().finish();
                     }
                     else if(books != null && books.getTotalItems() == 0)
                     {
@@ -212,16 +223,16 @@ public class HomeFragment extends Fragment
                 if (response.isSuccessful())
                 {
                     OmbdGA mediaSM = response.body();
-                    if (mediaSM != null && Integer.parseInt(mediaSM.getTotalResults()) > 0)
+                    if (mediaSM != null && mediaSM.getTotalResults() != null && Integer.parseInt(mediaSM.getTotalResults()) > 0)
                     {
                         List<Serie> serieList = Converter.convertToSeriesList(mediaSM);
                         Intent intent = new Intent(requireActivity(), ListMedia.class);
                         List<Multimedia> media = new ArrayList<>(serieList);
                         intent.putExtra("media", new MultimediaSerializable(media));
-                        startActivity(intent);
-                        requireActivity().finish();
+                        startActivityForResult(intent,2);
+                        //requireActivity().finish();
                     }
-                    else if(mediaSM != null && Integer.parseInt(mediaSM.getTotalResults()) == 0)
+                    else if(mediaSM != null && (mediaSM.getTotalResults() == null || Integer.parseInt(mediaSM.getTotalResults()) == 0))
                     {
                         AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity());
                         alert.setTitle(getText(R.string.error));
@@ -259,16 +270,16 @@ public class HomeFragment extends Fragment
                 if (response.isSuccessful())
                 {
                     OmbdGA mediaSM = response.body();
-                    if (mediaSM != null && Integer.parseInt(mediaSM.getTotalResults()) > 0)
+                    if (mediaSM != null && mediaSM.getTotalResults() != null && Integer.parseInt(mediaSM.getTotalResults()) > 0)
                     {
                         List<Movie> movieList = Converter.convertToMovieList(mediaSM);
                         Intent intent = new Intent(requireActivity(), ListMedia.class);
                         List<Multimedia> media = new ArrayList<>(movieList);
                         intent.putExtra("media", new MultimediaSerializable(media));
-                        startActivity(intent);
-                        requireActivity().finish();
+                        startActivityForResult(intent,2);
+                        //requireActivity().finish();
                     }
-                    else if(mediaSM != null && Integer.parseInt(mediaSM.getTotalResults()) == 0)
+                    else if(mediaSM != null && (mediaSM.getTotalResults() == null || Integer.parseInt(mediaSM.getTotalResults()) == 0))
                     {
                         AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity());
                         alert.setTitle(getText(R.string.error));

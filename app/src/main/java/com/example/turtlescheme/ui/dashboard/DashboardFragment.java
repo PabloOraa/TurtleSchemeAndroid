@@ -62,14 +62,11 @@ public class DashboardFragment extends Fragment
     public void onStart()
     {
         super.onStart();
-        listName.add(requireActivity().getText(R.string.music).toString());
-        listName.add(requireActivity().getText(R.string.books).toString());
-        listName.add(requireActivity().getText(R.string.movie).toString());
-        listName.add(requireActivity().getText(R.string.serie).toString());
         createDatabaseConnection();
         int totalWidth = calcNecessaryWidth();
         checkPrefs();
-        listNameBackup.addAll(listName);
+        if(listNameBackup.size() == 0)
+            listNameBackup.addAll(listName);
         adapter=new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, listName);
         ((ListView)requireView().findViewById(R.id.lv_contentList)).setAdapter(adapter);
         checkTheme();
@@ -99,6 +96,16 @@ public class DashboardFragment extends Fragment
             names = names.replaceAll("\\[", "").replaceAll("]", "");
             for (String name : names.split(","))
                 listName.add(name.trim());
+        }
+        else
+        {
+            listName.add(requireActivity().getText(R.string.music).toString());
+            listName.add(requireActivity().getText(R.string.books).toString());
+            listName.add(requireActivity().getText(R.string.movie).toString());
+            listName.add(requireActivity().getText(R.string.serie).toString());
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString("listsNames", listName.toString());
+            editor.apply();
         }
     }
 

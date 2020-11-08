@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity
      * The app version code (not the version name!) that was used on the last
      * start of the app.
      */
-    private static final String LAST_APP_VERSION = "93";
+    private static final String LAST_APP_VERSION = "97";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

@@ -320,7 +320,7 @@ public class DashboardFragment extends Fragment
             if(requireView().findViewById(R.id.im_filterL) != null)
                 setCheckedForSort(view,R.id.rg_filter,optionFilter);
             alert.setTitle(getText(R.string.filter_list));
-            alert.setMessage(getText(R.string.add_list_message));
+            alert.setMessage(getText(R.string.filter_list_message));
             createListenerForFuncFilter(view);
         }
         else if(type.equalsIgnoreCase("sort"))
@@ -328,7 +328,7 @@ public class DashboardFragment extends Fragment
             removeForSort(view);
             setCheckedForSort(view, R.id.rg_sort,optionSort);
             alert.setTitle(getText(R.string.sort_list));
-            alert.setMessage(getText(R.string.add_list_message));
+            alert.setMessage(getText(R.string.sort_list_message));
         }
 
         alert.setPositiveButton(getText(R.string.apply), (dialog, which) ->

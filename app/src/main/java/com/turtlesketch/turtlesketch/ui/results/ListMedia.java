@@ -96,6 +96,8 @@ public class ListMedia extends AppCompatActivity
 
         if(isList)
         {
+            if(getIntent().hasExtra("listTitle"))
+                setTitle(getIntent().getStringExtra("listTitle"));
             int totalWidth = calcNecessaryWidth();
             ViewGroup.LayoutParams layoutParams = findViewById(R.id.sv_searchL_inside_list).getLayoutParams();
             layoutParams.width = totalWidth;

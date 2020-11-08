@@ -13,6 +13,8 @@ import com.turtlesketch.turtlesketch.Multimedia.Multimedia;
 import com.turtlesketch.turtlesketch.Multimedia.Music;
 import com.turtlesketch.turtlesketch.Multimedia.Serie;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -310,8 +312,13 @@ public class Database extends SQLiteOpenHelper
         return (int) count;
     }
 
-    public int deleteList(SQLiteDatabase sqLiteDatabase, String listName)
+    public void deleteList(@NotNull SQLiteDatabase sqLiteDatabase, String listName)
     {
-        return sqLiteDatabase.delete("LIST", "title = ?", new String[] {listName});
+        sqLiteDatabase.delete("LIST", "title = ?", new String[]{listName});
+    }
+
+    public void deleteListMedia(@NotNull SQLiteDatabase sqLiteDatabase, String listName, String mediaID)
+    {
+        sqLiteDatabase.delete("LIST", "title = ? AND media = ?", new String[] {listName, mediaID});
     }
 }

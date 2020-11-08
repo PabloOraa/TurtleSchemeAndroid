@@ -55,4 +55,11 @@
     <string name="filter_list_message">Indica cómo quieres filtrar la lista</string>
     <string name="delete_list">Borrar la lista</string>
     <string name="delete_list_message">¿Estás seguro que deseas eliminar la lista y todo su contenido?</string>
+    <string name="author">Autor</string>
+    <string name="publisher">Editorial/Discográfica/Cadena</string>
+    <string name="language">Idioma</string>
+    <string name="gender">Género</string>
+    <string name="plot_desc">Sinopsis/Descripcion</string>
+    <string name="director">Director</string>
+    <string name="duration">Duración</string>
 </resources>

@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.turtlesketch.turtlesketch.AddMedia;
 import com.turtlesketch.turtlesketch.Config;
 import com.turtlesketch.turtlesketch.Interfaces.OmbdAPI;
 import com.turtlesketch.turtlesketch.Multimedia.OmbdGA.OmbdGA;
@@ -240,9 +241,18 @@ public class HomeFragment extends Fragment
         AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity());
         alert.setTitle(getText(R.string.error));
         alert.setMessage(requireActivity().getText(R.string.no_result_found));
-        alert.setPositiveButton(requireActivity().getText(R.string.yes), (dialog, which) -> dialog.dismiss());
+        alert.setPositiveButton(requireActivity().getText(R.string.yes), (dialog, which) -> addCreateMedia());
         alert.setNegativeButton(requireActivity().getText(R.string.no), (dialog,which) -> dialog.dismiss());
         AlertDialog dialog = alert.create();
         dialog.show();
+    }
+
+    private void addCreateMedia()
+    {
+        Intent intent = new Intent(requireActivity(), AddMedia.class);
+        intent.putExtra("type",((Spinner)requireView().findViewById(R.id.sp_types)).getSelectedItem().toString());
+        if(((EditText)requireView().findViewById(R.id.editTextTextPersonName)).getText() != null)
+            intent.putExtra("title",((EditText)requireView().findViewById(R.id.editTextTextPersonName)).getText().toString());
+        startActivityForResult(intent, 2);
     }
 }

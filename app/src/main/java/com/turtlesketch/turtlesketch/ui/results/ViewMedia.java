@@ -45,6 +45,7 @@ public class ViewMedia extends AppCompatActivity
     {
         super.onStart();
         fillMedia();
+        setTitle(media.getTitle());
         Database db = new Database(this,"turtlesketch.db", null, 3);
         if(!db.existsMultimedia(db.getReadableDatabase(),media.getTitle()))
             createListener();
@@ -141,7 +142,6 @@ public class ViewMedia extends AppCompatActivity
 
     private void changeTheme(String selectedText)
     {
-        Config.theme = selectedText;
         if(selectedText.equalsIgnoreCase(getString(R.string.light_theme)))
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         else if(selectedText.equalsIgnoreCase(getString(R.string.dark_theme)))

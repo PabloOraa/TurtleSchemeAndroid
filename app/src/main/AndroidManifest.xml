@@ -34,6 +34,10 @@
             android:name=".ui.results.ListMedia"
             android:label="@string/list_results">
         </activity>
+        <activity android:name=".AddMedia"
+            android:label="@string/add">
+            
+        </activity>
     </application>
 
 </manifest>

@@ -55,4 +55,11 @@
     <string name="filter_list_message">Select by which method do you want to filter the list</string>
     <string name="delete_list">Delete the list</string>
     <string name="delete_list_message">Are you sure you want to delete the list and all it\'s content?</string>
+    <string name="author">Author</string>
+    <string name="publisher">Publisher</string>
+    <string name="language">Language</string>
+    <string name="gender">Gender</string>
+    <string name="plot_desc">Plot/Description</string>
+    <string name="director">Director</string>
+    <string name="duration">Duration</string>
 </resources>

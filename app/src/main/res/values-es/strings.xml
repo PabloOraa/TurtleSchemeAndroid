@@ -53,4 +53,6 @@
     <string name="filter_list">Filtrar la lista</string>
     <string name="sort_list_message">Indica cómo quieres ordenar la lista</string>
     <string name="filter_list_message">Indica cómo quieres filtrar la lista</string>
+    <string name="delete_list">Borrar la lista</string>
+    <string name="delete_list_message">¿Estás seguro que deseas eliminar la lista y todo su contenido?</string>
 </resources>

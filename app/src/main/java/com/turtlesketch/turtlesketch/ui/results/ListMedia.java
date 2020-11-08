@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
 import android.view.WindowMetrics;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -71,16 +72,21 @@ public class ListMedia extends AppCompatActivity
         }
 
         if(isList)
-            if(getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.music)) ||
-                    getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.books)) ||
-                    getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.movie)) ||
-                    getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.serie)))
+            if(isBasicList())
             {
                 findViewById(R.id.iv_addL_inside_list).setVisibility(View.INVISIBLE);
                 findViewById(R.id.im_filterL_inside_list).setVisibility(View.INVISIBLE);
             }
         changeTheme(Config.theme);
         createListener();
+    }
+
+    private boolean isBasicList()
+    {
+        return getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.music)) ||
+                getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.books)) ||
+                getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.movie)) ||
+                getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.serie));
     }
 
     @Override
@@ -94,11 +100,26 @@ public class ListMedia extends AppCompatActivity
             ViewGroup.LayoutParams layoutParams = findViewById(R.id.sv_searchL_inside_list).getLayoutParams();
             layoutParams.width = totalWidth;
             findViewById(R.id.sv_searchL_inside_list).setLayoutParams(layoutParams);
+            checkIcons();
         }
         else
         {
             if(findViewById(R.id.cl_list_inside_list) != null)
                 ((LinearLayout)findViewById(R.id.cl_list_inside_list).getParent()).removeView(findViewById(R.id.cl_list_inside_list));
+        }
+    }
+
+    private void checkIcons()
+    {
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES)
+        {
+            ((ImageView) findViewById(R.id.iv_sortL_inside_list)).setImageResource(R.drawable.sort_white);
+            if (isBasicList())
+            {
+                ((ImageView) findViewById(R.id.im_filterL_inside_list)).setImageResource(R.drawable.filter_white);
+                ((ImageView) findViewById(R.id.iv_addL_inside_list)).setImageResource(R.drawable.add_white);
+            }
         }
     }
 
@@ -217,8 +238,8 @@ public class ListMedia extends AppCompatActivity
             }
             //((LinearLayout)view.findViewById(R.id.ln_filter_sort)).removeView(findViewById(R.id.rg_sort));
             ((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).removeView(((ConstraintLayout)view.findViewById(R.id.ln_filter_sort)).getViewById(R.id.rg_sort));
-            alert.setTitle(getText(R.string.add_list));
-            alert.setMessage(getText(R.string.add_list_message));
+            alert.setTitle(getText(R.string.filter_list));
+            alert.setMessage(getText(R.string.filter_list_message));
             createListenerForFuncFilter(view);
         }
         else if(type.equalsIgnoreCase("sort"))
@@ -247,8 +268,8 @@ public class ListMedia extends AppCompatActivity
                             if(((RadioButton)((RadioGroup)view.findViewById(R.id.rg_sort)).getChildAt(i)).getText().toString().equalsIgnoreCase(optionSort))
                                 ((RadioButton)((RadioGroup)view.findViewById(R.id.rg_sort)).getChildAt(i)).setChecked(true);
                     }
-            alert.setTitle(getText(R.string.add_list));
-            alert.setMessage(getText(R.string.add_list_message));
+            alert.setTitle(getText(R.string.sort_list));
+            alert.setMessage(getText(R.string.sort_list_message));
         }
 
         alert.setPositiveButton(getText(R.string.apply), (dialog, which) ->
@@ -447,10 +468,7 @@ public class ListMedia extends AppCompatActivity
         }
 
 
-        if(!getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.music)) &&
-                !getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.books)) &&
-                !getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.movie)) &&
-                !getIntent().getStringExtra("listTitle").equalsIgnoreCase(getString(R.string.serie)))
+        if(!isBasicList())
             return width-(widthAdd+widthFilter+widthSort+extraSpace);
         else
             return width-(widthFilter+widthSort+extraSpace);

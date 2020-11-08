@@ -87,20 +87,12 @@ public class DashboardFragment extends Fragment
     private void checkTheme()
     {
         int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        switch (currentNightMode)
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES)
         {
-            case Configuration.UI_MODE_NIGHT_NO:
-                ((ImageView)requireActivity().findViewById(R.id.iv_configL)).setImageResource(R.drawable.gears);
-                ((ImageView)requireActivity().findViewById(R.id.im_filterL)).setImageResource(R.drawable.filter);
-                ((ImageView)requireActivity().findViewById(R.id.iv_sortL)).setImageResource(R.drawable.sort);
-                ((ImageView)requireActivity().findViewById(R.id.iv_addL)).setImageResource(R.drawable.add);
-                break;
-            case Configuration.UI_MODE_NIGHT_YES:
-                ((ImageView)requireActivity().findViewById(R.id.iv_configL)).setImageResource(R.drawable.gears_white);
-                ((ImageView)requireActivity().findViewById(R.id.im_filterL)).setImageResource(R.drawable.filter_white);
-                ((ImageView)requireActivity().findViewById(R.id.iv_sortL)).setImageResource(R.drawable.sort_white);
-                ((ImageView)requireActivity().findViewById(R.id.iv_addL)).setImageResource(R.drawable.add_white);
-                break;
+            ((ImageView) requireActivity().findViewById(R.id.iv_configL)).setImageResource(R.drawable.gears_white);
+            ((ImageView) requireActivity().findViewById(R.id.im_filterL)).setImageResource(R.drawable.filter_white);
+            ((ImageView) requireActivity().findViewById(R.id.iv_sortL)).setImageResource(R.drawable.sort_white);
+            ((ImageView) requireActivity().findViewById(R.id.iv_addL)).setImageResource(R.drawable.add_white);
         }
     }
 
@@ -270,9 +262,10 @@ public class DashboardFragment extends Fragment
                 !listName.get(position).equalsIgnoreCase(listNameBackup.get(3)))
         {
             AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity());
-            alert.setTitle(requireActivity().getText(R.string.add_list));
-            alert.setMessage(requireActivity().getText(R.string.add_list_message));
-            alert.setPositiveButton(requireActivity().getText(R.string.add_list), (dialog, which) -> {
+            alert.setTitle(requireActivity().getText(R.string.delete_list));
+            alert.setMessage(requireActivity().getText(R.string.delete_list_message));
+            alert.setPositiveButton(requireActivity().getText(R.string.confirm), (dialog, which) ->
+            {
                 checkDatabaseForList(listName.get(position));
                 listNameBackup.remove(listName.get(position));
                 adapter.remove(listName.get(position));
@@ -290,7 +283,8 @@ public class DashboardFragment extends Fragment
 
     private void checkDatabaseForList(String s)
     {
-        System.out.println(s);
+        if(db.getNumberOfContentOfAList(connection, s) > 0)
+            db.deleteList(connection, s);
     }
 
     private void addNewList()

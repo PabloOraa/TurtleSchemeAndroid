@@ -19,18 +19,14 @@ import androidx.fragment.app.Fragment;
 
 import com.turtlesketch.turtlesketch.Config;
 import com.turtlesketch.turtlesketch.Interfaces.OmbdAPI;
-import com.turtlesketch.turtlesketch.Multimedia.Movie;
 import com.turtlesketch.turtlesketch.Multimedia.OmbdGA.OmbdGA;
-import com.turtlesketch.turtlesketch.Multimedia.Serie;
 import com.turtlesketch.turtlesketch.ui.results.Converter;
 import com.turtlesketch.turtlesketch.Database;
 import com.turtlesketch.turtlesketch.Interfaces.MusicAPI;
 import com.turtlesketch.turtlesketch.Interfaces.GoogleAPI;
-import com.turtlesketch.turtlesketch.Multimedia.Book;
 import com.turtlesketch.turtlesketch.Multimedia.BooksGA.BooksGA;
 import com.turtlesketch.turtlesketch.Multimedia.Multimedia;
 import com.turtlesketch.turtlesketch.Multimedia.MultimediaSerializable;
-import com.turtlesketch.turtlesketch.Multimedia.Music;
 import com.turtlesketch.turtlesketch.Multimedia.MusicGA.MusicGA;
 import com.turtlesketch.turtlesketch.R;
 import com.turtlesketch.turtlesketch.ui.results.ListMedia;
@@ -65,26 +61,22 @@ public class HomeFragment extends Fragment
         super.onStart();
         createDatabaseConnection();
         createListener();
-        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        switch (currentNightMode)
-        {
-            case Configuration.UI_MODE_NIGHT_NO:
-                ((ImageView)requireActivity().findViewById(R.id.IV_engranajesH)).setImageResource(R.drawable.gears);
-                break;
-            case Configuration.UI_MODE_NIGHT_YES:
-                ((ImageView)requireActivity().findViewById(R.id.IV_engranajesH)).setImageResource(R.drawable.gears_white);
-                break;
-        }
+        checkTheme();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
         if(resultCode == 2)
-        {
             ((EditText)requireView().findViewById(R.id.editTextTextPersonName)).setText("");
-        }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void checkTheme()
+    {
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES)
+            ((ImageView) requireActivity().findViewById(R.id.IV_engranajesH)).setImageResource(R.drawable.gears_white);
     }
 
     private void createDatabaseConnection()
@@ -115,12 +107,7 @@ public class HomeFragment extends Fragment
 
     private void searchMusic(String textToSearch)
     {
-        /*Retrofit query = new Retrofit.Builder().baseUrl("https://api.deezer.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
-                .setLenient()
-                .create())).client(new OkHttpClient.Builder().build()).build();*/
-        Retrofit query = new Retrofit.Builder().baseUrl("https://www.theaudiodb.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
-                .setLenient()
-                .create())).client(new OkHttpClient.Builder().build()).build();
+        Retrofit query = createRetrofit("https://www.theaudiodb.com");
         MusicAPI apiService = query.create(MusicAPI.class);
         Call<MusicGA> call = apiService.getArtist(textToSearch);
         call.enqueue(new Callback<MusicGA>() {
@@ -130,24 +117,9 @@ public class HomeFragment extends Fragment
                 {
                     MusicGA music = response.body();
                     if (music != null && music.getArtists() != null && music.getArtists().size() > 0)
-                    {
-                        List<Music> musicList = Converter.convertToMusicList(music);
-                        Intent intent = new Intent(requireActivity(), ListMedia.class);
-                        List<Multimedia> media = new ArrayList<>(musicList);
-                        intent.putExtra("media", new MultimediaSerializable(media));
-                        startActivityForResult(intent, 2);
-                        //requireActivity().finish();
-                    }
+                        createList(new ArrayList<>(Converter.convertToMusicList(music)));
                     else if(music != null && (music.getArtists() == null || music.getArtists().size() == 0))
-                    {
-                        AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity());
-                        alert.setTitle(getText(R.string.error));
-                        alert.setMessage(requireActivity().getText(R.string.no_result_found));
-                        alert.setPositiveButton(requireActivity().getText(R.string.yes), (dialog, which) -> dialog.dismiss());
-                        alert.setNegativeButton(requireActivity().getText(R.string.no), (dialog,which) -> dialog.dismiss());
-                        AlertDialog dialog = alert.create();
-                        dialog.show();
-                    }
+                        noResults();
                 }
                 else
                     System.out.println(response.errorBody());
@@ -162,9 +134,7 @@ public class HomeFragment extends Fragment
 
     private void searchBooks(String textToSearch)
     {
-        Retrofit query = new Retrofit.Builder().baseUrl("https://www.googleapis.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
-                .setLenient()
-                .create())).client(new OkHttpClient.Builder().build()).build();
+        Retrofit query = createRetrofit("https://www.googleapis.com");
         GoogleAPI apiService = query.create(GoogleAPI.class);
         Call<BooksGA> call = apiService.getBooks(textToSearch);
         call.enqueue(new Callback<BooksGA>()
@@ -176,24 +146,9 @@ public class HomeFragment extends Fragment
                 {
                     BooksGA books = response.body();
                     if(books != null && books.getTotalItems() > 0)
-                    {
-                        List<Book> bookList = Converter.convertToBookList(books);
-                        Intent intent = new Intent(requireActivity(), ListMedia.class);
-                        List<Multimedia> media = new ArrayList<>(bookList);
-                        intent.putExtra("media", new MultimediaSerializable(media));
-                        startActivityForResult(intent, 2);
-                        //requireActivity().finish();
-                    }
+                        createList(new ArrayList<>(Converter.convertToBookList(books)));
                     else if(books != null && books.getTotalItems() == 0)
-                    {
-                        AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity());
-                        alert.setTitle(getText(R.string.error));
-                        alert.setMessage(requireActivity().getText(R.string.no_result_found));
-                        alert.setPositiveButton(requireActivity().getText(R.string.yes), (dialog, which) -> dialog.dismiss());
-                        alert.setNegativeButton(requireActivity().getText(R.string.no), (dialog,which) -> dialog.dismiss());
-                        AlertDialog dialog = alert.create();
-                        dialog.show();
-                    }
+                        noResults();
                 }
                 else
                     System.out.println(response.errorBody());
@@ -210,9 +165,7 @@ public class HomeFragment extends Fragment
 
     private void searchSerie(String textToSearch)
     {
-        Retrofit query = new Retrofit.Builder().baseUrl("https://www.omdbapi.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
-                .setLenient()
-                .create())).client(new OkHttpClient.Builder().build()).build();
+        Retrofit query = createRetrofit("https://www.omdbapi.com");
         OmbdAPI apiService = query.create(OmbdAPI.class);
         Call<OmbdGA> call = apiService.getMovieSerie(textToSearch, Multimedia.SERIEOMBD);
         call.enqueue(new Callback<OmbdGA>()
@@ -224,24 +177,9 @@ public class HomeFragment extends Fragment
                 {
                     OmbdGA mediaSM = response.body();
                     if (mediaSM != null && mediaSM.getTotalResults() != null && Integer.parseInt(mediaSM.getTotalResults()) > 0)
-                    {
-                        List<Serie> serieList = Converter.convertToSeriesList(mediaSM);
-                        Intent intent = new Intent(requireActivity(), ListMedia.class);
-                        List<Multimedia> media = new ArrayList<>(serieList);
-                        intent.putExtra("media", new MultimediaSerializable(media));
-                        startActivityForResult(intent,2);
-                        //requireActivity().finish();
-                    }
+                        createList(new ArrayList<>(Converter.convertToSeriesList(mediaSM)));
                     else if(mediaSM != null && (mediaSM.getTotalResults() == null || Integer.parseInt(mediaSM.getTotalResults()) == 0))
-                    {
-                        AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity());
-                        alert.setTitle(getText(R.string.error));
-                        alert.setMessage(requireActivity().getText(R.string.no_result_found));
-                        alert.setPositiveButton(requireActivity().getText(R.string.yes), (dialog, which) -> dialog.dismiss());
-                        alert.setNegativeButton(requireActivity().getText(R.string.no), (dialog,which) -> dialog.dismiss());
-                        AlertDialog dialog = alert.create();
-                        dialog.show();
-                    }
+                        noResults();
                 }
                 else
                     System.out.println(response.errorBody());
@@ -257,9 +195,7 @@ public class HomeFragment extends Fragment
 
     private void searchMovie(String textToSearch)
     {
-        Retrofit query = new Retrofit.Builder().baseUrl("https://www.omdbapi.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
-                .setLenient()
-                .create())).client(new OkHttpClient.Builder().build()).build();
+        Retrofit query = createRetrofit("https://www.omdbapi.com");
         OmbdAPI apiService = query.create(OmbdAPI.class);
         Call<OmbdGA> call = apiService.getMovieSerie(textToSearch, Multimedia.MOVIEOMBD);
         call.enqueue(new Callback<OmbdGA>()
@@ -271,24 +207,9 @@ public class HomeFragment extends Fragment
                 {
                     OmbdGA mediaSM = response.body();
                     if (mediaSM != null && mediaSM.getTotalResults() != null && Integer.parseInt(mediaSM.getTotalResults()) > 0)
-                    {
-                        List<Movie> movieList = Converter.convertToMovieList(mediaSM);
-                        Intent intent = new Intent(requireActivity(), ListMedia.class);
-                        List<Multimedia> media = new ArrayList<>(movieList);
-                        intent.putExtra("media", new MultimediaSerializable(media));
-                        startActivityForResult(intent,2);
-                        //requireActivity().finish();
-                    }
+                        createList(new ArrayList<>(Converter.convertToMovieList(mediaSM)));
                     else if(mediaSM != null && (mediaSM.getTotalResults() == null || Integer.parseInt(mediaSM.getTotalResults()) == 0))
-                    {
-                        AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity());
-                        alert.setTitle(getText(R.string.error));
-                        alert.setMessage(requireActivity().getText(R.string.no_result_found));
-                        alert.setPositiveButton(requireActivity().getText(R.string.yes), (dialog, which) -> dialog.dismiss());
-                        alert.setNegativeButton(requireActivity().getText(R.string.no), (dialog,which) -> dialog.dismiss());
-                        AlertDialog dialog = alert.create();
-                        dialog.show();
-                    }
+                        noResults();
                 }
                 else
                     System.out.println(response.errorBody());
@@ -300,5 +221,28 @@ public class HomeFragment extends Fragment
                 t.printStackTrace();
             }
         });
+    }
+
+    private Retrofit createRetrofit(String url)
+    {
+        return new Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create())).client(new OkHttpClient.Builder().build()).build();
+    }
+
+    private void createList(List<Multimedia> media)
+    {
+        Intent intent = new Intent(requireActivity(), ListMedia.class);
+        intent.putExtra("media", new MultimediaSerializable(media));
+        startActivityForResult(intent,2);
+    }
+
+    private void noResults()
+    {
+        AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity());
+        alert.setTitle(getText(R.string.error));
+        alert.setMessage(requireActivity().getText(R.string.no_result_found));
+        alert.setPositiveButton(requireActivity().getText(R.string.yes), (dialog, which) -> dialog.dismiss());
+        alert.setNegativeButton(requireActivity().getText(R.string.no), (dialog,which) -> dialog.dismiss());
+        AlertDialog dialog = alert.create();
+        dialog.show();
     }
 }

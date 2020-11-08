@@ -309,4 +309,9 @@ public class Database extends SQLiteOpenHelper
         }
         return (int) count;
     }
+
+    public int deleteList(SQLiteDatabase sqLiteDatabase, String listName)
+    {
+        return sqLiteDatabase.delete("LIST", "title = ?", new String[] {listName});
+    }
 }

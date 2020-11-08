@@ -53,4 +53,6 @@
     <string name="filter_list">Filter list</string>
     <string name="sort_list_message">Select by which method do you want to sort the list</string>
     <string name="filter_list_message">Select by which method do you want to filter the list</string>
+    <string name="delete_list">Delete the list</string>
+    <string name="delete_list_message">Are you sure you want to delete the list and all it\'s content?</string>
 </resources>

@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.SearchView;
 import android.widget.Spinner;
 
 import androidx.annotation.Nullable;
@@ -33,6 +34,8 @@ import com.turtlesketch.turtlesketch.Multimedia.MultimediaSerializable;
 import com.turtlesketch.turtlesketch.Multimedia.Music;
 import com.turtlesketch.turtlesketch.Multimedia.Serie;
 import com.turtlesketch.turtlesketch.R;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,16 +139,47 @@ public class ListMedia extends AppCompatActivity
             });
         if(isList)
         {
-            if(findViewById(R.id.iv_sortL) != null)
-                findViewById(R.id.iv_sortL).setOnClickListener(v -> filterSortListener("sort"));
-            else if(findViewById(R.id.iv_sortL_inside_list) != null)
+            if(findViewById(R.id.iv_sortL_inside_list) != null)
                 findViewById(R.id.iv_sortL_inside_list).setOnClickListener(v -> filterSortListener("sort"));
-
-            if(findViewById(R.id.im_filterL) != null)
-                findViewById(R.id.im_filterL).setOnClickListener(v -> filterSortListener("filter"));
-            else if(findViewById(R.id.im_filterL_inside_list) != null)
+            if(findViewById(R.id.im_filterL_inside_list) != null)
                 findViewById(R.id.im_filterL_inside_list).setOnClickListener(v -> filterSortListener("filter"));
+            createListenerForSearch();
         }
+    }
+
+    private void createListenerForSearch()
+    {
+        SearchView search = findViewById(R.id.sv_searchL_inside_list);
+        search.setOnQueryTextFocusChangeListener((v, hasFocus) ->
+        {
+            if(!hasFocus)
+                searchOnList(search.getQuery().toString());
+        });
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query)
+            {
+                searchOnList(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText)
+            {
+                return false;
+            }
+        });
+    }
+
+    private void searchOnList(@NotNull String query)
+    {
+        adapter.clear();
+        if(query.isEmpty())
+            adapter.addAll(listMediaBackup);
+        else
+            for(Multimedia media : listMediaBackup)
+                if(media.getTitle().contains(query))
+                    adapter.add(media);
     }
 
     private void filterSortListener(String type)

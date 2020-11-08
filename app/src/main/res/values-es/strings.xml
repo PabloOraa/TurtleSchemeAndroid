@@ -49,4 +49,8 @@
     <string name="by_number_equals">Contenidos en la lista</string>
     <string name="apply">Aplicar</string>
     <string name="original">Original</string>
+    <string name="sort_list">Ordenar la lista</string>
+    <string name="filter_list">Filtrar la lista</string>
+    <string name="sort_list_message">Indica cómo quieres ordenar la lista</string>
+    <string name="filter_list_message">Indica cómo quieres filtrar la lista</string>
 </resources>

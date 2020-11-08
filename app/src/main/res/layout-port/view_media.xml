@@ -25,12 +25,14 @@
             android:id="@+id/tv_media_title"
             android:layout_width="127dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="44dp"
             android:layout_marginEnd="24dp"
             android:text=''
             android:textAlignment="center"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_media_author"
             app:layout_constraintEnd_toStartOf="@+id/tv_media_author"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_media_author" />
 

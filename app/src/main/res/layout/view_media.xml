@@ -25,14 +25,17 @@
             android:id="@+id/tv_media_title"
             android:layout_width="127dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="64dp"
             android:layout_marginEnd="24dp"
             android:text=''
             android:textAlignment="center"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_media_author"
             app:layout_constraintEnd_toStartOf="@+id/tv_media_author"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_media_author" />
+            app:layout_constraintTop_toTopOf="@+id/tv_media_author"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/tv_media_author"
@@ -55,6 +58,7 @@
             android:textAlignment="center"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="@+id/tv_media_title"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/tv_media_title"
             app:layout_constraintTop_toBottomOf="@+id/tv_media_title" />
 
@@ -67,8 +71,10 @@
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_media_publisher"
             app:layout_constraintEnd_toEndOf="@+id/tv_media_author"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/tv_media_author"
-            app:layout_constraintTop_toTopOf="@+id/tv_media_publisher" />
+            app:layout_constraintTop_toTopOf="@+id/tv_media_publisher"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/tv_media_language"
@@ -79,6 +85,7 @@
             android:textAlignment="center"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="@+id/tv_media_publisher"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/tv_media_publisher"
             app:layout_constraintTop_toBottomOf="@+id/tv_media_publisher" />
 
@@ -90,6 +97,7 @@
             android:textAlignment="center"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="@+id/tv_media_publishDate"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/tv_media_publishDate"
             app:layout_constraintTop_toTopOf="@+id/tv_media_language" />
 
@@ -97,8 +105,8 @@
             android:id="@+id/tv_media_plot"
             android:layout_width="333dp"
             android:layout_height="wrap_content"
-            android:justificationMode="inter_word"
             android:layout_marginTop="32dp"
+            android:justificationMode="inter_word"
             android:text=""
             android:textAlignment="center"
             android:textSize="24sp"
@@ -115,7 +123,7 @@
             android:textAlignment="center"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="@+id/tv_media_language"
-            app:layout_constraintStart_toStartOf="@+id/tv_media_plot"
+            app:layout_constraintStart_toStartOf="@+id/tv_media_language"
             app:layout_constraintTop_toBottomOf="@+id/tv_media_plot" />
 
         <TextView
@@ -126,6 +134,7 @@
             android:textAlignment="center"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="@+id/tv_media_gender"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/tv_media_gender"
             app:layout_constraintTop_toTopOf="@+id/tv_media_directorAlbum" />
 

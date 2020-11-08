@@ -25,38 +25,29 @@
             android:id="@+id/tv_media_title"
             android:layout_width="127dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="164dp"
             android:layout_marginEnd="24dp"
             android:text=''
             android:textAlignment="center"
             android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="@+id/sv_author"
-            app:layout_constraintEnd_toStartOf="@+id/sv_author"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_media_author"
+            app:layout_constraintEnd_toStartOf="@+id/tv_media_author"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/sv_author" />
+            app:layout_constraintTop_toTopOf="@+id/tv_media_author"
+            app:layout_constraintVertical_bias="0.0" />
 
-        <ScrollView
-            android:id="@+id/sv_author"
+        <TextView
+            android:id="@+id/tv_media_author"
             android:layout_width="127dp"
             android:layout_height="wrap_content"
+            android:text=""
+            android:textAlignment="center"
+            android:textSize="24sp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="164dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/im_media_cover">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_media_author"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textSize="24sp" />
-            </LinearLayout>
-        </ScrollView>
+            app:layout_constraintTop_toBottomOf="@+id/im_media_cover"/>
 
 
         <TextView
@@ -68,6 +59,7 @@
             android:textAlignment="center"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="@+id/tv_media_title"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/tv_media_title"
             app:layout_constraintTop_toBottomOf="@+id/tv_media_title" />
 
@@ -79,9 +71,11 @@
             android:textAlignment="center"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_media_publisher"
-            app:layout_constraintEnd_toEndOf="@+id/sv_author"
-            app:layout_constraintStart_toStartOf="@+id/sv_author"
-            app:layout_constraintTop_toTopOf="@+id/tv_media_publisher" />
+            app:layout_constraintEnd_toEndOf="@+id/tv_media_author"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/tv_media_author"
+            app:layout_constraintTop_toTopOf="@+id/tv_media_publisher"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/tv_media_language"
@@ -92,45 +86,32 @@
             android:textAlignment="center"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="@+id/tv_media_publisher"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/tv_media_publisher"
             app:layout_constraintTop_toBottomOf="@+id/tv_media_publisher" />
 
-        <ScrollView
-            android:id="@+id/sv_gender"
+        <TextView
+            android:id="@+id/tv_media_gender"
             android:layout_width="127dp"
             android:layout_height="match_parent"
+            android:text=""
+            android:textAlignment="center"
+            android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="@+id/tv_media_publishDate"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/tv_media_publishDate"
-            app:layout_constraintTop_toTopOf="@+id/tv_media_language">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_media_gender"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textSize="24sp" />
-
-            </LinearLayout>
-        </ScrollView>
-
-
+            app:layout_constraintTop_toTopOf="@+id/tv_media_language" />
 
         <TextView
             android:id="@+id/tv_media_plot"
             android:layout_width="333dp"
             android:layout_height="wrap_content"
-            android:justificationMode="inter_word"
             android:layout_marginTop="32dp"
+            android:justificationMode="inter_word"
             android:text=""
             android:textAlignment="center"
             android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="@+id/sv_gender"
+            app:layout_constraintEnd_toEndOf="@+id/tv_media_gender"
             app:layout_constraintStart_toStartOf="@+id/tv_media_language"
             app:layout_constraintTop_toBottomOf="@+id/tv_media_language" />
 
@@ -143,7 +124,8 @@
             android:textAlignment="center"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="@+id/tv_media_language"
-            app:layout_constraintStart_toStartOf="@+id/tv_media_plot"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/tv_media_language"
             app:layout_constraintTop_toBottomOf="@+id/tv_media_plot" />
 
         <TextView
@@ -153,8 +135,9 @@
             android:text=""
             android:textAlignment="center"
             android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="@+id/sv_gender"
-            app:layout_constraintStart_toStartOf="@+id/sv_gender"
+            app:layout_constraintEnd_toEndOf="@+id/tv_media_gender"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/tv_media_gender"
             app:layout_constraintTop_toTopOf="@+id/tv_media_directorAlbum" />
 
         <Button

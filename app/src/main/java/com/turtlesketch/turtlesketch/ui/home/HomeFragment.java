@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,9 @@ import androidx.fragment.app.Fragment;
 
 import com.turtlesketch.turtlesketch.AddMedia;
 import com.turtlesketch.turtlesketch.Config;
+import com.turtlesketch.turtlesketch.Interfaces.MySQLAPI;
 import com.turtlesketch.turtlesketch.Interfaces.OmbdAPI;
+import com.turtlesketch.turtlesketch.Multimedia.MYSQL.MovieGA.MovieGA;
 import com.turtlesketch.turtlesketch.Multimedia.OmbdGA.OmbdGA;
 import com.turtlesketch.turtlesketch.ui.results.Converter;
 import com.turtlesketch.turtlesketch.Database;
@@ -35,6 +38,7 @@ import com.google.gson.GsonBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,12 +51,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HomeFragment extends Fragment
 {
-    private SQLiteDatabase connection;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        /*View root = inflater.inflate(R.layout.fragment_home, container, false);
-        return root;*/
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -82,8 +83,8 @@ public class HomeFragment extends Fragment
 
     private void createDatabaseConnection()
     {
-        Database db = new Database(requireActivity(),"turtlesketch.db", null, 3);
-        connection = db.getWritableDatabase();
+        /*Database db = new Database(requireActivity(),"turtlesketch.db", null, 3);
+        SQLiteDatabase connection = db.getWritableDatabase();*/
     }
 
     private void createListener()
@@ -238,13 +239,122 @@ public class HomeFragment extends Fragment
 
     private void noResults()
     {
-        AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity());
-        alert.setTitle(getText(R.string.error));
-        alert.setMessage(requireActivity().getText(R.string.no_result_found));
-        alert.setPositiveButton(requireActivity().getText(R.string.yes), (dialog, which) -> addCreateMedia());
-        alert.setNegativeButton(requireActivity().getText(R.string.no), (dialog,which) -> dialog.dismiss());
-        AlertDialog dialog = alert.create();
-        dialog.show();
+        if(!checkOwnDatabase())
+        {
+            AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity());
+            alert.setTitle(getText(R.string.error));
+            alert.setMessage(requireActivity().getText(R.string.no_result_found));
+            alert.setPositiveButton(requireActivity().getText(R.string.yes), (dialog, which) -> addCreateMedia());
+            alert.setNegativeButton(requireActivity().getText(R.string.no), (dialog,which) -> dialog.dismiss());
+            AlertDialog dialog = alert.create();
+            dialog.show();
+        }
+    }
+
+    private boolean checkOwnDatabase()
+    {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        String type = ((Spinner)requireView().findViewById(R.id.sp_types)).getSelectedItem().toString();
+        String textToSearch = ((EditText)requireView().findViewById(R.id.editTextTextPersonName)).getText().toString();
+        Retrofit retrofit = createRetrofit("https://turtlesketch.consulting");
+        MySQLAPI mySQLAPI = retrofit.create(MySQLAPI.class);
+        if(type.equalsIgnoreCase(getString(R.string.books)))
+        {
+            Call<com.turtlesketch.turtlesketch.Multimedia.MYSQL.BooksGA.BooksGA> call = mySQLAPI.getBook(textToSearch);
+            try
+            {
+                Response<com.turtlesketch.turtlesketch.Multimedia.MYSQL.BooksGA.BooksGA> response = call.execute();
+                if(response.isSuccessful())
+                {
+                    com.turtlesketch.turtlesketch.Multimedia.MYSQL.BooksGA.BooksGA book = response.body();
+                    if(Integer.parseInt(book.getTotalResults()) > 0)
+                    {
+                        createList(new ArrayList<>(Converter.convertToBookSQLList(book)));
+                        return true;
+                    }
+                }
+                else
+                    System.out.println(response.errorBody());
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else if(type.equalsIgnoreCase(getString(R.string.movie)))
+        {
+            Call<MovieGA> call = mySQLAPI.getMovie(textToSearch);
+            try
+            {
+                Response<MovieGA> response = call.execute();
+                if(response.isSuccessful())
+                {
+                    MovieGA movie = response.body();
+                    if(Integer.parseInt(movie.getTotalResults()) > 0)
+                    {
+                        createList(new ArrayList<>(Converter.convertToMovieSQLList(movie)));
+                        return true;
+                    }
+                }
+                else
+                    System.out.println(response.errorBody());
+
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else if(type.equalsIgnoreCase(getString(R.string.music)))
+        {
+            Call<com.turtlesketch.turtlesketch.Multimedia.MYSQL.MusicGA.MusicGA> call = mySQLAPI.getMusic(textToSearch);
+            try
+            {
+                Response<com.turtlesketch.turtlesketch.Multimedia.MYSQL.MusicGA.MusicGA> response = call.execute();
+                if(response.isSuccessful())
+                {
+                    com.turtlesketch.turtlesketch.Multimedia.MYSQL.MusicGA.MusicGA music = response.body();
+                    if(Integer.parseInt(music.getTotalResults()) > 0)
+                    {
+                        createList(new ArrayList<>(Converter.convertToMusicSQLList(music)));
+                        return true;
+                    }
+                }
+                else
+                    System.out.println(response.errorBody());
+
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else if(type.equalsIgnoreCase(getString(R.string.serie)))
+        {
+            Call<com.turtlesketch.turtlesketch.Multimedia.MYSQL.SerieGA.SerieGA> call = mySQLAPI.getSerie(textToSearch);
+            try
+            {
+                Response<com.turtlesketch.turtlesketch.Multimedia.MYSQL.SerieGA.SerieGA> response = call.execute();
+                if(response.isSuccessful())
+                {
+                    com.turtlesketch.turtlesketch.Multimedia.MYSQL.SerieGA.SerieGA serie = response.body();
+                    if(Integer.parseInt(serie.getTotalResults()) > 0)
+                    {
+                        createList(new ArrayList<>(Converter.convertToSerieSQLList(serie)));
+                        return true;
+                    }
+                }
+                else
+                    System.out.println(response.errorBody());
+
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 
     private void addCreateMedia()

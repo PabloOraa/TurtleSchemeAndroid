@@ -8,6 +8,9 @@ import com.turtlesketch.turtlesketch.Interfaces.OmbdAPI;
 import com.turtlesketch.turtlesketch.Multimedia.Book;
 import com.turtlesketch.turtlesketch.Multimedia.BooksGA.BooksGA;
 import com.turtlesketch.turtlesketch.Multimedia.BooksGA.Item;
+import com.turtlesketch.turtlesketch.Multimedia.MYSQL.BooksGA.Result;
+import com.turtlesketch.turtlesketch.Multimedia.MYSQL.MovieGA.MovieGA;
+import com.turtlesketch.turtlesketch.Multimedia.MYSQL.SerieGA.SerieGA;
 import com.turtlesketch.turtlesketch.Multimedia.Movie;
 import com.turtlesketch.turtlesketch.Multimedia.Multimedia;
 import com.turtlesketch.turtlesketch.Multimedia.Music;
@@ -97,6 +100,104 @@ public class Converter
         return new ArrayList<>(movieList);
     }
 
+    public static List<Book> convertToBookSQLList(com.turtlesketch.turtlesketch.Multimedia.MYSQL.BooksGA.BooksGA book)
+    {
+        Set<Book> bookList = new ArraySet<>();
+        for(Result search : book.getResults())
+        {
+            if(search.getAuthor() != null)
+            {
+                Book newBook = new Book();
+                newBook.setId(search.getId());
+                newBook.setTitle(search.getTitle());
+                newBook.setPublisher(search.getPublisher());
+                newBook.setActors_authors(Arrays.asList(search.getAuthor().split(",")));
+                newBook.setPlot(search.getPlot());
+                newBook.setCover(search.getCover());
+                newBook.setGender(Arrays.asList(search.getCategory().split(",")));
+                newBook.setLanguage(search.getLang());
+                newBook.setPublishDate(search.getPublishDate());
+                newBook.setType(Multimedia.BOOK);
+                bookList.add(newBook);
+            }
+        }
+        return new ArrayList<>(bookList);
+    }
+
+    public static List<Serie> convertToSerieSQLList(SerieGA serie)
+    {
+        Set<Serie> serieList = new ArraySet<>();
+        for(com.turtlesketch.turtlesketch.Multimedia.MYSQL.SerieGA.Result search : serie.getResults())
+        {
+            if(search.getDurationPerEpisode() != null && search.getPublishDate() != null && search.getGender() != null)
+            {
+                Serie newSerie = new Serie();
+                newSerie.setId(search.getId());
+                newSerie.setTitle(search.getTitle());
+                newSerie.setDirector(search.getDirector());
+                newSerie.setActors_authors(Arrays.asList(search.getActors().split(",")));
+                newSerie.setPlot(search.getPlot());
+                newSerie.setDurationPerEpisode(search.getDurationPerEpisode());
+                newSerie.setCover(search.getCover());
+                newSerie.setGender(Arrays.asList(search.getGender().split(",")));
+                newSerie.setLanguage(search.getLang());
+                newSerie.setPublishDate(search.getPublishDate());
+                newSerie.setType(Multimedia.SERIE);
+                serieList.add(newSerie);
+            }
+        }
+        return new ArrayList<>(serieList);
+    }
+
+    public static List<Movie> convertToMovieSQLList(MovieGA movie)
+    {
+        Set<Movie> movieList = new ArraySet<>();
+        for(com.turtlesketch.turtlesketch.Multimedia.MYSQL.MovieGA.Result search : movie.getResults())
+        {
+            if(search.getDuration() != null && search.getPublishDate() != null && search.getGender() != null)
+            {
+                Movie newMovie = new Movie();
+                newMovie.setId(search.getId());
+                newMovie.setTitle(search.getTitle());
+                newMovie.setDirector(search.getDirector());
+                newMovie.setActors_authors(Arrays.asList(search.getActors().split(",")));
+                newMovie.setPlot(search.getPlot());
+                newMovie.setDuration(search.getDuration());
+                newMovie.setCover(search.getCover());
+                newMovie.setGender(Arrays.asList(search.getGender().split(",")));
+                newMovie.setLanguage(search.getLang());
+                newMovie.setPublishDate(search.getPublishDate());
+                newMovie.setType(Multimedia.MOVIE);
+                movieList.add(newMovie);
+            }
+        }
+        return new ArrayList<>(movieList);
+    }
+
+    public static List<Music> convertToMusicSQLList(com.turtlesketch.turtlesketch.Multimedia.MYSQL.MusicGA.MusicGA music)
+    {
+        Set<Music> musicList = new ArraySet<>();
+        for(com.turtlesketch.turtlesketch.Multimedia.MYSQL.MusicGA.Result search : music.getResults())
+        {
+            if(search.getDuration() != null && search.getPublishDate() != null && search.getGender() != null)
+            {
+                Music newMusic = new Music();
+                newMusic.setId(search.getId());
+                newMusic.setTitle(search.getTitle());
+                newMusic.setPublisher(search.getPublisher());
+                newMusic.setActors_authors(Arrays.asList(search.getArtist().split(",")));
+                newMusic.setDescription(search.getDescription());
+                newMusic.setDuration(search.getDuration());
+                newMusic.setCover(search.getCover());
+                newMusic.setGender(Arrays.asList(search.getGender().split(",")));
+                newMusic.setLanguage(search.getLang());
+                newMusic.setPublishDate(search.getPublishDate());
+                newMusic.setType(Multimedia.MUSIC);
+                musicList.add(newMusic);
+            }
+        }
+        return new ArrayList<>(musicList);
+    }
 
     private static Set<Music> getMusicDetail(String idArtist)
     {

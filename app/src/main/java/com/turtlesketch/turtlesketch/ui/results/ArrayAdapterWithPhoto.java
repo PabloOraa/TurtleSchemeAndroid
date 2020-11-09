@@ -45,8 +45,17 @@ public class ArrayAdapterWithPhoto extends ArrayAdapter<Multimedia>
         TextView author = convertView.findViewById(R.id.tv_result_author);
         ImageView imageView = convertView.findViewById(R.id.im_result_cover);
         title.setText(media.get(position).getTitle());
-        author.setText(media.get(position).getActors_authors().toString().split("\\[")[1].split("]")[0]);
-        imageView.setImageBitmap(getBitmapFromURL(media.get(position).getCover()));
+        if(media.get(position).getActors_authors() != null)
+            if(!media.get(position).getActors_authors().get(0).equalsIgnoreCase(""))
+                if(media.get(position).getActors_authors().toString().contains("["))
+                    if(media.get(position).getActors_authors().toString().contains("]"))
+                        author.setText(media.get(position).getActors_authors().toString().split("\\[")[1].split("]")[0]);
+                    else
+                        author.setText(media.get(position).getActors_authors().toString().split("\\[")[1]);
+                else
+                    author.setText(media.get(position).getActors_authors().toString());
+        if(media.get(position).getCover() != null)
+            imageView.setImageBitmap(getBitmapFromURL(media.get(position).getCover()));
         return convertView;
     }
 

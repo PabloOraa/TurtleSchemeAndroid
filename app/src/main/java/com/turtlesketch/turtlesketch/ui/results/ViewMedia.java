@@ -97,15 +97,32 @@ public class ViewMedia extends AppCompatActivity
     {
         Intent getIntent = getIntent();
         media = (Multimedia) getIntent.getSerializableExtra("media");
-        ((ImageView)findViewById(R.id.im_media_cover)).setImageBitmap(getBitmapFromURL(media.getCover()));
-        ((TextView)findViewById(R.id.tv_media_author)).setText(media.getActors_authors().toString().split("\\[")[1].split("]")[0]);
+        if(media.getCover() != null)
+            ((ImageView)findViewById(R.id.im_media_cover)).setImageBitmap(getBitmapFromURL(media.getCover()));
+        if(media.getActors_authors() != null)
+            if(!media.getActors_authors().get(0).equalsIgnoreCase(""))
+                if(media.getActors_authors().toString().contains("["))
+                    if(media.getActors_authors().toString().contains("]"))
+                        ((TextView)findViewById(R.id.tv_media_author)).setText(media.getActors_authors().toString().split("\\[")[1].split("]")[0]);
+                    else
+                        ((TextView)findViewById(R.id.tv_media_author)).setText(media.getActors_authors().toString().split("\\[")[1]);
+                else
+                    ((TextView)findViewById(R.id.tv_media_author)).setText(media.getActors_authors().toString());
         ((TextView)findViewById(R.id.tv_media_title)).setText(media.getTitle());
         if(media.getLanguage()!=null)
             ((TextView)findViewById(R.id.tv_media_language)).setText(media.getLanguage());
         if(media.getUrl() != null)
             ((TextView)findViewById(R.id.tv_media_directorAlbum)).setText(media.getUrl());
         if(media.getGender() != null)
-            ((TextView) findViewById(R.id.tv_media_gender)).setText(media.getGender().toString().split("\\[")[1].split("]")[0]);
+            if(!media.getGender().get(0).equalsIgnoreCase(""))
+                if(media.getGender().toString().contains("["))
+                    if(media.getGender().toString().contains("]"))
+                        ((TextView) findViewById(R.id.tv_media_gender)).setText(media.getGender().toString().split("\\[")[1].split("]")[0]);
+                    else
+                        ((TextView) findViewById(R.id.tv_media_gender)).setText(media.getGender().toString().split("\\[")[1]);
+                else
+                    ((TextView) findViewById(R.id.tv_media_gender)).setText(media.getGender().toString());
+
         ((TextView)findViewById(R.id.tv_media_publishDate)).setText(media.getPublishDate());
         if(media.getClass().equals(Book.class))
         {

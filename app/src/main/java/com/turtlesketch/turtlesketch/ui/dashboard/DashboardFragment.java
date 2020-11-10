@@ -385,7 +385,7 @@ public class DashboardFragment extends Fragment
     {
         if(((RadioButton)view.findViewById(((RadioGroup) view.findViewById(R.id.rg_filter)).getCheckedRadioButtonId())).getText().toString().equalsIgnoreCase(getString(R.string.by_content_type)))
             setNewList(getString(R.string.by_content_type), ((Spinner)view.findViewById(R.id.sp_type_filter)).getSelectedItem().toString());
-        else if(((RadioButton)view.findViewById(((RadioGroup) view.findViewById(R.id.rg_filter)).getCheckedRadioButtonId())).getText().toString().equalsIgnoreCase(getString(R.string.by_content_type)))
+        else if(((RadioButton)view.findViewById(((RadioGroup) view.findViewById(R.id.rg_filter)).getCheckedRadioButtonId())).getText().toString().equalsIgnoreCase(getString(R.string.original)))
             setNewList(getString(R.string.original), null);
         else if(((RadioButton)view.findViewById(((RadioGroup) view.findViewById(R.id.rg_filter)).getCheckedRadioButtonId())).getText().toString().equalsIgnoreCase(getString(R.string.by_number_equal_more)))
             setNewList(getString(R.string.by_number_equal_more), ((EditText)view.findViewById(R.id.et_number_equals_more)).getText().toString());
@@ -517,20 +517,23 @@ public class DashboardFragment extends Fragment
 
     private void setNewList(String criteria, String selectedItem) //For filter
     {
-        if(listName != null && listName.size() > 0)
+        if(selectedItem != null)
         {
-            if (criteria.equalsIgnoreCase(getString(R.string.by_content_type)))
-                filterByType(selectedItem);
-            else if(criteria.equalsIgnoreCase(getString(R.string.by_number_equals)))
-                filterByNumber(Integer.parseInt(selectedItem));
-            else if(criteria.equalsIgnoreCase(getString(R.string.by_number_equal_less)))
-                filterByNumberLess(Integer.parseInt(selectedItem));
-            else if(criteria.equalsIgnoreCase(getString(R.string.by_number_equal_more)))
-                filterByNumberMore(Integer.parseInt(selectedItem));
-            else if(criteria.equalsIgnoreCase(getString(R.string.original)))
-                backToOriginal();
+            if(listNameBackup != null && listNameBackup.size() > 0)
+            {
+                if (criteria.equalsIgnoreCase(getString(R.string.by_content_type)))
+                    filterByType(selectedItem);
+                else if (criteria.equalsIgnoreCase(getString(R.string.by_number_equals)))
+                    filterByNumber(Integer.parseInt(selectedItem));
+                else if (criteria.equalsIgnoreCase(getString(R.string.by_number_equal_less)))
+                    filterByNumberLess(Integer.parseInt(selectedItem));
+                else if (criteria.equalsIgnoreCase(getString(R.string.by_number_equal_more)))
+                    filterByNumberMore(Integer.parseInt(selectedItem));
+            }
         }
-        optionFilter = criteria;
+        else if(criteria.equalsIgnoreCase(getString(R.string.original)))
+            backToOriginal();
+            optionFilter = criteria;
     }
 
     private void filterByType(String selectedItem)
@@ -554,7 +557,7 @@ public class DashboardFragment extends Fragment
     {
         adapter.clear();
         for(String name: listNameBackup)
-            if(num >= db.getNumberOfContentOfAList(connection, getNormalizedName(name)))
+            if(num <= db.getNumberOfContentOfAList(connection, getNormalizedName(name)))
                 adapter.add(name);
     }
 
@@ -562,7 +565,7 @@ public class DashboardFragment extends Fragment
     {
         adapter.clear();
         for(String name : listNameBackup)
-            if(num <= db.getNumberOfContentOfAList(connection, getNormalizedName(name)))
+            if(num >= db.getNumberOfContentOfAList(connection, getNormalizedName(name)))
                 adapter.add(name);
     }
 }

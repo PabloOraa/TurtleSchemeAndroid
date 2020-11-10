@@ -268,7 +268,7 @@ public class HomeFragment extends Fragment
                 if(response.isSuccessful())
                 {
                     com.turtlesketch.turtlesketch.Multimedia.MYSQL.BooksGA.BooksGA book = response.body();
-                    if(Integer.parseInt(book.getTotalResults()) > 0)
+                    if(book != null && Integer.parseInt(book.getTotalResults()) > 0)
                     {
                         createList(new ArrayList<>(Converter.convertToBookSQLList(book)));
                         return true;
@@ -291,7 +291,7 @@ public class HomeFragment extends Fragment
                 if(response.isSuccessful())
                 {
                     MovieGA movie = response.body();
-                    if(Integer.parseInt(movie.getTotalResults()) > 0)
+                    if(movie != null && Integer.parseInt(movie.getTotalResults()) > 0)
                     {
                         createList(new ArrayList<>(Converter.convertToMovieSQLList(movie)));
                         return true;
@@ -315,7 +315,7 @@ public class HomeFragment extends Fragment
                 if(response.isSuccessful())
                 {
                     com.turtlesketch.turtlesketch.Multimedia.MYSQL.MusicGA.MusicGA music = response.body();
-                    if(Integer.parseInt(music.getTotalResults()) > 0)
+                    if(music != null && Integer.parseInt(music.getTotalResults()) > 0)
                     {
                         createList(new ArrayList<>(Converter.convertToMusicSQLList(music)));
                         return true;
@@ -339,7 +339,7 @@ public class HomeFragment extends Fragment
                 if(response.isSuccessful())
                 {
                     com.turtlesketch.turtlesketch.Multimedia.MYSQL.SerieGA.SerieGA serie = response.body();
-                    if(Integer.parseInt(serie.getTotalResults()) > 0)
+                    if(serie != null && Integer.parseInt(serie.getTotalResults()) > 0)
                     {
                         createList(new ArrayList<>(Converter.convertToSerieSQLList(serie)));
                         return true;

@@ -62,4 +62,14 @@
     <string name="plot_desc">Plot/Description</string>
     <string name="director">Director</string>
     <string name="duration">Duration</string>
+    <string name="suggestions">Suggested just for you</string>
+    <string name="connect">Connect</string>
+    <string name="import_data">Import list</string>
+    <string name="google" translatable="false">Google</string>
+    <string name="sportify" translatable="false">Spotify</string>
+    <string name="deezer" translatable="false">Deezer</string>
+    <string name="author_app">Made by Pablo Oraa Lopez. Version</string>
+    <string name="app_ver" translatable="false">1.0.0</string>
+    <string name="about" translatable="false">%1$s %2$s</string>
+    <string name="server_client_id" translatable="false">757060070955-q1bdjvs0u6ug0dbo96nn83kqpmicogoh.apps.googleusercontent.com</string>
 </resources>

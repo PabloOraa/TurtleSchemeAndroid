@@ -62,4 +62,8 @@
     <string name="plot_desc">Sinopsis/Descripcion</string>
     <string name="director">Director</string>
     <string name="duration">Duración</string>
+    <string name="suggestions">Sugerencias solo para ti</string>
+    <string name="connect">Conectar</string>
+    <string name="import_data">Importar listas</string>
+    <string name="author_app">Aplicación hecha por Pablo Oraa López. Versión</string>
 </resources>

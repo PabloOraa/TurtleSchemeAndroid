@@ -289,6 +289,21 @@ public class Database extends SQLiteOpenHelper
         return false;
     }
 
+    public boolean existsMultimediaIntoList(SQLiteDatabase sqLiteDatabase, String id, String titleOfTheList)
+    {
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * " +
+                                                "FROM LIST " +
+                                                "WHERE media = ?1 " +
+                                                "AND title = ?2", new String[]{id,titleOfTheList});
+        if(c.moveToNext())
+        {
+            c.close();
+            return true;
+        }
+        c.close();
+        return false;
+    }
+
     public int getNumberOfContentOfAList(SQLiteDatabase sqLiteDatabase, String listName)
     {
         long count;
@@ -320,5 +335,16 @@ public class Database extends SQLiteOpenHelper
     public void deleteListMedia(@NotNull SQLiteDatabase sqLiteDatabase, String listName, String mediaID)
     {
         sqLiteDatabase.delete("LIST", "title = ? AND media = ?", new String[] {listName, mediaID});
+    }
+
+    public String getMostTypicalCategories(@NotNull SQLiteDatabase sqLiteDatabase)
+    {
+        String category = "";
+
+        Cursor c = sqLiteDatabase.rawQuery("SELECT category FROM BOOKS GROUP BY Category ORDER BY COUNT(Category) DESC", null);
+        if(c.moveToNext())
+            category = (c.getString(c.getColumnIndex("category")));
+        c.close();
+        return category;
     }
 }

@@ -3,6 +3,9 @@ package com.turtlesketch.turtlesketch.Multimedia;
 import android.content.ContentValues;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.widget.TextView;
+
+import com.turtlesketch.turtlesketch.R;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -44,12 +47,15 @@ public abstract class Multimedia implements Serializable
         this.title = title;
         this.actors_authors = Arrays.asList(actors_authors.split(","));
         this.publishDate = publishDate;
-        if(gender.contains(","))
-            this.gender = Arrays.asList(gender.split(","));
-        else
+        if(gender != null)
         {
-            this.gender = new ArrayList<>();
-            this.gender.add(gender);
+            if(gender.contains(","))
+                this.gender = Arrays.asList(gender.split(","));
+            else
+            {
+                this.gender = new ArrayList<>();
+                this.gender.add(gender);
+            }
         }
         this.language = language;
         this.cover = cover;
@@ -164,18 +170,41 @@ public abstract class Multimedia implements Serializable
         ContentValues content = new ContentValues();
         content.put("id", id);
         content.put("title", title);
+
         if(getType().equals(Multimedia.BOOK))
-            content.put("author", actors_authors.toString().split("\\[")[1].split("]")[0]);
+            content.put("author", authorToDB());
         else if(getType().equals(Multimedia.MUSIC))
-            content.put("artist", actors_authors.toString().split("\\[")[1].split("]")[0]);
+            content.put("artist", authorToDB());
         else
-            content.put("actors", actors_authors.toString().split("\\[")[1].split("]")[0]);
-        if(gender != null)
-            content.put("gender", gender.toString().split("\\[")[1].split("]")[0]);
+            content.put("actors", authorToDB());
+
+        if(gender != null && gender.size() > 0)
+            if(!gender.get(0).equalsIgnoreCase(""))
+                if(gender.toString().contains("["))
+                    if(gender.toString().contains("]"))
+                        content.put("gender", gender.toString().split("\\[")[1].split("]")[0]);
+                    else
+                        content.put("gender", gender.toString().split("\\[")[1]);
+                else
+                    content.put("gender", gender.toString());
         content.put("publishDate", publishDate);
         content.put("lang", language);
         content.put("cover", cover);
         return content;
+    }
+
+    private String authorToDB()
+    {
+        if(actors_authors != null)
+            if(!actors_authors.get(0).equalsIgnoreCase(""))
+                if(actors_authors.toString().contains("["))
+                    if(actors_authors.toString().contains("]"))
+                        return actors_authors.toString().split("\\[")[1].split("]")[0];
+                    else
+                        return actors_authors.toString().split("\\[")[1];
+                else
+                    return actors_authors.toString();
+         return null;
     }
 
     private ByteArrayOutputStream getByteFromImage()

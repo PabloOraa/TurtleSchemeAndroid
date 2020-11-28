@@ -49,7 +49,15 @@ public class Book extends Multimedia implements Serializable
         ContentValues content = super.getContentValues();
         content.put("plot", plot);
         content.remove("gender");
-        content.put("category", getGender().toString().split("\\[")[1].split("]")[0]);
+        if(getGender() != null && getGender().size() > 0)
+            if(!getGender().get(0).equalsIgnoreCase(""))
+                if(getGender().toString().contains("["))
+                    if(getGender().toString().contains("]"))
+                        content.put("category", getGender().toString().split("\\[")[1].split("]")[0]);
+                    else
+                        content.put("category", getGender().toString().split("\\[")[1]);
+                else
+                    content.put("category", getGender().toString());
         content.put("publisher", publisher);
         return content;
     }

@@ -71,6 +71,9 @@ public class ListMedia extends AppCompatActivity
             setContentView(R.layout.view_list_media_empty);
         }
 
+        if(getIntent().hasExtra("sugg"))
+            setTitle(getText(R.string.suggestions));
+
         if(isList)
             if(isBasicList())
             {
@@ -378,16 +381,19 @@ public class ListMedia extends AppCompatActivity
         Intent intent = new Intent(this,ViewMedia.class);
         if(book.getTitle().contains("("))
             book.setTitle(book.getTitle().substring(0,book.getTitle().indexOf("(")-1));
-        if(book.getLanguage().equalsIgnoreCase("es"))
-            book.setLanguage(getText(R.string.es).toString());
-        else if(book.getLanguage().equalsIgnoreCase("en"))
-            book.setLanguage(getText(R.string.en).toString());
-        else if(book.getLanguage().equalsIgnoreCase("fr"))
-            book.setLanguage(getText(R.string.fr).toString());
-        else if(book.getLanguage().equalsIgnoreCase("de"))
-            book.setLanguage(getText(R.string.de).toString());
-        else if(book.getLanguage().equalsIgnoreCase("be"))
-            book.setLanguage(getText(R.string.be).toString());
+        if(book.getLanguage() != null)
+        {
+            if (book.getLanguage().equalsIgnoreCase("es"))
+                book.setLanguage(getText(R.string.es).toString());
+            else if (book.getLanguage().equalsIgnoreCase("en"))
+                book.setLanguage(getText(R.string.en).toString());
+            else if (book.getLanguage().equalsIgnoreCase("fr"))
+                book.setLanguage(getText(R.string.fr).toString());
+            else if (book.getLanguage().equalsIgnoreCase("de"))
+                book.setLanguage(getText(R.string.de).toString());
+            else if (book.getLanguage().equalsIgnoreCase("be"))
+                book.setLanguage(getText(R.string.be).toString());
+        }
         intent.putExtra("media", book);
         startActivityForResult(intent, 2);
     }
@@ -424,6 +430,12 @@ public class ListMedia extends AppCompatActivity
         {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+            finish();
+        }
+        else if(resultCode == 3)
+        {
+            Suggestions suggestions = new Suggestions();
+            suggestions.showSuggestions(listMedia.get(0).getType(),this);
             finish();
         }
     }

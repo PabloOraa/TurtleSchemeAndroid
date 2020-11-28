@@ -75,7 +75,7 @@ public class ViewMedia extends AppCompatActivity
                 alert.setPositiveButton("Ok", (dialog, which) ->
                 {
                     dialog.dismiss();
-                    setResult(2);
+                    setResult(3);
                     finish();
                 });
                 AlertDialog dialog = alert.create();
@@ -113,7 +113,7 @@ public class ViewMedia extends AppCompatActivity
             ((TextView)findViewById(R.id.tv_media_language)).setText(media.getLanguage());
         if(media.getUrl() != null)
             ((TextView)findViewById(R.id.tv_media_directorAlbum)).setText(media.getUrl());
-        if(media.getGender() != null)
+        if(media.getGender() != null && media.getGender().size() > 0)
             if(!media.getGender().get(0).equalsIgnoreCase(""))
                 if(media.getGender().toString().contains("["))
                     if(media.getGender().toString().contains("]"))

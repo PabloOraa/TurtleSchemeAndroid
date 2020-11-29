@@ -2,7 +2,6 @@ package com.turtlesketch.turtlesketch.ui.results;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.google.gson.GsonBuilder;
 import com.turtlesketch.turtlesketch.Database;
@@ -10,12 +9,12 @@ import com.turtlesketch.turtlesketch.Interfaces.GoogleAPI;
 import com.turtlesketch.turtlesketch.Interfaces.MusicAPI;
 import com.turtlesketch.turtlesketch.Interfaces.OmbdAPI;
 import com.turtlesketch.turtlesketch.Multimedia.BooksGA.BooksGA;
-import com.turtlesketch.turtlesketch.Multimedia.Movie;
 import com.turtlesketch.turtlesketch.Multimedia.Multimedia;
 import com.turtlesketch.turtlesketch.Multimedia.MultimediaSerializable;
 import com.turtlesketch.turtlesketch.Multimedia.MusicGA.MusicGA;
 import com.turtlesketch.turtlesketch.Multimedia.OmbdGA.OmbdGA;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -30,9 +29,24 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Suggestions
 {
+    /**
+     * List of the media objects
+     */
     List<Multimedia> listMedia;
+    /**
+     * Activity to do some of the functions.
+     */
     Activity act;
-    public void showSuggestions(String type, Activity activity) {
+
+    /**
+     * Get and show the suggestions based on the content type.
+     * @param type Type of the content to get the Suggestions
+     *         <br/><ul><li>Books</li><li>Movie</li><li>Music</li><li>Serie</li></ul>
+     * @param activity Activity to create the new intent once we have the startActivity.
+     * @author Pablo Oraa Lopez
+     */
+    public void showSuggestions(@NotNull String type, Activity activity)
+    {
         act = activity;
         switch (type) {
             case Multimedia.BOOK:
@@ -50,6 +64,10 @@ public class Suggestions
         }
     }
 
+    /**
+     * Create the intent for the List based on the suggestions obtained.
+     * @author Pablo Oraa lopez
+     */
     private void createIntentForList()
     {
         Intent intent = new Intent(act, ListMedia.class);
@@ -58,6 +76,10 @@ public class Suggestions
         act.startActivityForResult(intent,2);
     }
 
+    /**
+     * Create the suggestions for the IMBD API based on the user and their current collection.
+     * @author Pablo Oraa Lopez
+     */
     private void createSuggestionForSeries()
     {
         Retrofit query = createRetrofit("https://www.omdbapi.com");
@@ -89,6 +111,10 @@ public class Suggestions
         });
     }
 
+    /**
+     * Create the suggestions for the TheAudioDB API based on the user and their current collection.
+     * @author Pablo Oraa Lopez
+     */
     private void createSuggestionForMusic()
     {
         Retrofit query = createRetrofit("https://www.theaudiodb.com");
@@ -120,6 +146,10 @@ public class Suggestions
         });
     }
 
+    /**
+     * Create the suggestions for the IMBD API based on the user and their current collection.
+     * @author Pablo Oraa Lopez
+     */
     private void createSuggestionForMovies()
     {
         Retrofit query = createRetrofit("https://www.omdbapi.com");
@@ -151,6 +181,10 @@ public class Suggestions
         });
     }
 
+    /**
+     * Create the suggestions for the Google Books API based on the user and their current collection.
+     * @author Pablo Oraa Lopez
+     */
     private void createSuggestionForBooks()
     {
         Retrofit query = createRetrofit("https://www.googleapis.com");
@@ -183,11 +217,25 @@ public class Suggestions
         });
     }
 
+    /**
+     * Create the database object based on the current db name.
+     * @return Database object.
+     * @author Pablo Oraa Lopez
+     */
+    @NotNull
+    @Contract(" -> new")
     private Database getDatabase()
     {
         return new Database(act,"turtlesketch.db", null, 3);
     }
 
+    /**
+     * Create the retrofit object to do the call to the third party services.
+     * @param url Base URL to get the data from.
+     * @return Retrofit object.
+     * @author Pablo Oraa Lopez
+     */
+    @NotNull
     private Retrofit createRetrofit(String url)
     {
         return new Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create())).client(new OkHttpClient.Builder().build()).build();

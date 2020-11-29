@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,7 +23,6 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes;
@@ -32,8 +30,10 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.GsonBuilder;
+
 import com.microsoft.device.dualscreen.core.manager.ScreenModeListener;
 import com.microsoft.device.dualscreen.core.manager.SurfaceDuoScreenManager;
+
 import com.turtlesketch.turtlesketch.Interfaces.GoogleAPI;
 import com.turtlesketch.turtlesketch.Multimedia.Book;
 import com.turtlesketch.turtlesketch.Multimedia.BooksGA.BooksGA;
@@ -41,7 +41,6 @@ import com.turtlesketch.turtlesketch.Multimedia.LibraryGA.Item;
 import com.turtlesketch.turtlesketch.Multimedia.LibraryGA.LibraryGA;
 import com.turtlesketch.turtlesketch.ui.results.Converter;
 
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -50,19 +49,38 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+
 import okhttp3.OkHttpClient;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Config activity
+ * @author Pablo Oraa Lopez
+ */
 public class Config extends AppCompatActivity
 {
+    /**
+     * Manage the behaviour of the application depending on the state of the Surface Duo.
+     */
     private SurfaceDuoScreenManager surfaceDuoScreenManager;
+    /**
+     * Theme of the application.
+     */
     public static String theme;
-    private String scope = "oauth2:" + Scopes.EMAIL + " " + Scopes.PROFILE + " " + "https://www.googleapis.com/auth/books";
+    /**
+     * Scope of the application for Google Log in.
+     */
+    private final String scope = "oauth2:" + Scopes.EMAIL + " " + Scopes.PROFILE + " " + "https://www.googleapis.com/auth/books";
 
+    /**
+     * {@inheritDoc}
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -71,6 +89,10 @@ public class Config extends AppCompatActivity
         changeTheme(theme);
     }
 
+    /**
+     * {@inheritDoc}
+     * Set the about info and the buttons for the correct implementation of the connect part.
+     */
     @Override
     protected void onStart()
     {
@@ -84,6 +106,10 @@ public class Config extends AppCompatActivity
             ((Button)findViewById(R.id.bt_con_imp_google)).setText(R.string.connect);
     }
 
+    /**
+     * Configure the connection to third party services and options for the themes.
+     * @author Pablo Oraa Lopez
+     */
     private void configListener()
     {
         if(findViewById(R.id.sp_themes) == null)
@@ -94,7 +120,10 @@ public class Config extends AppCompatActivity
         configureConnection();
     }
 
-    //For Landscape
+    /**
+     * Configure the radio buttons for Landscape mode on the Theme.
+     * @author Pablo Oraa Lopez
+     */
     private void configureRadioButton()
     {
         RadioGroup group = findViewById(R.id.rg_theme);
@@ -105,7 +134,10 @@ public class Config extends AppCompatActivity
 
     }
 
-    //For Portrait
+    /**
+     * Configure the spinner for Portrait mode on the Theme.
+     * @author Pablo Oraa Lopez
+     */
     private void configureSpinner()
     {
         Spinner spinner = findViewById(R.id.sp_themes);
@@ -130,12 +162,20 @@ public class Config extends AppCompatActivity
         });
     }
 
+    /**
+     * Configure the connection to third partiy services, as of now being Google and Spotify.
+     * @author Pablo Oraa Lopez
+     */
     private void configureConnection()
     {
         googleConnection();
         spotifyConnection();
     }
 
+    /**
+     * Listener for the Google button to handle the connection.
+     * @author Pablo Oraa Lopez.
+     */
     private void googleConnection()
     {
         findViewById(R.id.bt_con_imp_google).setOnClickListener(v ->
@@ -152,6 +192,10 @@ public class Config extends AppCompatActivity
         });
     }
 
+    /**
+     * Listener for the Spotify button to handle the connection.
+     * @author Pablo Oraa Lopez.
+     */
     private void spotifyConnection()
     {
         findViewById(R.id.bt_con_imp_spoti).setOnClickListener(v ->
@@ -168,6 +212,11 @@ public class Config extends AppCompatActivity
         });
     }
 
+    /**
+     * Create the connection with Google and get the token if possible.
+     * @return True if the connection has been created successfully and false if not.
+     * @author Pablo Oraa Lopez
+     */
     private boolean createConnectionGoogle()
     {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
@@ -198,6 +247,10 @@ public class Config extends AppCompatActivity
         }
     }
 
+    /**
+     * Import all the lists the user has logged in and has in the Google Books web.
+     * @author Pablo Oraa Lopez
+     */
     private void importListsGoogle()
     {
         String token = getSharedPreferences("lists", Context.MODE_PRIVATE).getString("tokenGoogle", "");
@@ -234,7 +287,12 @@ public class Config extends AppCompatActivity
         }
     }
 
-    private void addLists(List<Item> items)
+    /**
+     * Add the lists to the SharedPreference so that could be accessed by the user.
+     * @param items Items that contains the lists names.
+     * @author Pablo Oraa Lopez
+     */
+    private void addLists(@NotNull List<Item> items)
     {
         List<String> listNameBackup = checkPrefs();
         for(Item item : items)
@@ -249,7 +307,13 @@ public class Config extends AppCompatActivity
         editor.apply();
     }
 
-    private void addBooks(List<Item> items, String token)
+    /**
+     * Add the the books the user has in their digital Google collection
+     * @param items Books received by Google on the personal collection.
+     * @param token Personalized token to access Google.
+     * @author Pablo Oraa Lopez
+     */
+    private void addBooks(@NotNull List<Item> items, String token)
     {
         for(Item item : items)
         {
@@ -276,7 +340,13 @@ public class Config extends AppCompatActivity
         }
     }
 
-    private void insertBooks(ArrayList<Book> books, String titleList)
+    /**
+     * Insert the books into the SQLite Database and into the list is contained on the Google
+     * personal library.
+     * @param books Book to be inserted.
+     * @param titleList Title of the list to insert the book.
+     */
+    private void insertBooks(@NotNull ArrayList<Book> books, String titleList)
     {
         Database db = new Database(this,"turtlesketch.db", null, 3);//getResources().getStringArray(R.array.sections));
         SQLiteDatabase connection = db.getWritableDatabase();
@@ -289,17 +359,34 @@ public class Config extends AppCompatActivity
         }
     }
 
+    /**
+     * Create the connection with Spotify and get the token if possible.
+     * @return True if the connection has been created successfully and false if not.
+     * @author Pablo Oraa Lopez
+     */
     private boolean createConnectionSpotify()
     {
         return true;
     }
 
+    /**
+     * Import the lists from the signed in spotify Account.
+     * @author Pablo Oraa Lopez
+     */
     private void importListsSpotify()
     {
 
     }
 
-    private void changeTheme(String selectedText)
+    /**
+     * Change the theme of the current Activity to match the system configuration or the selection of the User.
+     * <br/><br/>
+     * For the automatic configuration, it will depend on the system version we are running the App. If it's Android 10 or newer it will use the option included by Google.
+     * In the case is Android 9 (Android Pie) it will use the battery saver to decide the theme of the application.
+     * @param selectedText Actual theme selected by the user. If they never change it, auto will be the default option.
+     * @author Pablo Oraa Lopez
+     */
+    private void changeTheme(@NotNull String selectedText)
     {
         theme = selectedText;
         SharedPreferences sharedpreferences = getApplicationContext().getSharedPreferences("lists", Context.MODE_PRIVATE);
@@ -317,6 +404,12 @@ public class Config extends AppCompatActivity
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
     }
 
+    /**
+     * Create the necessary objects to manage the interaction with the app on Surface Duo.
+     * <br/>
+     * Depending on the real state of the Screen it will set the navigation bar in a different way.
+     * @author Pablo Oraa Lopez
+     */
     private void configureDualScreen()
     {
         surfaceDuoScreenManager = SurfaceDuoScreenManager.getInstance(getApplication());
@@ -340,11 +433,22 @@ public class Config extends AppCompatActivity
         });
     }
 
+    /**
+     * Retrieves the configurated Manager for the Surface Duo created on the OnCreate function.
+     * @return Surface Duo Manager object to manage the behaviour on this device.
+     * @author Pablo Oraa Lopez
+     */
     public SurfaceDuoScreenManager getSurfaceDuoScreenManager()
     {
         return surfaceDuoScreenManager;
     }
 
+    /**
+     * Do some task once the user has sign in correctly from the Intent.
+     * @param requestCode Expected code.
+     * @param resultCode Actual code.
+     * @param data Intent with all the data.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
@@ -360,7 +464,12 @@ public class Config extends AppCompatActivity
         }
     }
 
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask)
+    /**
+     * Handle the sign in from the user to get the token once he has accepted all the permissions.
+     * @param completedTask GoogleSignInAccount completed when the user accept all.
+     * @author Pablo Oraa Lopez
+     */
+    private void handleSignInResult(@NotNull Task<GoogleSignInAccount> completedTask)
     {
         try
         {
@@ -378,6 +487,10 @@ public class Config extends AppCompatActivity
         }
     }
 
+    /**
+     * Get the token for the Google Account to get all possible data from the Google Books API
+     * @author Pablo Oraa Lopez
+     */
     public void getToken()
     {
         Config config = this;
@@ -406,6 +519,13 @@ public class Config extends AppCompatActivity
         }).subscribeOn(Schedulers.computation()).subscribe();
     }
 
+    /**
+     * Check the list of names from the shared preferences, or creates it if it doesn't exists in the
+     * past.
+     * @return List of names.
+     * @author Pablo Oraa Lopez
+     */
+    @NotNull
     private List<String> checkPrefs()
     {
         List<String> listName = new ArrayList<>();

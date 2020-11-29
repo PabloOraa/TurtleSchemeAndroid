@@ -31,6 +31,13 @@ public class ArrayAdapterWithPhoto extends ArrayAdapter<Multimedia>
         super(context, resource, objects);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return View created for the list view.
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent)
@@ -64,6 +71,11 @@ public class ArrayAdapterWithPhoto extends ArrayAdapter<Multimedia>
         this.media = media;
     }
 
+    /**
+     * Recovers the image that can be found on the web and creates the bitmap asociated to show it on the activity.
+     * @param src URL of the web that contains the image.
+     * @return Bitmap image of the content.
+     */
     private Bitmap getBitmapFromURL(String src)
     {
         try

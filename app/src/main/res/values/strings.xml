@@ -72,4 +72,6 @@
     <string name="app_ver" translatable="false">1.0.0</string>
     <string name="about" translatable="false">%1$s %2$s</string>
     <string name="server_client_id" translatable="false">757060070955-q1bdjvs0u6ug0dbo96nn83kqpmicogoh.apps.googleusercontent.com</string>
+    <string name="client_id_spotify" translatable="false">9ddbd7d70e1f44cbb80b6c40f40d91ab</string>
+    <string name="client_secret_id_spotify" translatable="false">373751deac03472fa9c60e56f8afc3a6</string>
 </resources>

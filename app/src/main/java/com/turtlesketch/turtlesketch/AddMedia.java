@@ -24,10 +24,24 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Activity to Add media into SQL database and SQLite database when the user creates the media object.
+ */
 public class AddMedia extends Activity
 {
+    /**
+     * Media object to create and insert the Multimedia.
+     */
     Multimedia media;
+    /**
+     * Type of the media to create.
+     */
     String type;
+
+    /**
+     * {@inheritDoc}
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
@@ -36,6 +50,11 @@ public class AddMedia extends Activity
         checkTheme(Config.theme);
     }
 
+    /**
+     * {@inheritDoc}
+     * <br/>
+     * Creates the listener and the type to insert to configure as expected.
+     */
     @Override
     protected void onStart()
     {
@@ -44,6 +63,9 @@ public class AddMedia extends Activity
         createListener();
     }
 
+    /**
+     * Configure the type of the media to be inserted and set the Title to the one is passed on the Intent.
+     */
     private void configTitleType()
     {
         type = getIntent().getStringExtra("type");
@@ -51,6 +73,9 @@ public class AddMedia extends Activity
             ((EditText)findViewById(R.id.tv_media_title_add)).setText(getIntent().getStringExtra("title"));
     }
 
+    /**
+     * Create the listener to recover all data inserted by the user and insert into the Database.
+     */
     private void createListener()
     {
         findViewById(R.id.bt_add_media_add).setOnClickListener(v ->
@@ -68,6 +93,18 @@ public class AddMedia extends Activity
         });
     }
 
+    /**
+     * Connect to the database based on mySQL using the own webservice to insert the data into that
+     * specific type so other users can recover it.
+     * @param title Title of the media object.
+     * @param actorAuthor Actors/Authors/Artists of the media object.
+     * @param publisherDir Publisher/Director of the media object.
+     * @param duration Duration of the media object.
+     * @param publishDate Date in which the media object has been created.
+     * @param plotDesc Plot/Description of the media object.
+     * @param gender Gender of the media object
+     * @param lang Language of the media Object.
+     */
     private void connectAndInsert(String title, String actorAuthor, String publisherDir, String duration, String publishDate, String plotDesc, String gender, String lang)
     {
         Call<Integer> call = null;
@@ -111,6 +148,9 @@ public class AddMedia extends Activity
         }
     }
 
+    /**
+     * Show the error message into one AlertDialog for the error to be inserted.
+     */
     private void errorMessgae()
     {
         //Insert NO
@@ -121,6 +161,9 @@ public class AddMedia extends Activity
         dialog.show();
     }
 
+     /**
+      * Show a message that the content has been inserted successfully.
+      */
     private void successMessage()
     {
         insertIntoMySQL();
@@ -133,6 +176,9 @@ public class AddMedia extends Activity
         dialog.show();
     }
 
+    /**
+     * Method to insert the media object into the SQLite database of the device.
+     */
     private void insertIntoMySQL()
     {
         Database db = new Database(this,"turtlesketch.db", null, 3);//getResources().getStringArray(R.array.sections));
@@ -140,7 +186,15 @@ public class AddMedia extends Activity
         db.insertMultimedia(connection, media);//media))
     }
 
-    private void checkTheme(String selectedText)
+    /**
+     * Change the theme of the current Activity to match the system configuration or the selection of the User.
+     * <br/><br/>
+     * For the automatic configuration, it will depend on the system version we are running the App. If it's Android 10 or newer it will use the option included by Google.
+     * In the case is Android 9 (Android Pie) it will use the battery saver to decide the theme of the application.
+     * @param selectedText Actual theme selected by the user. If they never change it, auto will be the default option.
+     * @author Pablo Oraa Lopez
+     */
+    private void checkTheme(@NotNull String selectedText)
     {
         if(selectedText.equalsIgnoreCase(getString(R.string.light_theme)))
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);

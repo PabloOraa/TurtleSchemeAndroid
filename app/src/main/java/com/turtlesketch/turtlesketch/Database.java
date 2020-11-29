@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.ArraySet;
 
 import com.turtlesketch.turtlesketch.Multimedia.Book;
 import com.turtlesketch.turtlesketch.Multimedia.Movie;
@@ -14,9 +15,11 @@ import com.turtlesketch.turtlesketch.Multimedia.Music;
 import com.turtlesketch.turtlesketch.Multimedia.Serie;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class Database extends SQLiteOpenHelper
 {
@@ -25,8 +28,22 @@ public class Database extends SQLiteOpenHelper
         super(context, name, factory, version);
     }
 
+    /**
+     * {@inheritDoc}
+     * <br/>
+     * Tables to create are:
+     * <ul>
+     *     <li>Books</li>
+     *     <li>Music</li>
+     *     <li>Serie</li>
+     *     <li>Movie</li>
+     *     <li>List</li>
+     * </ul>
+     *
+     * @param sqLiteDatabase Database object which will contain all the necessary methods to interact with the database we created on the Constructor.
+     */
     @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase)
+    public void onCreate(@NotNull SQLiteDatabase sqLiteDatabase)
     {
         String tableCreation =  "CREATE TABLE BOOKS" +
                 "(" +
@@ -102,13 +119,26 @@ public class Database extends SQLiteOpenHelper
 
     }
 
-    public boolean insertMultimedia(SQLiteDatabase sqLiteDatabase, Multimedia media)
+    /**
+     * Insert the media object in the table defined by it's type.
+     * @param sqLiteDatabase SQLiteDatabase object to interact with the database created on the constructor.
+     * @param media Multimedia object which will contain all the necessary data for the app to work as expected.
+     * @return true if the insert is done succesfully and false is there was an error.
+     */
+    public boolean insertMultimedia(@NotNull SQLiteDatabase sqLiteDatabase, @NotNull Multimedia media)
     {
         long result = sqLiteDatabase.insert(media.getType(),null,media.getContentValues());
         return result != -1;
     }
 
-    public boolean insertIntoList(SQLiteDatabase sqLiteDatabase, Multimedia media, String titleOfTheList)
+    /**
+     * Insert media object into one specific list different to the type one.
+     * @param sqLiteDatabase SQLiteDatabase object to interact with the database created on the constructor.
+     * @param media Multimedia object which will contain all the necessary data for the app to work as expected.
+     * @param titleOfTheList List in which the media will be inserted.
+     * @return true if the insert is done succesfully and false is there was an error.
+     */
+    public boolean insertIntoList(@NotNull SQLiteDatabase sqLiteDatabase, @NotNull Multimedia media, String titleOfTheList)
     {
         ContentValues content = new ContentValues();
         content.put("title", titleOfTheList);
@@ -117,7 +147,14 @@ public class Database extends SQLiteOpenHelper
         return result != -1;
     }
 
-    public List<Multimedia> selectMultimedia(SQLiteDatabase sqLiteDatabase, String title, String table)
+    /**
+     * Retrieves a list of multimedia object in the case we want to know an specific value of a specific table.
+     * @param sqLiteDatabase SQLiteDatabase object to interact with the database created on the constructor.
+     * @param title Title of the media object to search.
+     * @param table Table to search that title.
+     * @return List with all possible media object with that title.
+     */
+    public List<Multimedia> selectMultimedia(SQLiteDatabase sqLiteDatabase, String title, @NotNull String table)
     {
         List<Multimedia> media = new ArrayList<>();
         Cursor c;
@@ -149,6 +186,12 @@ public class Database extends SQLiteOpenHelper
         return media;
     }
 
+    /**
+     * Retrieves all the content stored in a list that exist on the database.
+     * @param sqLiteDatabase SQLiteDatabase object to interact with the database created on the constructor.
+     * @param titleOfTheList Title of the list to get all content.
+     * @return List with all the Multimedia objects that were found.
+     */
     public List<Multimedia> selectList(SQLiteDatabase sqLiteDatabase, String titleOfTheList)
     {
         List<Multimedia> media = new ArrayList<>();
@@ -198,17 +241,29 @@ public class Database extends SQLiteOpenHelper
         return media;
     }
 
-    public List<String> selectListsNames(SQLiteDatabase sqLiteDatabase)
+    /**
+     * Get all names of the lists that are stored in the Database.
+     * @param sqLiteDatabase SQLiteDatabase object to interact with the database created on the constructor.
+     * @return List of String with all the different names existing on the database.
+     */
+    public List<String> selectListsNames(@NotNull SQLiteDatabase sqLiteDatabase)
     {
-        List<String> nameList = new ArrayList<>();
+        Set<String> nameList = new ArraySet<>();
         Cursor c = sqLiteDatabase.query("Lists", new String[] {"title"},null,null,null,null,null);
         while(c.moveToNext())
              nameList.add(c.getString(c.getColumnIndex("title")));
         c.close();
-        return nameList;
+        return new ArrayList<>(nameList);
     }
 
-    private List<String> getIds(SQLiteDatabase sqLiteDatabase, String titleOfTheList)
+    /**
+     * Get all the Ids of the media objects that are contained on a specific list. If it's one of the four main lists it will retrieve all data of that specific type.
+     * @param sqLiteDatabase SQLiteDatabase object to interact with the database created on the constructor.
+     * @param titleOfTheList Title of the list to get the Ids.
+     * @return List of String with the different Ids.
+     */
+    @Nullable
+    private List<String> getIds(SQLiteDatabase sqLiteDatabase, @NotNull String titleOfTheList)
     {
         List<String> listOfIds = new ArrayList<>();
         Cursor c;
@@ -251,7 +306,13 @@ public class Database extends SQLiteOpenHelper
         else return null;
     }
 
-    public boolean existsMultimedia(SQLiteDatabase sqLiteDatabase, String title)
+    /**
+     * Check if a media exists right now in the database.
+     * @param sqLiteDatabase SQLiteDatabase object to interact with the database created on the constructor.
+     * @param title Title to search for.
+     * @return True if the media object exists and false if not.
+     */
+    public boolean existsMultimedia(@NotNull SQLiteDatabase sqLiteDatabase, String title)
     {
         Cursor c = sqLiteDatabase.rawQuery("SELECT * " +
                 "FROM MOVIE " +
@@ -289,7 +350,14 @@ public class Database extends SQLiteOpenHelper
         return false;
     }
 
-    public boolean existsMultimediaIntoList(SQLiteDatabase sqLiteDatabase, String id, String titleOfTheList)
+    /**
+     * Check if a media exists right now in the list asked by the user.
+     * @param sqLiteDatabase SQLiteDatabase object to interact with the database created on the constructor.
+     * @param id Id of the object to search for it in the list.
+     * @param titleOfTheList List in which we have to look for the ID.
+     * @return True if exists and false if not.
+     */
+    public boolean existsMultimediaIntoList(@NotNull SQLiteDatabase sqLiteDatabase, String id, String titleOfTheList)
     {
         Cursor c = sqLiteDatabase.rawQuery("SELECT * " +
                                                 "FROM LIST " +
@@ -304,7 +372,13 @@ public class Database extends SQLiteOpenHelper
         return false;
     }
 
-    public int getNumberOfContentOfAList(SQLiteDatabase sqLiteDatabase, String listName)
+    /**
+     * Get the number of media objects stored into one of the list existing in the user app.
+     * @param sqLiteDatabase SQLiteDatabase object to interact with the database created on the constructor.
+     * @param listName Name of the list to get the count.
+     * @return Number of media objects in that list.
+     */
+    public int getNumberOfContentOfAList(SQLiteDatabase sqLiteDatabase, @NotNull String listName)
     {
         long count;
         switch (listName) {
@@ -327,16 +401,32 @@ public class Database extends SQLiteOpenHelper
         return (int) count;
     }
 
+    /**
+     * Delete one list from the database.
+     * @param sqLiteDatabase SQLiteDatabase object to interact with the database created on the constructor.
+     * @param listName List to be deleted.
+     */
     public void deleteList(@NotNull SQLiteDatabase sqLiteDatabase, String listName)
     {
         sqLiteDatabase.delete("LIST", "title = ?", new String[]{listName});
     }
 
+    /**
+     * Delete a media object from one of the list of the database. It's impossible that users delete it from the four basic lists, so it will only check the table List.
+     * @param sqLiteDatabase SQLiteDatabase object to interact with the database created on the constructor.
+     * @param listName Name of the list to delete the object from the database.
+     * @param mediaID Object to be deleted.
+     */
     public void deleteListMedia(@NotNull SQLiteDatabase sqLiteDatabase, String listName, String mediaID)
     {
         sqLiteDatabase.delete("LIST", "title = ? AND media = ?", new String[] {listName, mediaID});
     }
 
+    /**
+     *
+     * @param sqLiteDatabase SQLiteDatabase object to interact with the database created on the constructor.
+     * @return Most typical category of the user in the books table.
+     */
     public String getMostTypicalCategories(@NotNull SQLiteDatabase sqLiteDatabase)
     {
         String category = "";

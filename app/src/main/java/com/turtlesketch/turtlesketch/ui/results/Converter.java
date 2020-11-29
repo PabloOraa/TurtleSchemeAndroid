@@ -24,6 +24,9 @@ import com.turtlesketch.turtlesketch.Multimedia.OmbdGA.Search;
 import com.turtlesketch.turtlesketch.Multimedia.Serie;
 import com.google.gson.GsonBuilder;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,10 +40,19 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Converter class to change the result of the queries to objects know by the application and SQLiteDB
+ */
 public class Converter
 {
 
-    public static List<Book> convertToBookList(BooksGA books)
+    /**
+     * Convert the books received by Google to the Book class known by the app.
+     * @param books books received from Google Books API.
+     * @return List of Books.
+     */
+    @NotNull
+    public static List<Book> convertToBookList(@NotNull BooksGA books)
     {
         List<Book> bookList = new ArrayList<>();
         for(Item item : books.getItems())
@@ -69,7 +81,14 @@ public class Converter
         return bookList;
     }
 
-    public static List<Music> convertToMusicList(MusicGA music)
+    /**
+     * Convert the songs received by TheAudioDB to the Music class known by the app.
+     * @param music Songs received from TheAudioDB API.
+     * @return List of songs (Music).
+     */
+    @NotNull
+    @Contract("_ -> new")
+    public static List<Music> convertToMusicList(@NotNull MusicGA music)
     {
         Set<Music> musicList = new ArraySet<>();
         for(Artist data : music.getArtists()) //NO gender, no publisher
@@ -78,7 +97,14 @@ public class Converter
         return new ArrayList<>(musicList);
     }
 
-    public static List<Serie> convertToSeriesList(OmbdGA serie)
+    /**
+     * Convert the series received by IMBD to the Serie class known by the app.
+     * @param serie Series received from IMBD API.
+     * @return List of series.
+     */
+    @NotNull
+    @Contract("_ -> new")
+    public static List<Serie> convertToSeriesList(@NotNull OmbdGA serie)
     {
         Set<Serie> serieList = new ArraySet<>();
         for(Search search : serie.getSearch())
@@ -89,10 +115,17 @@ public class Converter
         return new ArrayList<>(serieList);
     }
 
-    public static List<Movie> convertToMovieList(OmbdGA serie)
+    /**
+     * Convert the movies received by IMBD to the Movie class known by the app.
+     * @param movie Movies received from IMBD API.
+     * @return List of movies.
+     */
+    @NotNull
+    @Contract("_ -> new")
+    public static List<Movie> convertToMovieList(@NotNull OmbdGA movie)
     {
         Set<Movie> movieList = new ArraySet<>();
-        for(Search search : serie.getSearch())
+        for(Search search : movie.getSearch())
         {
             if(!search.getPoster().equalsIgnoreCase("N/A"))
                 movieList.add(getMDetails(search.getTitle()));
@@ -100,7 +133,14 @@ public class Converter
         return new ArrayList<>(movieList);
     }
 
-    public static List<Book> convertToBookSQLList(com.turtlesketch.turtlesketch.Multimedia.MYSQL.BooksGA.BooksGA book)
+    /**
+     * Convert the books received by own DB to the Book class known by the app.
+     * @param book books received from MySQL DB.
+     * @return List of Books.
+     */
+    @NotNull
+    @Contract("_ -> new")
+    public static List<Book> convertToBookSQLList(@NotNull com.turtlesketch.turtlesketch.Multimedia.MYSQL.BooksGA.BooksGA book)
     {
         Set<Book> bookList = new ArraySet<>();
         for(Result search : book.getResults())
@@ -124,7 +164,14 @@ public class Converter
         return new ArrayList<>(bookList);
     }
 
-    public static List<Serie> convertToSerieSQLList(SerieGA serie)
+    /**
+     * Convert the series received by own DB to the Serie class known by the app.
+     * @param serie Series received from MySQL DB.
+     * @return List of series.
+     */
+    @NotNull
+    @Contract("_ -> new")
+    public static List<Serie> convertToSerieSQLList(@NotNull SerieGA serie)
     {
         Set<Serie> serieList = new ArraySet<>();
         for(com.turtlesketch.turtlesketch.Multimedia.MYSQL.SerieGA.Result search : serie.getResults())
@@ -149,7 +196,14 @@ public class Converter
         return new ArrayList<>(serieList);
     }
 
-    public static List<Movie> convertToMovieSQLList(MovieGA movie)
+    /**
+     * Convert the series received by own DB to the Movie class known by the app.
+     * @param movie Movies received from MySQL DB.
+     * @return List of movies.
+     */
+    @NotNull
+    @Contract("_ -> new")
+    public static List<Movie> convertToMovieSQLList(@NotNull MovieGA movie)
     {
         Set<Movie> movieList = new ArraySet<>();
         for(com.turtlesketch.turtlesketch.Multimedia.MYSQL.MovieGA.Result search : movie.getResults())
@@ -174,7 +228,14 @@ public class Converter
         return new ArrayList<>(movieList);
     }
 
-    public static List<Music> convertToMusicSQLList(com.turtlesketch.turtlesketch.Multimedia.MYSQL.MusicGA.MusicGA music)
+    /**
+     * Convert the songs received by own DB to the Music class known by the app.
+     * @param music Songs (Music) received from MySQL DB.
+     * @return List of music objects.
+     */
+    @NotNull
+    @Contract("_ -> new")
+    public static List<Music> convertToMusicSQLList(@NotNull com.turtlesketch.turtlesketch.Multimedia.MYSQL.MusicGA.MusicGA music)
     {
         Set<Music> musicList = new ArraySet<>();
         for(com.turtlesketch.turtlesketch.Multimedia.MYSQL.MusicGA.Result search : music.getResults())
@@ -199,6 +260,12 @@ public class Converter
         return new ArrayList<>(musicList);
     }
 
+    /**
+     * Get all the details of the song get by the search done by the user
+     * @param idArtist id of the Artist to get the data.
+     * @return Set of Music objects with all the data.
+     */
+    @NotNull
     private static Set<Music> getMusicDetail(String idArtist)
     {
         Set<Music> musicList = new ArraySet<>();
@@ -251,6 +318,12 @@ public class Converter
         return musicList;
     }
 
+    /**
+     * Get all the details of the serie get by the search done by the user
+     * @param title Title of the Serie to search all the details.
+     * @return Serie object with all the details.
+     */
+    @NotNull
     private static Serie getSDetails(String title)
     {
         Serie newSerie = new Serie();
@@ -296,6 +369,12 @@ public class Converter
         return newSerie;
     }
 
+    /**
+     * Get all the details of the movie get by the search done by the user
+     * @param title Title of the movie to search all the details.
+     * @return Movie object with all the details.
+     */
+    @NotNull
     private static Movie getMDetails(String title)
     {
         Movie newMovie = new Movie();

@@ -9,6 +9,9 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
+/**
+ * Interface that contains all the details to get full coverage of the methods.
+ */
 public interface MySQLAPI
 {
     @GET("androidsql/sqlRequest.php?type=Insert&table=BOOKS")

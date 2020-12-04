@@ -10,11 +10,13 @@ import android.graphics.Insets;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowInsets;
+import android.view.WindowManager;
 import android.view.WindowMetrics;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -148,8 +150,12 @@ public class DashboardFragment extends Fragment
         }
         else
         {
-            requireActivity().getApplicationContext().getDisplay().getRealMetrics(display);
-            width = display.widthPixels;
+            WindowManager wm = (WindowManager) requireContext().getSystemService(Context.WINDOW_SERVICE);
+            Display realDisplay = wm.getDefaultDisplay();
+            DisplayMetrics metrics = new DisplayMetrics();
+            realDisplay.getMetrics(metrics);
+            width = metrics.widthPixels;
+            //width = display.widthPixels;
         }
         int widthConfig = requireActivity().findViewById(R.id.iv_configL).getLayoutParams().width;
         int widthSort = requireActivity().findViewById(R.id.iv_sortL).getLayoutParams().width;

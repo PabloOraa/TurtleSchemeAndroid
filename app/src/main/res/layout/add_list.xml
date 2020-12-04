@@ -8,9 +8,11 @@
     <EditText
         android:id="@+id/et_add_list"
         android:layout_width="322dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:autofillHints="@string/newListHint"
         android:ems="10"
+        android:background="@color/white"
+        android:textColor="@color/black"
         android:hint="@string/newListHint"
         android:inputType="text"
         app:layout_constraintBottom_toBottomOf="parent"

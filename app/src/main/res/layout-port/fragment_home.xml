@@ -10,11 +10,14 @@
     <EditText
         android:id="@+id/editTextTextPersonName"
         android:layout_width="168dp"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
         android:autofillHints="no"
         android:ems="10"
         android:hint="@string/title_hint"
         android:inputType="text"
+        android:textColor="@color/black"
+        android:background="@color/white"
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="@+id/bt_search"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/bt_search"
@@ -24,7 +27,7 @@
     <Button
         android:id="@+id/bt_search"
         android:layout_width="165dp"
-        android:layout_height="44dp"
+        android:layout_height="48dp"
         android:layout_weight="1"
         android:text="@string/search"
         android:textStyle="bold"
@@ -51,7 +54,7 @@
     <Spinner
         android:id="@+id/sp_types"
         android:layout_width="168dp"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
         android:layout_weight="1"
         android:entries="@array/types"
         app:layout_constraintBottom_toTopOf="@+id/bt_search"

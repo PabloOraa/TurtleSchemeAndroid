@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity
      * The app version code (not the version name!) that was used on the last
      * start of the app.
      */
-    private final String LAST_APP_VERSION = getString(R.string.app_ver);
+    private final String LAST_APP_VERSION = "1.0.0";
 
     /**
      * {@inheritDoc}

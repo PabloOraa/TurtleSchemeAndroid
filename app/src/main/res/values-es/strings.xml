@@ -6,7 +6,7 @@
     <string name="title_search">Buscar</string>
     <string name="title">Título</string>
     <string name="type">Tipo</string>
-    <string name="title_hint">Título</string>
+    <string name="title_hint">Título a buscar</string>
     <string name="books">Libros</string>
     <string name="music">Música</string>
     <string name="serie">Series</string>

@@ -78,4 +78,8 @@
     <string name="client_secret_id_spotify" translatable="false">373751deac03472fa9c60e56f8afc3a6</string>
     <string name="add_to">Add to</string>
     <string name="add_to_list">Add to list</string>
+    <string name="importing">Importing your lists</string>
+    <string name="imported">Lists imported successfully</string>
+    <string name="creating_suggestions">Searching for some suggestions just for you</string>
+    <string name="searching">Searching for results</string>
 </resources>

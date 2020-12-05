@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,6 +37,7 @@ import com.turtlesketch.turtlesketch.R;
 import com.turtlesketch.turtlesketch.ui.results.ListMedia;
 import com.google.gson.GsonBuilder;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -109,6 +111,7 @@ public class HomeFragment extends Fragment
 
     private void searchMusic(String textToSearch)
     {
+        showMessage();
         Retrofit query = createRetrofit("https://www.theaudiodb.com");
         MusicAPI apiService = query.create(MusicAPI.class);
         Call<MusicGA> call = apiService.getArtist(textToSearch);
@@ -136,6 +139,7 @@ public class HomeFragment extends Fragment
 
     private void searchBooks(String textToSearch)
     {
+        showMessage();
         Retrofit query = createRetrofit("https://www.googleapis.com");
         GoogleAPI apiService = query.create(GoogleAPI.class);
         Call<BooksGA> call = apiService.getBooks(textToSearch);
@@ -167,6 +171,7 @@ public class HomeFragment extends Fragment
 
     private void searchSerie(String textToSearch)
     {
+        showMessage();
         Retrofit query = createRetrofit("https://www.omdbapi.com");
         OmbdAPI apiService = query.create(OmbdAPI.class);
         Call<OmbdGA> call = apiService.getMovieSerie(textToSearch, Multimedia.SERIEOMBD);
@@ -197,6 +202,7 @@ public class HomeFragment extends Fragment
 
     private void searchMovie(String textToSearch)
     {
+        showMessage();
         Retrofit query = createRetrofit("https://www.omdbapi.com");
         OmbdAPI apiService = query.create(OmbdAPI.class);
         Call<OmbdGA> call = apiService.getMovieSerie(textToSearch, Multimedia.MOVIEOMBD);
@@ -225,6 +231,14 @@ public class HomeFragment extends Fragment
         });
     }
 
+    private void showMessage()
+    {
+        Toast.makeText(requireContext(),getString(R.string.searching),Toast.LENGTH_LONG).show();
+    }
+
+
+    @NotNull
+    @Contract("_ -> new")
     private Retrofit createRetrofit(String url)
     {
         return new Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create())).client(new OkHttpClient.Builder().build()).build();

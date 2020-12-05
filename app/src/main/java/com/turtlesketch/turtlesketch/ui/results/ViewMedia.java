@@ -137,8 +137,10 @@ public class ViewMedia extends AppCompatActivity
                 dialog.dismiss();
                 if(getIntent().hasExtra("titleOfTheList"))
                     setResult(4);
-                else
+                else if(media.getType().equalsIgnoreCase(Multimedia.BOOK))
                     setResult(3);
+                else
+                    setResult(2);
                 finish();
             });
         AlertDialog dialog = alert.create();

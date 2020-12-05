@@ -23,6 +23,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SearchView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -664,6 +665,7 @@ public class ListMedia extends AppCompatActivity
         {
             Suggestions suggestions = new Suggestions();
             suggestions.showSuggestions(listMedia.get(0).getType(),this);
+            Toast.makeText(this,getString(R.string.creating_suggestions),Toast.LENGTH_LONG).show();
             finish();
         }
     }

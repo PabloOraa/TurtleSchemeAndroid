@@ -13,6 +13,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,10 +43,13 @@ import com.turtlesketch.turtlesketch.Multimedia.LibraryGA.LibraryGA;
 import com.turtlesketch.turtlesketch.ui.results.Converter;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -257,6 +261,7 @@ public class Config extends AppCompatActivity
         System.out.println("Token " + token);
         if(!token.equalsIgnoreCase(""))
         {
+            Config config = this;
             Retrofit retrofit = new Retrofit.Builder().baseUrl("https://www.googleapis.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create())).client(new OkHttpClient.Builder().build()).build();
             GoogleAPI apiService = retrofit.create(GoogleAPI.class);
             Call<LibraryGA> call = apiService.getLibraries("Bearer " + token);
@@ -267,14 +272,38 @@ public class Config extends AppCompatActivity
                 {
                     if(response.isSuccessful())
                     {
+                        Toast.makeText(config,getString(R.string.importing),Toast.LENGTH_SHORT).show();
                         LibraryGA libraries = response.body();
-                        if(libraries.getItems().size() > 0)
+                        System.out.println(getString(R.string.imported));
+                        if(libraries != null && libraries.getItems().size() > 0)
                         {
                             addLists(libraries.getItems());
                             addBooks(libraries.getItems(), token);
+                            System.out.println(getString(R.string.imported));
+                            Toast.makeText(config,getString(R.string.imported),Toast.LENGTH_SHORT).show();
                         }
                         else
                             System.out.println("No results");
+                    }
+                    else
+                    {
+                        try
+                        {
+                            if(response.errorBody() != null)
+                            {
+                                JSONObject jObjError = new JSONObject(response.errorBody().string());
+                                System.out.println(jObjError.getJSONObject("error").getString("message"));
+                                if(jObjError.getJSONObject("error").getString("message").contains("Request had invalid authentication credentials. Expected OAuth 2 access token, login cookie or other valid authentication credential."))
+                                {
+                                    getToken();
+                                    Thread.sleep(100);
+                                    importListsGoogle();
+                                }
+                            }
+                        } catch (JSONException | IOException | InterruptedException e)
+                        {
+                            e.printStackTrace();
+                        }
                     }
                 }
 
@@ -325,7 +354,7 @@ public class Config extends AppCompatActivity
                 @Override
                 public void onResponse(@NotNull Call<BooksGA> call, @NotNull Response<BooksGA> response)
                 {
-                    if(response.isSuccessful() && response.body().getTotalItems() > 0)
+                    if(response.isSuccessful() && response.body() != null && response.body().getTotalItems() > 0)
                     {
                         insertBooks(new ArrayList<>(Converter.convertToBookList(response.body())), item.getTitle());
                     }
@@ -500,7 +529,8 @@ public class Config extends AppCompatActivity
             String token = null;
             try
             {
-                token = GoogleAuthUtil.getToken(config, account.getAccount(), scope);
+                if(account != null)
+                    token = GoogleAuthUtil.getToken(config, Objects.requireNonNull(account.getAccount()), scope);
             } catch (UserRecoverableAuthException e)
             {
                 Log.e("Error", e.toString());
@@ -532,7 +562,6 @@ public class Config extends AppCompatActivity
         SharedPreferences sharedpreferences = getSharedPreferences("lists", Context.MODE_PRIVATE);
         if(sharedpreferences.contains("listsNames"))
         {
-            listName.clear();
             String names = sharedpreferences.getString("listsNames", "Music");
             names = names.replaceAll("\\[", "").replaceAll("]", "");
             for (String name : names.split(","))

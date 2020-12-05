@@ -15,8 +15,6 @@
         android:ems="10"
         android:hint="@string/title_hint"
         android:inputType="text"
-        android:textColor="@color/black"
-        android:background="@color/white"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="@+id/bt_search"
         app:layout_constraintEnd_toEndOf="parent"

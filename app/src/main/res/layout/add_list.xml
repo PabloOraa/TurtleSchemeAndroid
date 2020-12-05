@@ -11,8 +11,6 @@
         android:layout_height="48dp"
         android:autofillHints="@string/newListHint"
         android:ems="10"
-        android:background="@color/white"
-        android:textColor="@color/black"
         android:hint="@string/newListHint"
         android:inputType="text"
         app:layout_constraintBottom_toBottomOf="parent"

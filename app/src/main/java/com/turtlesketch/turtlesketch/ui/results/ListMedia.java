@@ -4,14 +4,17 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Insets;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
+import android.view.WindowManager;
 import android.view.WindowMetrics;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,6 +30,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.turtlesketch.turtlesketch.Config;
+import com.turtlesketch.turtlesketch.Database;
 import com.turtlesketch.turtlesketch.MainActivity;
 import com.turtlesketch.turtlesketch.Multimedia.Book;
 import com.turtlesketch.turtlesketch.Multimedia.Movie;
@@ -70,6 +74,14 @@ public class ListMedia extends AppCompatActivity
      * Option selected to sort the listMedia.
      */
     private String optionSort;
+    /**
+     * SQLite Database
+     */
+    Database db;
+    /**
+     * Connection to SQLite Database
+     */
+    private SQLiteDatabase connection;
 
     /**
      * {@inheritDoc}
@@ -106,7 +118,16 @@ public class ListMedia extends AppCompatActivity
                 findViewById(R.id.im_filterL_inside_list).setVisibility(View.INVISIBLE);
             }
         changeTheme(Config.theme);
+        createConnection();
         createListener();
+        if(isList && !isBasicList())
+            createLongListListener();
+    }
+
+    private void createConnection()
+    {
+        db = new Database(this,"turtlesketch.db", null, 3);
+        connection = db.getWritableDatabase();
     }
 
     /**
@@ -140,6 +161,8 @@ public class ListMedia extends AppCompatActivity
         {
             if(findViewById(R.id.cl_list_inside_list) != null)
                 ((LinearLayout)findViewById(R.id.cl_list_inside_list).getParent()).removeView(findViewById(R.id.cl_list_inside_list));
+            if(getIntent().hasExtra("addToList"))
+                setTitle(getString(R.string.add_to) + " " + getIntent().getStringExtra("titleOfTheList"));
         }
     }
 
@@ -214,7 +237,49 @@ public class ListMedia extends AppCompatActivity
             if(findViewById(R.id.im_filterL_inside_list) != null)
                 findViewById(R.id.im_filterL_inside_list).setOnClickListener(v -> filterSortListener("filter"));
             createListenerForSearch();
+            createListenerForAdd();
         }
+    }
+
+    private void createLongListListener()
+    {
+        if(listMedia.size() > 0)
+        {
+            ((ListView)findViewById(R.id.lv_contentListQuery)).setOnItemLongClickListener((parent, view, position, id) ->
+            {
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setTitle(getText(R.string.delete_list_media));
+                alert.setMessage(getText(R.string.delete_list_media_message));
+                alert.setPositiveButton(getText(R.string.apply), (dialog, which) ->
+                {
+                    db.deleteListMedia(connection,getIntent().getStringExtra("listTitle"),listMedia.get(position).getId());
+                    listMediaBackup.remove(listMedia.get(position));
+                    adapter.remove(listMedia.get(position));
+                });
+                alert.setNegativeButton(getText(R.string.cancel), (dialog, which) -> dialog.dismiss());
+                AlertDialog dialog = alert.create();
+                dialog.show();
+                return false;
+            });
+        }
+    }
+
+
+    private void createListenerForAdd()
+    {
+        findViewById(R.id.iv_addL_inside_list).setOnClickListener(v ->
+        {
+            List<Multimedia> allMedia = db.getAllData(connection);
+            Intent intent = new Intent(this, ListMedia.class);
+            if(!allMedia.isEmpty())
+                intent.putExtra("media", new MultimediaSerializable(allMedia));
+            else
+                intent.putExtra("empty", true);
+            //intent.putExtra("list", true);
+            intent.putExtra("addToList", true);
+            intent.putExtra("titleOfTheList", getIntent().getStringExtra("listTitle"));
+            startActivity(intent);
+        });
     }
 
     /**
@@ -413,35 +478,42 @@ public class ListMedia extends AppCompatActivity
      * Method to sort the media list based on the possible values.
      * @param criteria Criteria to sort.
      */
-    private void setNewList(String criteria)
+    private void setNewList(String criteria) //For Sort
     {
         if(listMedia != null && listMedia.size() > 0)
-        {
             if(criteria.equalsIgnoreCase(getString(R.string.alphabetically)))
-            {
-                Multimedia media;
-                for(int i = 0; i < listMedia.size();i++)
-                {
-                    media = listMedia.get(i);
-                    for(int j = i; j < listMedia.size();j++)
-                        if(media.getTitle().compareToIgnoreCase(listMedia.get(j).getTitle()) > 0)
-                        {
-                            Multimedia newMedia = listMedia.get(i);
-                            listMedia.set(i,media);
-                            listMedia.set(j,newMedia);
-                        }
-                }
-                List<Multimedia> newListMultimedia = new ArrayList<>(listMedia);
-                adapter.clear();
-                adapter.addAll(newListMultimedia);
-            }
+                sortAlphabetically();
             else if(criteria.equalsIgnoreCase(getString(R.string.original)))
-            {
-                adapter.clear();
-                adapter.addAll(listMediaBackup);
-            }
-        }
+                backToOriginal();
         optionSort = criteria;
+    }
+
+    private void sortAlphabetically()
+    {
+        for(int i = 0; i < listMedia.size();i++)
+        {
+            Multimedia media = listMedia.get(i);
+            for(int j = i; j < listMedia.size();j++)
+                if(media.getTitle().compareToIgnoreCase(listMedia.get(j).getTitle()) > 0)
+                    media = swipeMedia(i,j,media);
+        }
+        List<Multimedia> newListMultimedia = new ArrayList<>(listMedia);
+        adapter.clear();
+        adapter.addAll(newListMultimedia);
+    }
+
+    private Multimedia swipeMedia(int i, int j, Multimedia media)
+    {
+        Multimedia newMedia = listMedia.get(j);
+        listMedia.set(j,media);
+        listMedia.set(i,newMedia);
+        return newMedia;
+    }
+
+    private void backToOriginal()
+    {
+        adapter.clear();
+        adapter.addAll(listMediaBackup);
     }
 
     /**
@@ -449,34 +521,44 @@ public class ListMedia extends AppCompatActivity
      * @param criteria Criteria to filter.
      * @param selectedItem In the case it's necessary a non pre-defined value, the value the user selected.
      */
-    private void setNewList(String criteria, String selectedItem)
+    private void setNewList(String criteria, String selectedItem) //For filter
     {
-        if(listMedia != null && listMedia.size() > 0)
+        if(selectedItem != null)
         {
-            if (criteria.equalsIgnoreCase(getString(R.string.by_content_type)))
+            if(listMediaBackup != null && listMediaBackup.size() > 0)
             {
-                if (selectedItem.equalsIgnoreCase(getString(R.string.movie)))
-                    selectedItem = Multimedia.MOVIE;
-                else if (selectedItem.equalsIgnoreCase(getString(R.string.music)))
-                    selectedItem = Multimedia.MUSIC;
-                else if (selectedItem.equalsIgnoreCase(getString(R.string.books)))
-                    selectedItem = Multimedia.BOOK;
-                else if (selectedItem.equalsIgnoreCase(getString(R.string.serie)))
-                    selectedItem = Multimedia.SERIE;
-
-                adapter.clear();
-                for (Multimedia media : listMediaBackup)
-                    if (media.getType().equalsIgnoreCase(selectedItem))
-                        adapter.add(media);
-            }
-            else if(criteria.equalsIgnoreCase(getString(R.string.original)))
-            {
-                adapter.clear();
-                for (Multimedia media : listMediaBackup)
-                    adapter.add(media);
+                if (criteria.equalsIgnoreCase(getString(R.string.by_content_type)))
+                    filterByType(selectedItem);
             }
         }
+        else if(criteria.equalsIgnoreCase(getString(R.string.original)))
+            backToOriginal();
         optionFilter = criteria;
+    }
+
+    private void filterByType(String selectedItem)
+    {
+        adapter.clear();
+
+        for (Multimedia media : db.selectList(connection,getNormalizedName(selectedItem)))
+            if (media.getType().equalsIgnoreCase(getNormalizedName(selectedItem)))
+                for(Multimedia existingMedia : listMediaBackup)
+                    if(media.getId().equalsIgnoreCase(existingMedia.getId()))
+                        adapter.add(media);
+    }
+
+    private String getNormalizedName(@NotNull String s)
+    {
+        if(s.equalsIgnoreCase(getString(R.string.books)))
+            return Multimedia.BOOK;
+        else if(s.equalsIgnoreCase(getString(R.string.music)))
+            return Multimedia.MUSIC;
+        else if(s.equalsIgnoreCase(getString(R.string.movie)))
+            return Multimedia.MOVIE;
+        else if(s.equalsIgnoreCase(getString(R.string.serie)))
+            return Multimedia.SERIE;
+        else
+            return s;
     }
 
     /**
@@ -502,6 +584,8 @@ public class ListMedia extends AppCompatActivity
             else if (book.getLanguage().equalsIgnoreCase("be"))
                 book.setLanguage(getText(R.string.be).toString());
         }
+        if(getIntent().hasExtra("addToList"))
+            intent.putExtra("titleOfTheList", getIntent().getStringExtra("titleOfTheList"));
         intent.putExtra("media", book);
         startActivityForResult(intent, 2);
     }
@@ -517,6 +601,8 @@ public class ListMedia extends AppCompatActivity
         if(music.getTitle().contains("("))
             music.setTitle(music.getTitle().substring(0,music.getTitle().indexOf("(")-1));
         intent.putExtra("media", music);
+        if(getIntent().hasExtra("addToList"))
+            intent.putExtra("titleOfTheList", getIntent().getStringExtra("titleOfTheList"));
         startActivityForResult(intent, 2);
     }
 
@@ -531,6 +617,8 @@ public class ListMedia extends AppCompatActivity
         if(serie.getTitle().contains("("))
             serie.setTitle(serie.getTitle().substring(0,serie.getTitle().indexOf("(")-1));
         intent.putExtra("media", serie);
+        if(getIntent().hasExtra("addToList"))
+            intent.putExtra("titleOfTheList", getIntent().getStringExtra("titleOfTheList"));
         startActivityForResult(intent, 2);
     }
 
@@ -545,6 +633,8 @@ public class ListMedia extends AppCompatActivity
         if(movie.getTitle().contains("("))
             movie.setTitle(movie.getTitle().substring(0,movie.getTitle().indexOf("(")-1));
         intent.putExtra("media", movie);
+        if(getIntent().hasExtra("addToList"))
+            intent.putExtra("titleOfTheList", getIntent().getStringExtra("titleOfTheList"));
         startActivityForResult(intent, 2);
     }
 
@@ -592,7 +682,7 @@ public class ListMedia extends AppCompatActivity
         int widthSort = findViewById(R.id.iv_sortL_inside_list).getLayoutParams().width;
         DisplayMetrics display = getResources().getDisplayMetrics();
 
-        width = getWidth(display);
+        width = getWidth();
         if(!isBasicList())
         {
             widthAdd = findViewById(R.id.iv_addL_inside_list).getLayoutParams().width;
@@ -611,10 +701,9 @@ public class ListMedia extends AppCompatActivity
     /**
      * Check and return the width of the display in the current mode of the phone. If it's Android 11,
      * it will use the new way to obtain it, but in older versions use the traditional way which won't have any problem.
-     * @param display Screen of the application with all the sizes.
      * @return Number of pixels which occupies the width screen.
      */
-    private int getWidth(DisplayMetrics display)
+    private int getWidth()
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
         {
@@ -624,8 +713,11 @@ public class ListMedia extends AppCompatActivity
         }
         else
         {
-            getApplicationContext().getDisplay().getRealMetrics(display);
-            return display.widthPixels;
+            WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+            Display realDisplay = wm.getDefaultDisplay();
+            DisplayMetrics metrics = new DisplayMetrics();
+            realDisplay.getMetrics(metrics);
+            return metrics.widthPixels;
         }
     }
 

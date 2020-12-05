@@ -52,7 +52,7 @@ public class Suggestions
             case Multimedia.BOOK:
                 createSuggestionForBooks();
                 break;
-            case Multimedia.MOVIE:
+            /*case Multimedia.MOVIE:
                 createSuggestionForMovies();
                 break;
             case Multimedia.MUSIC:
@@ -60,7 +60,7 @@ public class Suggestions
                 break;
             case Multimedia.SERIE:
                 createSuggestionForSeries();
-                break;
+                break;*/
         }
     }
 

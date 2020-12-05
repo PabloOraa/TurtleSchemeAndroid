@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -68,7 +69,26 @@ public class ViewMedia extends AppCompatActivity
         if(!db.existsMultimedia(db.getReadableDatabase(),media.getTitle()))
             createListener();
         else
-            findViewById(R.id.bt_add_media).setVisibility(View.INVISIBLE);
+            if(getIntent().hasExtra("titleOfTheList") && !db.existsMultimediaIntoList(db.getReadableDatabase(),media.getId(),getIntent().getStringExtra("titleOfTheList")))
+                createListenerAddToList();
+            else
+                findViewById(R.id.bt_add_media).setVisibility(View.INVISIBLE);
+    }
+
+    private void createListenerAddToList()
+    {
+        ((Button)findViewById(R.id.bt_add_media)).setText(R.string.add_to_list);
+        findViewById(R.id.bt_add_media).setOnClickListener(v ->
+        {
+            Database db = new Database(this,"turtlesketch.db", null, 3);//getResources().getStringArray(R.array.sections));
+            SQLiteDatabase connection = db.getWritableDatabase();
+            if(db.insertIntoList(connection, media, getIntent().getStringExtra("titleOfTheList")))
+                //Insert OK
+                insertDone();
+            else
+                //Insert NO
+                errorMessage();
+        });
     }
 
     /**
@@ -115,7 +135,10 @@ public class ViewMedia extends AppCompatActivity
         alert.setPositiveButton("Ok", (dialog, which) ->
             {
                 dialog.dismiss();
-                setResult(3);
+                if(getIntent().hasExtra("titleOfTheList"))
+                    setResult(4);
+                else
+                    setResult(3);
                 finish();
             });
         AlertDialog dialog = alert.create();

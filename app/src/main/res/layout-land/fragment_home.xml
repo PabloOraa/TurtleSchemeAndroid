@@ -12,8 +12,6 @@
         android:layout_height="48dp"
         android:autofillHints="no"
         android:ems="10"
-        android:textColor="@color/black"
-        android:background="@color/white"
         android:hint="@string/title_hint"
         android:inputType="text"
         android:textAlignment="center"

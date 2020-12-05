@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Retrieves the configurated Manager for the Surface Duo created on the OnCreate function.
+     * Retrieves the configured Manager for the Surface Duo created on the OnCreate function.
      * @return Surface Duo Manager object to manage the behaviour on this device.
      */
     public SurfaceDuoScreenManager getSurfaceDuoScreenManager()

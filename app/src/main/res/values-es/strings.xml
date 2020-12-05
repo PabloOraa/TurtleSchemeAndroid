@@ -66,4 +66,8 @@
     <string name="connect">Conectar</string>
     <string name="import_data">Importar listas</string>
     <string name="author_app">Aplicación hecha por Pablo Oraa López. Versión</string>
+    <string name="add_to">Añadir a</string>
+    <string name="add_to_list">Añadir a la lista</string>
+    <string name="delete_list_media">Borrar contenido de la lista</string>
+    <string name="delete_list_media_message">¿Estás seguro que deseas eliminar todo el contenido de la lista?</string>
 </resources>

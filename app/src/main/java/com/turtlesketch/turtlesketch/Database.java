@@ -437,4 +437,42 @@ public class Database extends SQLiteOpenHelper
         c.close();
         return category;
     }
+
+    public List<Multimedia> getAllData(SQLiteDatabase sqLiteDatabase)
+    {
+        List<Multimedia> media = new ArrayList<>();
+
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * " +
+                "FROM MOVIE " , null);
+        while(c.moveToNext())
+            media.add(new Movie(c.getString(c.getColumnIndex("id")),c.getString(c.getColumnIndex("title")),
+                    c.getString(c.getColumnIndex("actors")),c.getString(c.getColumnIndex("publishDate")),c.getString(c.getColumnIndex("gender")),
+                    c.getString(c.getColumnIndex("lang")),c.getString(c.getColumnIndex("cover")),"",
+                    c.getString(c.getColumnIndex("plot")),c.getString(c.getColumnIndex("director")),c.getString(c.getColumnIndex("duration"))));
+        c = sqLiteDatabase.rawQuery("SELECT * " +
+                "FROM BOOKS " , null);
+        while(c.moveToNext())
+            media.add(new Book(c.getString(c.getColumnIndex("id")),c.getString(c.getColumnIndex("title")),
+                    c.getString(c.getColumnIndex("author")),c.getString(c.getColumnIndex("publishDate")),c.getString(c.getColumnIndex("category")),
+                    c.getString(c.getColumnIndex("lang")),c.getString(c.getColumnIndex("cover")),"",
+                    c.getString(c.getColumnIndex("plot")),c.getString(c.getColumnIndex("publisher"))));
+        c = sqLiteDatabase.rawQuery("SELECT * " +
+                "FROM MUSIC " , null);
+        while(c.moveToNext())
+            media.add(new Music(c.getString(c.getColumnIndex("id")),c.getString(c.getColumnIndex("title")),
+                    c.getString(c.getColumnIndex("artist")),c.getString(c.getColumnIndex("publishDate")),c.getString(c.getColumnIndex("gender")),
+                    c.getString(c.getColumnIndex("lang")),c.getString(c.getColumnIndex("cover")),"",
+                    c.getString(c.getColumnIndex("duration")),c.getString(c.getColumnIndex("publisher")),c.getString(c.getColumnIndex("description"))));
+        c = sqLiteDatabase.rawQuery("SELECT * " +
+                "FROM SERIE ", null);
+        while(c.moveToNext())
+            media.add(new Serie(c.getString(c.getColumnIndex("id")),c.getString(c.getColumnIndex("title")),
+                    c.getString(c.getColumnIndex("actors")),c.getString(c.getColumnIndex("publishDate")),c.getString(c.getColumnIndex("gender")),
+                    c.getString(c.getColumnIndex("lang")),c.getString(c.getColumnIndex("cover")),"",
+                    c.getString(c.getColumnIndex("plot")),c.getString(c.getColumnIndex("director")),c.getString(c.getColumnIndex("country")),
+                    c.getString(c.getColumnIndex("durationPerEpisode")),c.getString(c.getColumnIndex("seasonNumber"))));
+
+        c.close();
+        return media;
+    }
 }

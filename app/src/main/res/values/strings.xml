@@ -71,7 +71,7 @@
     <string name="sportify" translatable="false">Spotify</string>
     <string name="deezer" translatable="false">Deezer</string>
     <string name="author_app">Made by Pablo Oraa Lopez. Version</string>
-    <string name="app_ver" translatable="false">1.0.0</string>
+    <string name="app_ver" translatable="false">1.0.1</string>
     <string name="about" translatable="false">%1$s %2$s</string>
     <string name="server_client_id" translatable="false">757060070955-q1bdjvs0u6ug0dbo96nn83kqpmicogoh.apps.googleusercontent.com</string>
     <string name="client_id_spotify" translatable="false">9ddbd7d70e1f44cbb80b6c40f40d91ab</string>

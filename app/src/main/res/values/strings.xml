@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TurtleScheme</string>
+    <string name="app_name">TurtleSketch</string>
     <string name="title_add">Add to collection</string>
     <string name="title_list">Lists</string>
     <string name="title_search">Search</string>

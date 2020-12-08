@@ -13,9 +13,16 @@ import androidx.appcompat.app.AppCompatDelegate;
 import com.google.gson.GsonBuilder;
 import com.turtlesketch.turtlesketch.Interfaces.MySQLAPI;
 import com.turtlesketch.turtlesketch.Multimedia.Book;
+import com.turtlesketch.turtlesketch.Multimedia.Movie;
 import com.turtlesketch.turtlesketch.Multimedia.Multimedia;
+import com.turtlesketch.turtlesketch.Multimedia.Music;
+import com.turtlesketch.turtlesketch.Multimedia.Serie;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -107,6 +114,8 @@ public class AddMedia extends Activity
      */
     private void connectAndInsert(String title, String actorAuthor, String publisherDir, String duration, String publishDate, String plotDesc, String gender, String lang)
     {
+        if(media == null)
+            createMedia(title,actorAuthor,publisherDir,duration,publishDate,plotDesc,gender,lang);
         Call<Integer> call = null;
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://turtlesketch.consulting").addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create())).client(new OkHttpClient.Builder().build()).build();
         MySQLAPI mySQLAPI = retrofit.create(MySQLAPI.class);
@@ -128,8 +137,10 @@ public class AddMedia extends Activity
                 {
                     if(response.isSuccessful())
                     {
-                        if(response.body() == 1)
+                        if(response.body() != null && response.body() == 1)
+                        {
                             successMessage();
+                        }
                         else
                             errorMessgae();
                     }
@@ -146,6 +157,87 @@ public class AddMedia extends Activity
                 }
             });
         }
+    }
+
+    private void createMedia(String title, String actorAuthor, String publisherDir, String duration, String publishDate, String plotDesc, String gender, String lang)
+    {
+        if(type.equalsIgnoreCase(getString(R.string.books)))
+            media = createBook(title,actorAuthor,publisherDir,publishDate,plotDesc,gender,lang);
+        else if(type.equalsIgnoreCase(getString(R.string.music)))
+            media = createMusic(title,actorAuthor,publisherDir,duration,publishDate,plotDesc,gender,lang);
+        else if(type.equalsIgnoreCase(getString(R.string.movie)))
+            media = createMovie(title,actorAuthor,publisherDir,duration,publishDate,plotDesc,gender,lang);
+        else if(type.equalsIgnoreCase(getString(R.string.serie)))
+            media = createSerie(title, actorAuthor,publisherDir,duration,publishDate,plotDesc,gender,lang, "","");
+    }
+
+    @NotNull
+    private Multimedia createSerie(String title, @NotNull String actorAuthor, String publisherDir, String duration, String publishDate, String plotDesc, @NotNull String gender, String lang, String seasonNumber, String country)
+    {
+        Serie serie = new Serie();
+        serie.setId(title + "1");
+        serie.setType(Multimedia.SERIE);
+        serie.setTitle(title);
+        serie.setActors_authors(Arrays.asList(actorAuthor.split(",")));
+        serie.setPublishDate(publishDate);
+        serie.setGender(Arrays.asList(gender.split(",")));
+        serie.setLanguage(lang);
+        serie.setDurationPerEpisode(duration);
+        serie.setDirector(publisherDir);
+        serie.setPlot(plotDesc);
+        serie.setSeasonNumber(seasonNumber);
+        serie.setCountry(country);
+        return serie;
+    }
+
+    @NotNull
+    private Multimedia createMovie(String title, @NotNull String actorAuthor, String publisherDir, String duration, String publishDate, String plotDesc, @NotNull String gender, String lang)
+    {
+        Movie movie = new Movie();
+        movie.setId(title+"1");
+        movie.setType(Multimedia.MOVIE);
+        movie.setTitle(title);
+        movie.setActors_authors(Arrays.asList(actorAuthor.split(",")));
+        movie.setPublishDate(publishDate);
+        movie.setGender(Arrays.asList(gender.split(",")));
+        movie.setLanguage(lang);
+        movie.setDuration(duration);
+        movie.setPlot(plotDesc);
+        movie.setDirector(publisherDir);
+        return movie;
+    }
+
+    @NotNull
+    private Multimedia createMusic(String title, @NotNull String actorAuthor, String publisherDir, String duration, String publishDate, String plotDesc, @NotNull String gender, String lang)
+    {
+        Music music = new Music();
+        music.setId(title+"1");
+        music.setType(Multimedia.MUSIC);
+        music.setTitle(title);
+        music.setActors_authors(Arrays.asList(actorAuthor.split(",")));
+        music.setPublishDate(publishDate);
+        music.setGender(Arrays.asList(gender.split(",")));
+        music.setLanguage(lang);
+        music.setPublisher(publisherDir);
+        music.setDescription(plotDesc);
+        music.setDuration(duration);
+        return music;
+    }
+
+    @NotNull
+    private Multimedia createBook(String title, @NotNull String actorAuthor, String publisherDir, String publishDate, String plotDesc, @NotNull String gender, String lang)
+    {
+        Book libro = new Book();
+        libro.setId(title+"1");
+        libro.setType(Multimedia.BOOK);
+        libro.setTitle(title);
+        libro.setActors_authors(Arrays.asList(actorAuthor.split(",")));
+        libro.setPublishDate(publishDate);
+        libro.setGender(Arrays.asList(gender.split(",")));
+        libro.setLanguage(lang);
+        libro.setPlot(plotDesc);
+        libro.setPublisher(publisherDir);
+        return libro;
     }
 
     /**

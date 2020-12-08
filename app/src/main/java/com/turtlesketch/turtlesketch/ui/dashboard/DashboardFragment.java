@@ -270,7 +270,7 @@ public class DashboardFragment extends Fragment
             AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity());
             alert.setTitle(requireActivity().getText(R.string.delete_list));
             alert.setMessage(requireActivity().getText(R.string.delete_list_message));
-            alert.setPositiveButton(requireActivity().getText(R.string.confirm), (dialog, which) ->
+            alert.setPositiveButton(requireActivity().getText(R.string.apply), (dialog, which) ->
             {
                 checkDatabaseForList(listName.get(position));
                 listNameBackup.remove(listName.get(position));

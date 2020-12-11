@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity
             public void onSwitchToDualScreen()
             {
                 Log.d("Surface Duo", "Dual Screen");
-                ((SurfaceDuoBottomNavigationView)findViewById(R.id.nav_view)).setSurfaceDuoDisplayPosition(DisplayPosition.DUAL);
+                ((SurfaceDuoBottomNavigationView)findViewById(R.id.nav_view)).setSurfaceDuoDisplayPosition(DisplayPosition.START);
             }
 
         });

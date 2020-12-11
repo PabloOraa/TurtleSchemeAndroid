@@ -19,6 +19,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.microsoft.device.dualscreen.core.ScreenHelper;
+import com.microsoft.device.dualscreen.core.ScreenMode;
+import com.microsoft.device.dualscreen.core.manager.SurfaceDuoScreenManager;
 import com.turtlesketch.turtlesketch.AddMedia;
 import com.turtlesketch.turtlesketch.Config;
 import com.turtlesketch.turtlesketch.Interfaces.MySQLAPI;
@@ -56,7 +59,10 @@ public class HomeFragment extends Fragment
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        if(ScreenHelper.isDeviceSurfaceDuo(requireActivity()) && (SurfaceDuoScreenManager.getInstance(requireActivity().getApplication())).getScreenMode() == ScreenMode.DUAL_SCREEN)
+            return inflater.inflate(R.layout.fragment_home_dual, container, false);
+        else
+            return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @Override
@@ -79,8 +85,9 @@ public class HomeFragment extends Fragment
     private void checkTheme()
     {
         int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES)
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
             ((ImageView) requireActivity().findViewById(R.id.IV_engranajesH)).setImageResource(R.drawable.gears_white);
+        }
     }
 
     private void createDatabaseConnection()

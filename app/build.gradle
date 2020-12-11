@@ -10,8 +10,8 @@ android {
         applicationId "com.turtlesketch.turtlesketch"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 101
-        versionName "1.0.1"
+        versionCode 111
+        versionName "1.1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -45,7 +45,7 @@ dependencies {
     implementation "com.microsoft.device.dualscreen:fragmentshandler:1.0.0-alpha02"
     implementation "com.microsoft.device.dualscreen:layouts:1.0.0-alpha02"
     implementation "com.microsoft.device.dualscreen:tabs:1.0.0-alpha04"
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.20'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.21'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.retrofit2:converter-simplexml:2.9.0'

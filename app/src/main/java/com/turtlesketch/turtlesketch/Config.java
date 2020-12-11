@@ -32,6 +32,8 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.GsonBuilder;
 
+import com.microsoft.device.dualscreen.core.ScreenHelper;
+import com.microsoft.device.dualscreen.core.ScreenMode;
 import com.microsoft.device.dualscreen.core.manager.ScreenModeListener;
 import com.microsoft.device.dualscreen.core.manager.SurfaceDuoScreenManager;
 
@@ -89,7 +91,10 @@ public class Config extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.configuration);
+        if(ScreenHelper.isDeviceSurfaceDuo(getApplicationContext()) && (SurfaceDuoScreenManager.getInstance(getApplication())).getScreenMode() == ScreenMode.DUAL_SCREEN)
+            setContentView(R.layout.configuration_dual);
+        else
+            setContentView(R.layout.configuration);
         changeTheme(theme);
     }
 

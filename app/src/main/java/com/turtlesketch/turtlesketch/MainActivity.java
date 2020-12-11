@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity
      * The app version code (not the version name!) that was used on the last
      * start of the app.
      */
-    private final String LAST_APP_VERSION = "1.0.1";
+    private final String LAST_APP_VERSION = "1.1.1";
 
     /**
      * {@inheritDoc}
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity
                 // We don't want to get on the user's nerves
                 break;
             case FIRST_TIME_VERSION:
-                System.out.println("First time on this version :D. I can show what's new here.");
+                System.out.println("First time on "+LAST_APP_VERSION+" :D. I can show what's new here.");
                 break;
             case FIRST_TIME:
                 System.out.println("First time on the app, thank you! Here there should be a tutorial or check for backup");

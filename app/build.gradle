@@ -6,7 +6,7 @@ android {
     compileSdkVersion 31
 
     defaultConfig {
-        applicationId "com.turtlesketch.turtlesketch"
+        applicationId "com.turtlesketch.turtlesketch2"
         minSdkVersion 26
         targetSdkVersion 31
         versionCode 112
@@ -28,7 +28,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    namespace 'com.turtlesketch.turtlesketch'
+    namespace 'com.turtlesketch2.turtlesketch2'
     buildToolsVersion '30.0.3'
 }
 

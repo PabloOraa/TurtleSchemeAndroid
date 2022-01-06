@@ -19,9 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.microsoft.device.dualscreen.core.ScreenHelper;
-import com.microsoft.device.dualscreen.core.ScreenMode;
-import com.microsoft.device.dualscreen.core.manager.SurfaceDuoScreenManager;
 import com.turtlesketch.turtlesketch.AddMedia;
 import com.turtlesketch.turtlesketch.Config;
 import com.turtlesketch.turtlesketch.Interfaces.MySQLAPI;
@@ -59,7 +56,7 @@ public class HomeFragment extends Fragment
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        if(ScreenHelper.isDeviceSurfaceDuo(requireActivity()) && (SurfaceDuoScreenManager.getInstance(requireActivity().getApplication())).getScreenMode() == ScreenMode.DUAL_SCREEN)
+        if(Config.appSpanned)// || !windowLayoutInfo.getDisplayFeatures().isEmpty())
             return inflater.inflate(R.layout.fragment_home_dual, container, false);
         else
             return inflater.inflate(R.layout.fragment_home, container, false);

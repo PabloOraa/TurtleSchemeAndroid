@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="JavadocGenerationManager">
-    <option name="OUTPUT_DIRECTORY" value="$USER_HOME$/Downloads/javadoc" />
-    <option name="OPTION_SCOPE" value="private" />
-    <option name="OPTION_DOCUMENT_TAG_AUTHOR" value="true" />
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/pabli/AndroidStudioProjects/TurtleSchemeAndroid/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1085" />
+        <entry key="..\:/Users/pabli/AndroidStudioProjects/TurtleSchemeAndroid/app/src/main/res/drawable/border.xml" value="0.1085" />
+        <entry key="..\:/Users/pabli/AndroidStudioProjects/TurtleSchemeAndroid/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.1085" />
+        <entry key="..\:/Users/pabli/AndroidStudioProjects/TurtleSchemeAndroid/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.1085" />
+        <entry key="..\:/Users/pabli/AndroidStudioProjects/TurtleSchemeAndroid/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1085" />
+        <entry key="..\:/Users/pabli/AndroidStudioProjects/TurtleSchemeAndroid/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.1085" />
+        <entry key="..\:/Users/pabli/AndroidStudioProjects/TurtleSchemeAndroid/app/src/main/res/layout-port/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/pabli/AndroidStudioProjects/TurtleSchemeAndroid/app/src/main/res/layout/activity_main.xml" value="0.14791666666666667" />
+        <entry key="..\:/Users/pabli/AndroidStudioProjects/TurtleSchemeAndroid/app/src/main/res/layout/add_list.xml" value="0.1" />
+        <entry key="..\:/Users/pabli/AndroidStudioProjects/TurtleSchemeAndroid/app/src/main/res/layout/list_results_layout.xml" value="0.1" />
+        <entry key="..\:/Users/pabli/AndroidStudioProjects/TurtleSchemeAndroid/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
+        <entry key="..\:/Users/pabli/AndroidStudioProjects/TurtleSchemeAndroid/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1085" />
+        <entry key="..\:/Users/pabli/AndroidStudioProjects/TurtleSchemeAndroid/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1085" />
+      </map>
+    </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_15" default="true" project-jdk-name="15" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="Embedded JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

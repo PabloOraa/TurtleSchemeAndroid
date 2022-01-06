@@ -23,7 +23,6 @@ import com.turtlesketch.turtlesketch.Multimedia.Multimedia;
 import com.turtlesketch.turtlesketch.Multimedia.Music;
 import com.turtlesketch.turtlesketch.Multimedia.Serie;
 import com.turtlesketch.turtlesketch.R;
-import com.microsoft.device.dualscreen.core.manager.SurfaceDuoScreenManager;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,7 +38,7 @@ public class ViewMedia extends AppCompatActivity
     /**
      * Manage the behaviour of the application depending on the state of the Surface Duo
      */
-    private SurfaceDuoScreenManager surfaceDuoScreenManager;
+    //private SurfaceDuoScreenManager surfaceDuoScreenManager;
     /**
      * Media object that could be stored into the database or it's already stored on the db.
      */

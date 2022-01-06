@@ -10,10 +10,10 @@
         android:id="@+id/navigation_dashboard"
         android:icon="@drawable/list"
         android:title="@string/title_list" />
-
+<!--
     <item
         android:id="@+id/navigation_search"
         android:icon="@android:drawable/ic_menu_search"
-        android:title="@string/title_search" />
+        android:title="@string/title_search" /> -->
 
 </menu>

@@ -2,18 +2,17 @@
 buildscript {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.0-beta01'
-
+        classpath 'com.android.tools.build:gradle:7.2.0-alpha06'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
 
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.4.21'
+    //id "org.jetbrains.kotlin.jvm" version "1.6.10"
 }
 
 allprojects {
@@ -24,11 +23,11 @@ allprojects {
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         maven
-                {
-                    url "https://pkgs.dev.azure.com/MicrosoftDeviceSDK/DuoSDK-Public/_packaging/Duo-SDK-Feed/maven/v1"
-                }
+        {
+            url "https://pkgs.dev.azure.com/MicrosoftDeviceSDK/DuoSDK-Public/_packaging/Duo-SDK-Feed/maven/v1"
+        }
     }
 }
 
@@ -39,17 +38,4 @@ task clean2(type: Delete) {
 repositories {
     maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
     mavenCentral()
-}
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-}
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
 }

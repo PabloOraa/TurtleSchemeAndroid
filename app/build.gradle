@@ -3,13 +3,26 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion '30.0.2'
+    signingConfigs {
+        debug {
+            storeFile file('C:\\Nueva carpeta\\storefileAndroid.jks')
+            storePassword 'Microsoft234'
+            keyPassword 'Microsoft234'
+            keyAlias 'key0'
+        }
+        release {
+            storeFile file('C:\\Nueva carpeta\\storefileAndroid.jks')
+            storePassword 'Microsoft234'
+            keyAlias 'key0'
+            keyPassword 'Microsoft234'
+        }
+    }
+    compileSdkVersion 31
 
     defaultConfig {
         applicationId "com.turtlesketch.turtlesketch"
         minSdkVersion 26
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 111
         versionName "1.1.1"
 
@@ -21,40 +34,51 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            debuggable true
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    namespace 'com.turtlesketch.turtlesketch'
+    buildToolsVersion '30.0.3'
 }
 
 dependencies {
 
-    implementation 'com.google.android.gms:play-services-auth:19.0.0'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
-    implementation "androidx.webkit:webkit:1.3.0"
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'androidx.navigation:navigation-fragment:2.3.2'
-    implementation 'androidx.navigation:navigation-ui:2.3.2'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
-    implementation "com.microsoft.device.display:display-mask:0.3.0"
-    implementation "com.microsoft.device.dualscreen:core:1.0.0-alpha01"
-    implementation "com.microsoft.device.dualscreen:bottomnavigation:1.0.0-alpha03"
-    implementation "com.microsoft.device.dualscreen:fragmentshandler:1.0.0-alpha02"
-    implementation "com.microsoft.device.dualscreen:layouts:1.0.0-alpha02"
-    implementation "com.microsoft.device.dualscreen:tabs:1.0.0-alpha04"
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.21'
+    implementation 'com.google.android.gms:play-services-auth:20.0.1'
+    implementation 'androidx.appcompat:appcompat:1.4.0'
+    implementation 'com.google.android.material:material:1.6.0-alpha01'
+    implementation 'androidx.webkit:webkit:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
+    implementation 'androidx.navigation:navigation-fragment:2.4.0-rc01'
+    implementation 'androidx.navigation:navigation-ui:2.4.0-rc01'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
+    //Dual Devices
+    implementation "androidx.window:window:1.0.0-rc01"
+    implementation "androidx.window:window-java:1.0.0-rc01"
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
+    //Surface Duo specifics
+    implementation "com.microsoft.device.dualscreen:bottomnavigation:1.0.0-beta3"
+    implementation "com.microsoft.device.dualscreen:fragmentshandler:1.0.0-beta4"
+    implementation 'com.microsoft.device.dualscreen:layouts:1.0.0-beta7'
+    implementation "com.microsoft.device.dualscreen:tabs:1.0.0-beta3"
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.retrofit2:converter-simplexml:2.9.0'
-    implementation "androidx.window:window:1.0.0-alpha01"
-    implementation "io.reactivex.rxjava3:rxjava:3.0.7"
-    testImplementation 'junit:junit:4.13.1'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation 'androidx.window:window:1.0.0-rc01'
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.3'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.4-alpha03'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0-alpha03'
     // Required for instrumented tests
     androidTestImplementation 'com.android.support:support-annotations:28.0.0'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
+}
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }

@@ -32,8 +32,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
-import com.microsoft.device.dualscreen.bottomnavigation.SurfaceDuoBottomNavigationView;
-import com.microsoft.device.dualscreen.core.DisplayPosition;
+import com.microsoft.device.dualscreen.bottomnavigation.BottomNavigationView;
 import com.turtlesketch.turtlesketch.Config;
 import com.turtlesketch.turtlesketch.Database;
 import com.turtlesketch.turtlesketch.Multimedia.Multimedia;

@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:theme="@style/Theme.TurtleScheme">
 
-    <com.microsoft.device.dualscreen.bottomnavigation.SurfaceDuoBottomNavigationView
+    <!--com.microsoft.device.dualscreen.bottomnavigation.BottomNavigationView-->
+     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

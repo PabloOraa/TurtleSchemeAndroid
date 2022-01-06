@@ -7,15 +7,18 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Window;
 
+import androidx.window.java.layout.WindowInfoTrackerCallbackAdapter;
+import androidx.window.layout.WindowInfoTracker;
+import androidx.window.layout.WindowLayoutInfo;
+import androidx.window.layout.WindowMetrics;
+import androidx.window.layout.WindowMetricsCalculator;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.microsoft.device.dualscreen.bottomnavigation.SurfaceDuoBottomNavigationView;
-import com.microsoft.device.dualscreen.core.DisplayPosition;
-import com.microsoft.device.dualscreen.core.ScreenHelper;
-import com.microsoft.device.dualscreen.core.manager.ScreenModeListener;
-import com.microsoft.device.dualscreen.core.manager.SurfaceDuoScreenManager;
+//import com.microsoft.device.dualscreen.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -23,10 +26,13 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.core.util.Consumer;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 
 /**
  * Main Activity of the application
@@ -34,9 +40,13 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity
 {
     /**
-     * Manage the behaviour of the application depending on the state of the Surface Duo
+     * Manage the behaviour of the application depending on the state of the foldable device
      */
-    private SurfaceDuoScreenManager surfaceDuoScreenManager;
+    private WindowInfoTrackerCallbackAdapter wit;
+    private WindowMetrics wm;
+    private WindowMetricsCalculator wmc;
+    LayoutStateChangeCallback layoutStateChangeCallback = new LayoutStateChangeCallback();
+
     /**
      * Connection to Database which will be used to store, retrieve and delete data.
      */
@@ -63,8 +73,8 @@ public class MainActivity extends AppCompatActivity
 
         appStart();
 
-        if(ScreenHelper.isDeviceSurfaceDuo(this))
-            configureDualScreen();
+        wit = new WindowInfoTrackerCallbackAdapter(WindowInfoTracker.Companion.getOrCreate(this));
+        wmc = WindowMetricsCalculator.Companion.getOrCreate();
 
         Database db = new Database(this,"turtlesketch.db", null, 3);//getResources().getStringArray(R.array.sections));
         connection = db.getWritableDatabase();
@@ -124,6 +134,7 @@ public class MainActivity extends AppCompatActivity
     protected void onStart()
     {
         super.onStart();
+        wit.addWindowLayoutInfoListener(this, runOnUiThreadExecutor(), layoutStateChangeCallback);
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -134,40 +145,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Create the necessary objects to manage the interaction with the app on Surface Duo.
+     * {@inheritDoc}
      * <br/>
-     * Depending on the real state of the Screen it will set the navigation bar in a different way.
+     * Remove the listener for foldables
      */
-    private void configureDualScreen()
+    @Override
+    protected void onStop()
     {
-        surfaceDuoScreenManager = SurfaceDuoScreenManager.getInstance(getApplication());
-        getSurfaceDuoScreenManager().addScreenModeListener(this, new ScreenModeListener()
-        {
-
-            @Override
-            public void onSwitchToSingleScreen()
-            {
-                ((SurfaceDuoBottomNavigationView)findViewById(R.id.nav_view)).setSurfaceDuoDisplayPosition(DisplayPosition.START);
-                Log.d("Surface Duo", "Single Screen");
-            }
-
-            @Override
-            public void onSwitchToDualScreen()
-            {
-                Log.d("Surface Duo", "Dual Screen");
-                ((SurfaceDuoBottomNavigationView)findViewById(R.id.nav_view)).setSurfaceDuoDisplayPosition(DisplayPosition.START);
-            }
-
-        });
-    }
-
-    /**
-     * Retrieves the configured Manager for the Surface Duo created on the OnCreate function.
-     * @return Surface Duo Manager object to manage the behaviour on this device.
-     */
-    public SurfaceDuoScreenManager getSurfaceDuoScreenManager()
-    {
-        return surfaceDuoScreenManager;
+        super.onStop();
+        wit.removeWindowLayoutInfoListener(layoutStateChangeCallback);
     }
 
     /**
@@ -257,5 +243,43 @@ public class MainActivity extends AppCompatActivity
         }
         else
             return AppStart.NORMAL;
+    }
+
+
+
+    void updateLayout(WindowLayoutInfo windowLayoutInfo)
+    {
+        if(Config.appSpanned && windowLayoutInfo.getDisplayFeatures().isEmpty())
+        {
+            Config.appSpanned = !windowLayoutInfo.getDisplayFeatures().isEmpty();
+
+            this.recreate();
+        }
+        else if(!Config.appSpanned && !windowLayoutInfo.getDisplayFeatures().isEmpty())
+        {
+            Config.appSpanned = !windowLayoutInfo.getDisplayFeatures().isEmpty();
+
+            this.recreate();
+        }
+    }
+
+    class LayoutStateChangeCallback implements Consumer<WindowLayoutInfo> {
+        @Override
+        public void accept(WindowLayoutInfo windowLayoutInfo) {
+            updateLayout(windowLayoutInfo);
+        }
+    }
+
+    Executor runOnUiThreadExecutor()
+    {
+        return new MyExecutor();
+    }
+    class MyExecutor implements Executor
+    {
+        Handler handler = new Handler(Looper.getMainLooper());
+        @Override
+        public void execute(Runnable command) {
+            handler.post(command);
+        }
     }
 }

@@ -32,11 +32,6 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.GsonBuilder;
 
-import com.microsoft.device.dualscreen.core.ScreenHelper;
-import com.microsoft.device.dualscreen.core.ScreenMode;
-import com.microsoft.device.dualscreen.core.manager.ScreenModeListener;
-import com.microsoft.device.dualscreen.core.manager.SurfaceDuoScreenManager;
-
 import com.turtlesketch.turtlesketch.Interfaces.GoogleAPI;
 import com.turtlesketch.turtlesketch.Multimedia.Book;
 import com.turtlesketch.turtlesketch.Multimedia.BooksGA.BooksGA;
@@ -71,9 +66,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Config extends AppCompatActivity
 {
     /**
-     * Manage the behaviour of the application depending on the state of the Surface Duo.
+     * Manage the behaviour of the application depending on the state of the foldable.
      */
-    private SurfaceDuoScreenManager surfaceDuoScreenManager;
+    public static Boolean appSpanned = false;
     /**
      * Theme of the application.
      */
@@ -91,7 +86,7 @@ public class Config extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        if(ScreenHelper.isDeviceSurfaceDuo(getApplicationContext()) && (SurfaceDuoScreenManager.getInstance(getApplication())).getScreenMode() == ScreenMode.DUAL_SCREEN)
+        if(appSpanned)
             setContentView(R.layout.configuration_dual);
         else
             setContentView(R.layout.configuration);
@@ -172,7 +167,7 @@ public class Config extends AppCompatActivity
     }
 
     /**
-     * Configure the connection to third partiy services, as of now being Google and Spotify.
+     * Configure the connection to third party services, as of now being Google and Spotify.
      * @author Pablo Oraa Lopez
      */
     private void configureConnection()
@@ -446,7 +441,7 @@ public class Config extends AppCompatActivity
      */
     private void configureDualScreen()
     {
-        surfaceDuoScreenManager = SurfaceDuoScreenManager.getInstance(getApplication());
+        /*surfaceDuoScreenManager = SurfaceDuoScreenManager.getInstance(getApplication());
         getSurfaceDuoScreenManager().addScreenModeListener(this, new ScreenModeListener()
         {
 
@@ -464,17 +459,7 @@ public class Config extends AppCompatActivity
                 //((SurfaceDuoBottomNavigationView)findViewById(R.id.nav_view)).setSurfaceDuoDisplayPosition(DisplayPosition.DUAL);
             }
 
-        });
-    }
-
-    /**
-     * Retrieves the configurated Manager for the Surface Duo created on the OnCreate function.
-     * @return Surface Duo Manager object to manage the behaviour on this device.
-     * @author Pablo Oraa Lopez
-     */
-    public SurfaceDuoScreenManager getSurfaceDuoScreenManager()
-    {
-        return surfaceDuoScreenManager;
+        });*/
     }
 
     /**

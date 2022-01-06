@@ -3,28 +3,14 @@ plugins {
 }
 
 android {
-    signingConfigs {
-        debug {
-            storeFile file('C:\\Nueva carpeta\\storefileAndroid.jks')
-            storePassword 'Microsoft234'
-            keyPassword 'Microsoft234'
-            keyAlias 'key0'
-        }
-        release {
-            storeFile file('C:\\Nueva carpeta\\storefileAndroid.jks')
-            storePassword 'Microsoft234'
-            keyAlias 'key0'
-            keyPassword 'Microsoft234'
-        }
-    }
     compileSdkVersion 31
 
     defaultConfig {
         applicationId "com.turtlesketch.turtlesketch"
         minSdkVersion 26
         targetSdkVersion 31
-        versionCode 111
-        versionName "1.1.1"
+        versionCode 112
+        versionName "1.1.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

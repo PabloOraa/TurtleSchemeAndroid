@@ -22,7 +22,7 @@ import com.turtlesketch.turtlesketch2.Multimedia.Movie;
 import com.turtlesketch.turtlesketch2.Multimedia.Multimedia;
 import com.turtlesketch.turtlesketch2.Multimedia.Music;
 import com.turtlesketch.turtlesketch2.Multimedia.Serie;
-import com.turtlesketch2.turtlesketch2.R;
+import com.turtlesketch.turtlesketch2.R;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,10 +36,6 @@ import java.net.URL;
 public class ViewMedia extends AppCompatActivity
 {
     /**
-     * Manage the behaviour of the application depending on the state of the Surface Duo
-     */
-    //private SurfaceDuoScreenManager surfaceDuoScreenManager;
-    /**
      * Media object that could be stored into the database or it's already stored on the db.
      */
     Multimedia media;
@@ -48,7 +44,10 @@ public class ViewMedia extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_media);
+        if(Config.appSpanned)
+            setContentView(R.layout.view_media_dual);
+        else
+            setContentView(R.layout.view_media);
         changeTheme(Config.theme);
     }
 

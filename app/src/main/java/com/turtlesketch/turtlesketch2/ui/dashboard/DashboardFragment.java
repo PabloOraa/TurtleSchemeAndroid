@@ -36,7 +36,7 @@ import com.turtlesketch.turtlesketch2.Config;
 import com.turtlesketch.turtlesketch2.Database;
 import com.turtlesketch.turtlesketch2.Multimedia.Multimedia;
 import com.turtlesketch.turtlesketch2.Multimedia.MultimediaSerializable;
-import com.turtlesketch2.turtlesketch2.R;
+import com.turtlesketch.turtlesketch2.R;
 import com.turtlesketch.turtlesketch2.ui.results.ListMedia;
 
 import org.jetbrains.annotations.NotNull;
@@ -57,7 +57,10 @@ public class DashboardFragment extends Fragment
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.fragment_dashboard, container, false);
+        if(Config.appSpanned)// || !windowLayoutInfo.getDisplayFeatures().isEmpty())
+            return inflater.inflate(R.layout.fragment_dashboard_dual, container, false);
+        else
+            return inflater.inflate(R.layout.fragment_dashboard, container, false);
     }
 
     @Override
@@ -539,7 +542,7 @@ public class DashboardFragment extends Fragment
         }
         else if(criteria.equalsIgnoreCase(getString(R.string.original)))
             backToOriginal();
-            optionFilter = criteria;
+        optionFilter = criteria;
     }
 
     private void filterByType(String selectedItem)

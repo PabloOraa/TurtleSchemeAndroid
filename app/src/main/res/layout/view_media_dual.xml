@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/viewMedia"
+    android:id="@+id/viewMedia_dual"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -26,7 +26,7 @@
             android:id="@+id/tv_media_title"
             android:layout_width="127dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="164dp"
+            android:layout_marginStart="64dp"
             android:layout_marginEnd="24dp"
             android:text=''
             android:textAlignment="center"
@@ -42,14 +42,13 @@
             android:id="@+id/tv_media_author"
             android:layout_width="127dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="64dp"
             android:text=""
             android:textAlignment="center"
             android:textSize="24sp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="164dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/im_media_cover"/>
-
+            app:layout_constraintTop_toBottomOf="@+id/im_media_cover" />
 
         <TextView
             android:id="@+id/tv_media_publisher"
@@ -94,7 +93,7 @@
         <TextView
             android:id="@+id/tv_media_gender"
             android:layout_width="127dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text=""
             android:textAlignment="center"
             android:textSize="24sp"
@@ -125,7 +124,6 @@
             android:textAlignment="center"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="@+id/tv_media_language"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/tv_media_language"
             app:layout_constraintTop_toBottomOf="@+id/tv_media_plot" />
 

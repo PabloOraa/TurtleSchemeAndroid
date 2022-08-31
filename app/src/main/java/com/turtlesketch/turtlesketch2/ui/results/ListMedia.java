@@ -39,7 +39,7 @@ import com.turtlesketch.turtlesketch2.Multimedia.Multimedia;
 import com.turtlesketch.turtlesketch2.Multimedia.MultimediaSerializable;
 import com.turtlesketch.turtlesketch2.Multimedia.Music;
 import com.turtlesketch.turtlesketch2.Multimedia.Serie;
-import com.turtlesketch2.turtlesketch2.R;
+import com.turtlesketch.turtlesketch2.R;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -96,7 +96,14 @@ public class ListMedia extends AppCompatActivity
 
         if(getIntent().hasExtra("media"))
         {
-            setContentView(R.layout.view_list_media);
+            if(Config.appSpanned)
+            {
+                setContentView(R.layout.view_list_media_dual);
+            }
+            else
+            {
+                setContentView(R.layout.view_list_media);
+            }
             MultimediaSerializable ser = (MultimediaSerializable) getIntent().getSerializableExtra("media");
             listMedia = ser.getMultimediaList();
             adapter= new ArrayAdapterWithPhoto(this, R.layout.list_results_layout, listMedia);

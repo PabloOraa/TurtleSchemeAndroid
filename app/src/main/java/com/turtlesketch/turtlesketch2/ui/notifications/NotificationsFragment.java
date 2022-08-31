@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.webkit.WebSettingsCompat;
 import androidx.webkit.WebViewFeature;
 
-import com.turtlesketch2.turtlesketch2.R;
+import com.turtlesketch.turtlesketch2.R;
 
 import java.util.Locale;
 

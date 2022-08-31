@@ -17,7 +17,7 @@ import com.turtlesketch.turtlesketch2.Multimedia.Movie;
 import com.turtlesketch.turtlesketch2.Multimedia.Multimedia;
 import com.turtlesketch.turtlesketch2.Multimedia.Music;
 import com.turtlesketch.turtlesketch2.Multimedia.Serie;
-import com.turtlesketch2.turtlesketch2.R;
+import com.turtlesketch.turtlesketch2.R;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -129,29 +129,21 @@ public class AddMedia extends Activity
 
         if(call != null)
         {
-            call.enqueue(new Callback<Integer>()
-            {
+            call.enqueue(new Callback<>() {
                 @Override
-                public void onResponse(@NotNull Call<Integer> call, @NotNull Response<Integer> response)
-                {
-                    if(response.isSuccessful())
-                    {
-                        if(response.body() != null && response.body() == 1)
-                        {
+                public void onResponse(@NotNull Call<Integer> call, @NotNull Response<Integer> response) {
+                    if (response.isSuccessful()) {
+                        if (response.body() != null && response.body() == 1) {
                             successMessage();
-                        }
-                        else
+                        } else
                             errorMessgae();
-                    }
-                    else
-                    {
+                    } else {
                         System.out.println(response.errorBody());
                     }
                 }
 
                 @Override
-                public void onFailure(@NotNull Call<Integer> call, @NotNull Throwable t)
-                {
+                public void onFailure(@NotNull Call<Integer> call, @NotNull Throwable t) {
                     t.printStackTrace();
                 }
             });

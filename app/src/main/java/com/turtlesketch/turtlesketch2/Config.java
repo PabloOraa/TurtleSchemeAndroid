@@ -18,7 +18,9 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
@@ -38,7 +40,7 @@ import com.turtlesketch.turtlesketch2.Multimedia.BooksGA.BooksGA;
 import com.turtlesketch.turtlesketch2.Multimedia.LibraryGA.Item;
 import com.turtlesketch.turtlesketch2.Multimedia.LibraryGA.LibraryGA;
 import com.turtlesketch.turtlesketch2.ui.results.Converter;
-import com.turtlesketch2.turtlesketch2.R;
+import com.turtlesketch.turtlesketch2.R;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -47,6 +49,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import io.reactivex.rxjava3.core.Observable;
@@ -54,6 +57,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import okhttp3.OkHttpClient;
 
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -266,51 +270,39 @@ public class Config extends AppCompatActivity
             Retrofit retrofit = new Retrofit.Builder().baseUrl("https://www.googleapis.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create())).client(new OkHttpClient.Builder().build()).build();
             GoogleAPI apiService = retrofit.create(GoogleAPI.class);
             Call<LibraryGA> call = apiService.getLibraries("Bearer " + token);
-            call.enqueue(new Callback<LibraryGA>()
-            {
+            call.enqueue(new Callback<>() {
                 @Override
-                public void onResponse(@NotNull Call<LibraryGA> call, @NotNull Response<LibraryGA> response)
-                {
-                    if(response.isSuccessful())
-                    {
-                        Toast.makeText(config,getString(R.string.importing),Toast.LENGTH_SHORT).show();
+                public void onResponse(@NotNull Call<LibraryGA> call, @NotNull Response<LibraryGA> response) {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(config, getString(R.string.importing), Toast.LENGTH_SHORT).show();
                         LibraryGA libraries = response.body();
                         System.out.println(getString(R.string.imported));
-                        if(libraries != null && libraries.getItems().size() > 0)
-                        {
+                        if (libraries != null && libraries.getItems().size() > 0) {
                             addLists(libraries.getItems());
                             addBooks(libraries.getItems(), token);
                             System.out.println(getString(R.string.imported));
-                            Toast.makeText(config,getString(R.string.imported),Toast.LENGTH_SHORT).show();
-                        }
-                        else
+                            Toast.makeText(config, getString(R.string.imported), Toast.LENGTH_SHORT).show();
+                        } else
                             System.out.println("No results");
-                    }
-                    else
-                    {
-                        try
-                        {
-                            if(response.errorBody() != null)
-                            {
+                    } else {
+                        try {
+                            if (response.errorBody() != null) {
                                 JSONObject jObjError = new JSONObject(response.errorBody().string());
                                 System.out.println(jObjError.getJSONObject("error").getString("message"));
-                                if(jObjError.getJSONObject("error").getString("message").contains("Request had invalid authentication credentials. Expected OAuth 2 access token, login cookie or other valid authentication credential."))
-                                {
+                                if (jObjError.getJSONObject("error").getString("message").contains("Request had invalid authentication credentials. Expected OAuth 2 access token, login cookie or other valid authentication credential.")) {
                                     getToken();
                                     Thread.sleep(100);
                                     importListsGoogle();
                                 }
                             }
-                        } catch (JSONException | IOException | InterruptedException e)
-                        {
+                        } catch (JSONException | IOException | InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
                 }
 
                 @Override
-                public void onFailure(@NotNull Call<LibraryGA> call, @NotNull Throwable t)
-                {
+                public void onFailure(@NotNull Call<LibraryGA> call, @NotNull Throwable t) {
                     t.printStackTrace();
                 }
             });
@@ -350,20 +342,16 @@ public class Config extends AppCompatActivity
             Retrofit retrofit = new Retrofit.Builder().baseUrl("https://www.googleapis.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create())).client(new OkHttpClient.Builder().build()).build();
             GoogleAPI apiService = retrofit.create(GoogleAPI.class);
             Call<BooksGA> call = apiService.getBooksByLibrary("Bearer " + token, String.valueOf(item.getId()));
-            call.enqueue(new Callback<BooksGA>()
-            {
+            call.enqueue(new Callback<>() {
                 @Override
-                public void onResponse(@NotNull Call<BooksGA> call, @NotNull Response<BooksGA> response)
-                {
-                    if(response.isSuccessful() && response.body() != null && response.body().getTotalItems() > 0)
-                    {
+                public void onResponse(@NotNull Call<BooksGA> call, @NotNull Response<BooksGA> response) {
+                    if (response.isSuccessful() && response.body() != null && response.body().getTotalItems() > 0) {
                         insertBooks(new ArrayList<>(Converter.convertToBookList(response.body())), item.getTitle());
                     }
                 }
 
                 @Override
-                public void onFailure(@NotNull Call<BooksGA> call, @NotNull Throwable t)
-                {
+                public void onFailure(@NotNull Call<BooksGA> call, @NotNull Throwable t) {
                     t.printStackTrace();
                 }
             });
@@ -389,6 +377,16 @@ public class Config extends AppCompatActivity
         }
     }
 
+    public static final String CLIENT_ID = "9ddbd7d70e1f44cbb80b6c40f40d91ab";
+    public static final String REDIRECT_URI = "spotify-sdk://auth";
+    public static final int AUTH_TOKEN_REQUEST_CODE = 0x10;
+    public static final int AUTH_CODE_REQUEST_CODE = 0x11;
+
+    private final OkHttpClient mOkHttpClient = new OkHttpClient();
+    private String mAccessToken;
+    private String mAccessCode;
+    private Call mCall;
+
     /**
      * Create the connection with Spotify and get the token if possible.
      * @return True if the connection has been created successfully and false if not.
@@ -396,7 +394,54 @@ public class Config extends AppCompatActivity
      */
     private boolean createConnectionSpotify()
     {
+        /*if (mAccessToken == null) {
+            final Snackbar snackbar = Snackbar.make(findViewById(R.id.configuration), "", Snackbar.LENGTH_SHORT);
+            snackbar.getView().setBackgroundColor(ContextCompat.getColor(this, Integer.parseInt(theme)));
+            snackbar.show();
+            return true;
+        }
+
+        final Request request = new Request.Builder()
+                .url("https://api.spotify.com/v1/me")
+                .addHeader("Authorization", "Bearer " + mAccessToken)
+                .build();
+
+        cancelCall();
+        mCall = (Call) mOkHttpClient.newCall(request);
+
+        mCall.enqueue(new Callback()  {
+            @Override
+            public void onResponse(Call call, Response response)
+            {
+                try {
+                    final JSONObject jsonObject = new JSONObject((Map) response.body());
+                    setResponse(jsonObject.toString(3));
+                } catch (JSONException e) {
+                    setResponse("Failed to parse data: " + e);
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable e) {
+                setResponse("Failed to fetch data: " + e);
+            }
+        });*/
         return true;
+    }
+
+    private void cancelCall() {
+        if (mCall != null) {
+            mCall.cancel();
+        }
+    }
+
+    private void setResponse(final String text) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
     }
 
     /**

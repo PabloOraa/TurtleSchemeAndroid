@@ -18,7 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.turtlesketch2.turtlesketch2.R;
+import com.turtlesketch.turtlesketch2.R;
 import com.turtlesketch.turtlesketch2.AddMedia;
 import com.turtlesketch.turtlesketch2.Config;
 import com.turtlesketch.turtlesketch2.Interfaces.MySQLAPI;
@@ -117,18 +117,16 @@ public class HomeFragment extends Fragment
         Retrofit query = createRetrofit("https://www.theaudiodb.com");
         MusicAPI apiService = query.create(MusicAPI.class);
         Call<MusicGA> call = apiService.getArtist(textToSearch);
-        call.enqueue(new Callback<MusicGA>() {
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NotNull Call<MusicGA> call, @NotNull Response<MusicGA> response) {
-                if (response.isSuccessful())
-                {
+                if (response.isSuccessful()) {
                     MusicGA music = response.body();
                     if (music != null && music.getArtists() != null && music.getArtists().size() > 0)
                         createList(new ArrayList<>(Converter.convertToMusicList(music)));
-                    else if(music != null && (music.getArtists() == null || music.getArtists().size() == 0))
+                    else if (music != null && (music.getArtists() == null || music.getArtists().size() == 0))
                         noResults();
-                }
-                else
+                } else
                     System.out.println(response.errorBody());
             }
 
@@ -145,27 +143,22 @@ public class HomeFragment extends Fragment
         Retrofit query = createRetrofit("https://www.googleapis.com");
         GoogleAPI apiService = query.create(GoogleAPI.class);
         Call<BooksGA> call = apiService.getBooks(textToSearch);
-        call.enqueue(new Callback<BooksGA>()
-        {
+        call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NotNull Call<BooksGA> call, @NotNull Response<BooksGA> response)
-            {
-                if(response.isSuccessful())
-                {
+            public void onResponse(@NotNull Call<BooksGA> call, @NotNull Response<BooksGA> response) {
+                if (response.isSuccessful()) {
                     BooksGA books = response.body();
-                    if(books != null && books.getTotalItems() > 0)
+                    if (books != null && books.getTotalItems() > 0)
                         createList(new ArrayList<>(Converter.convertToBookList(books)));
-                    else if(books != null && books.getTotalItems() == 0)
+                    else if (books != null && books.getTotalItems() == 0)
                         noResults();
-                }
-                else
+                } else
                     System.out.println(response.errorBody());
 
             }
 
             @Override
-            public void onFailure(@NotNull Call<BooksGA> call, @NotNull Throwable t)
-            {
+            public void onFailure(@NotNull Call<BooksGA> call, @NotNull Throwable t) {
                 t.printStackTrace();
             }
         });
@@ -177,26 +170,21 @@ public class HomeFragment extends Fragment
         Retrofit query = createRetrofit("https://www.omdbapi.com");
         OmbdAPI apiService = query.create(OmbdAPI.class);
         Call<OmbdGA> call = apiService.getMovieSerie(textToSearch, Multimedia.SERIEOMBD);
-        call.enqueue(new Callback<OmbdGA>()
-        {
+        call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NotNull Call<OmbdGA> call, @NotNull Response<OmbdGA> response)
-            {
-                if (response.isSuccessful())
-                {
+            public void onResponse(@NotNull Call<OmbdGA> call, @NotNull Response<OmbdGA> response) {
+                if (response.isSuccessful()) {
                     OmbdGA mediaSM = response.body();
                     if (mediaSM != null && mediaSM.getTotalResults() != null && Integer.parseInt(mediaSM.getTotalResults()) > 0)
                         createList(new ArrayList<>(Converter.convertToSeriesList(mediaSM)));
-                    else if(mediaSM != null && (mediaSM.getTotalResults() == null || Integer.parseInt(mediaSM.getTotalResults()) == 0))
+                    else if (mediaSM != null && (mediaSM.getTotalResults() == null || Integer.parseInt(mediaSM.getTotalResults()) == 0))
                         noResults();
-                }
-                else
+                } else
                     System.out.println(response.errorBody());
             }
 
             @Override
-            public void onFailure(@NotNull Call<OmbdGA> call, @NotNull Throwable t)
-            {
+            public void onFailure(@NotNull Call<OmbdGA> call, @NotNull Throwable t) {
                 t.printStackTrace();
             }
         });
@@ -208,26 +196,21 @@ public class HomeFragment extends Fragment
         Retrofit query = createRetrofit("https://www.omdbapi.com");
         OmbdAPI apiService = query.create(OmbdAPI.class);
         Call<OmbdGA> call = apiService.getMovieSerie(textToSearch, Multimedia.MOVIEOMBD);
-        call.enqueue(new Callback<OmbdGA>()
-        {
+        call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NotNull Call<OmbdGA> call, @NotNull Response<OmbdGA> response)
-            {
-                if (response.isSuccessful())
-                {
+            public void onResponse(@NotNull Call<OmbdGA> call, @NotNull Response<OmbdGA> response) {
+                if (response.isSuccessful()) {
                     OmbdGA mediaSM = response.body();
                     if (mediaSM != null && mediaSM.getTotalResults() != null && Integer.parseInt(mediaSM.getTotalResults()) > 0)
                         createList(new ArrayList<>(Converter.convertToMovieList(mediaSM)));
-                    else if(mediaSM != null && (mediaSM.getTotalResults() == null || Integer.parseInt(mediaSM.getTotalResults()) == 0))
+                    else if (mediaSM != null && (mediaSM.getTotalResults() == null || Integer.parseInt(mediaSM.getTotalResults()) == 0))
                         noResults();
-                }
-                else
+                } else
                     System.out.println(response.errorBody());
             }
 
             @Override
-            public void onFailure(@NotNull Call<OmbdGA> call, @NotNull Throwable t)
-            {
+            public void onFailure(@NotNull Call<OmbdGA> call, @NotNull Throwable t) {
                 t.printStackTrace();
             }
         });

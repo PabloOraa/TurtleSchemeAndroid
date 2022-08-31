@@ -11,8 +11,8 @@
         android:id="@+id/editTextTextPersonName"
         android:layout_width="168dp"
         android:layout_height="48dp"
-        android:layout_marginTop="88dp"
-        android:layout_marginEnd="196dp"
+        android:layout_marginTop="108dp"
+        android:layout_marginEnd="144dp"
         android:autofillHints="no"
         android:ems="10"
         android:hint="@string/title_hint"
@@ -32,7 +32,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintVertical_bias="0.649" />
 
     <TextView
         android:id="@+id/textView"
@@ -44,10 +44,8 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/sp_types"
         app:layout_constraintEnd_toStartOf="@+id/sp_types"
-        app:layout_constraintHorizontal_bias="0.795"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/sp_types"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="@+id/sp_types" />
 
     <Spinner
         android:id="@+id/sp_types"
@@ -58,19 +56,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/editTextTextPersonName"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.665" />
+        app:layout_constraintVertical_bias="0.199" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="111dp"
         android:layout_height="40dp"
-        android:layout_marginEnd="60dp"
+        android:layout_marginEnd="44dp"
         android:text="@string/title"
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/editTextTextPersonName"
         app:layout_constraintEnd_toStartOf="@+id/editTextTextPersonName"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toTopOf="@+id/editTextTextPersonName"
         app:layout_constraintVertical_bias="0.0" />
 
@@ -79,7 +79,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="575dp"
+        android:layout_marginTop="16dp"
         android:contentDescription="@string/config"
         android:src="@drawable/gears"
         app:layout_constraintStart_toStartOf="parent"

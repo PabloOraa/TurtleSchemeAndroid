@@ -16,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.turtlesketch.turtlesketch2.Multimedia.Multimedia;
-import com.turtlesketch2.turtlesketch2.R;
+import com.turtlesketch.turtlesketch2.R;
 
 import java.io.IOException;
 import java.net.URL;

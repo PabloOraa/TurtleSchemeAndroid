@@ -33,7 +33,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
-import com.turtlesketch2.turtlesketch2.R;
+import com.microsoft.device.dualscreen.utils.wm.DisplayPosition;
+import com.turtlesketch.turtlesketch2.R;
 
 /**
  * Main Activity of the application
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity
      * The app version code (not the version name!) that was used on the last
      * start of the app.
      */
-    private final String LAST_APP_VERSION = "1.1.1";
+    private final String LAST_APP_VERSION = "1.1.3";
 
     /**
      * {@inheritDoc}
@@ -65,8 +66,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
-        Objects.requireNonNull(getSupportActionBar()).hide(); //hide the title bar
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
+        //Objects.requireNonNull(getSupportActionBar()).hide(); //hide the title bar
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -77,8 +78,12 @@ public class MainActivity extends AppCompatActivity
         wit = new WindowInfoTrackerCallbackAdapter(WindowInfoTracker.Companion.getOrCreate(this));
         wmc = WindowMetricsCalculator.Companion.getOrCreate();
 
-        Database db = new Database(this,"turtlesketch2.db", null, 3);//getResources().getStringArray(R.array.sections));
-        connection = db.getWritableDatabase();
+
+        try (Database db = new Database(this,"turtlesketch.db", null, 3))
+        {
+            connection = db.getWritableDatabase();
+        }
+
     }
 
     /**
@@ -141,7 +146,7 @@ public class MainActivity extends AppCompatActivity
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_search).build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
     }
 
@@ -253,7 +258,6 @@ public class MainActivity extends AppCompatActivity
         if(Config.appSpanned && windowLayoutInfo.getDisplayFeatures().isEmpty())
         {
             Config.appSpanned = !windowLayoutInfo.getDisplayFeatures().isEmpty();
-
             this.recreate();
         }
         else if(!Config.appSpanned && !windowLayoutInfo.getDisplayFeatures().isEmpty())

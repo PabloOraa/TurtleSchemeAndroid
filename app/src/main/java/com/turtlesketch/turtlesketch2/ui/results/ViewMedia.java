@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
@@ -164,7 +165,13 @@ public class ViewMedia extends AppCompatActivity
     private void fillMedia()
     {
         Intent getIntent = getIntent();
-        media = (Multimedia) getIntent.getSerializableExtra("media");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            media = getIntent.getSerializableExtra("media", Multimedia.class);
+        }
+        else
+        {
+            media = (Multimedia) getIntent.getSerializableExtra("media");
+        }
 
         fillImage();
         fillAuthorActor();

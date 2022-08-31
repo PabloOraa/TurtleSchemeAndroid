@@ -54,7 +54,8 @@ public class HomeFragment extends Fragment
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        if(Config.appSpanned)// || !windowLayoutInfo.getDisplayFeatures().isEmpty())
+
+        if(Config.appSpanned)
             return inflater.inflate(R.layout.fragment_home_dual, container, false);
         else
             return inflater.inflate(R.layout.fragment_home, container, false);

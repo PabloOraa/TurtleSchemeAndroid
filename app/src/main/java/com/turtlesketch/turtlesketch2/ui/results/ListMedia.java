@@ -113,7 +113,12 @@ public class ListMedia extends AppCompatActivity
         }
         else if(getIntent().hasExtra("empty"))
         {
-            setContentView(R.layout.view_list_media_empty);
+            if(Config.appSpanned)
+                setContentView(R.layout.view_list_media_empty_dual);
+            else
+                setContentView(R.layout.view_list_media_empty);
+            findViewById(R.id.iv_sortL_inside_list).setVisibility(View.INVISIBLE);
+            findViewById(R.id.sv_searchL_inside_list).setVisibility(View.INVISIBLE);
         }
 
         if(getIntent().hasExtra("sugg"))
@@ -295,13 +300,13 @@ public class ListMedia extends AppCompatActivity
      */
     private void createListenerForSearch()
     {
-        SearchView search = findViewById(R.id.sv_searchL_inside_list);
+        androidx.appcompat.widget.SearchView search = findViewById(R.id.sv_searchL_inside_list);
         search.setOnQueryTextFocusChangeListener((v, hasFocus) ->
         {
             if(!hasFocus)
                 searchOnList(search.getQuery().toString());
         });
-        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        search.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query)
             {

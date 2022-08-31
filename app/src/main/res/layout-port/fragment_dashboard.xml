@@ -67,7 +67,7 @@
             app:layout_constraintStart_toEndOf="@+id/im_filterL"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <SearchView
+        <androidx.appcompat.widget.SearchView
             android:id="@+id/sv_searchL"
             android:layout_width="0dp"
             android:layout_height="39dp"
@@ -78,7 +78,7 @@
             app:layout_constraintStart_toEndOf="@+id/iv_configL"
             app:layout_constraintTop_toTopOf="parent">
 
-        </SearchView>
+        </androidx.appcompat.widget.SearchView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

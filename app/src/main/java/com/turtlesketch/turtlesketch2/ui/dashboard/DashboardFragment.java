@@ -207,13 +207,13 @@ public class DashboardFragment extends Fragment
 
     private void createListenerForSearch()
     {
-        SearchView search = requireView().findViewById(R.id.sv_searchL);
+        androidx.appcompat.widget.SearchView search = requireView().findViewById(R.id.sv_searchL);
         search.setOnQueryTextFocusChangeListener((v, hasFocus) ->
         {
             if(!hasFocus)
                 searchOnList(search.getQuery().toString());
         });
-        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        search.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query)
             {

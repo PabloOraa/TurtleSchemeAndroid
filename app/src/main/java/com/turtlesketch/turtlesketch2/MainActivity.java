@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.Window;
 
 import androidx.window.java.layout.WindowInfoTrackerCallbackAdapter;
+import androidx.window.layout.DisplayFeature;
+import androidx.window.layout.FoldingFeature;
 import androidx.window.layout.WindowInfoTracker;
 import androidx.window.layout.WindowLayoutInfo;
 import androidx.window.layout.WindowMetrics;
@@ -30,6 +32,7 @@ import androidx.core.util.Consumer;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
@@ -57,7 +60,7 @@ public class MainActivity extends AppCompatActivity
      * The app version code (not the version name!) that was used on the last
      * start of the app.
      */
-    private final String LAST_APP_VERSION = "1.1.3";
+    private final String LAST_APP_VERSION = "1.1.4";
 
     /**
      * {@inheritDoc}
@@ -255,15 +258,14 @@ public class MainActivity extends AppCompatActivity
 
     void updateLayout(WindowLayoutInfo windowLayoutInfo)
     {
-        if(Config.appSpanned && windowLayoutInfo.getDisplayFeatures().isEmpty())
+        if(!windowLayoutInfo.getDisplayFeatures().isEmpty() && !Config.appSpanned)
         {
-            Config.appSpanned = !windowLayoutInfo.getDisplayFeatures().isEmpty();
+            Config.appSpanned = true;
             this.recreate();
         }
-        else if(!Config.appSpanned && !windowLayoutInfo.getDisplayFeatures().isEmpty())
+        else if(windowLayoutInfo.getDisplayFeatures().isEmpty() && Config.appSpanned)
         {
-            Config.appSpanned = !windowLayoutInfo.getDisplayFeatures().isEmpty();
-
+            Config.appSpanned = false;
             this.recreate();
         }
     }

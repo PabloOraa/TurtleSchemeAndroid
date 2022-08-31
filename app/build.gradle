@@ -9,8 +9,8 @@ android {
         applicationId "com.turtlesketch.turtlesketch2"
         minSdkVersion 26
         targetSdkVersion 33
-        versionCode 114
-        versionName "1.1.4"
+        versionCode 115
+        versionName "1.1.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -25,8 +25,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_9
-        targetCompatibility JavaVersion.VERSION_1_9
+        sourceCompatibility JavaVersion.VERSION_18
+        targetCompatibility JavaVersion.VERSION_18
     }
     namespace 'com.turtlesketch.turtlesketch2'
     buildToolsVersion '33.0.0'
